@@ -1,0 +1,84 @@
+{
+  "generator": "satellite-harvester",
+  "version": "1.0.0",
+  "startedAt": "2026-05-01T18:49:32.486Z",
+  "finishedAt": "2026-05-01T18:55:00.000Z",
+  "username": "Demoville1",
+  "base": {
+    "recover": "https://recover-api.satellite-provider.example/api",
+    "dashboard": "https://v2-server.satellite-provider.example"
+  },
+  "options": {
+    "outDir": "harvest",
+    "pageSize": 500,
+    "includeBinaries": true,
+    "skipRecover": false,
+    "skipDashboard": false
+  },
+  "surfaces": {
+    "recoverApi": {
+      "ok": true,
+      "projects": 1,
+      "pois": 75,
+      "fieldResults": 2,
+      "errors": []
+    },
+    "dashboard": {
+      "ok": true,
+      "subProjects": [
+        {
+          "sub_project": "676251",
+          "activeLeaks": "2",
+          "mdcPilotRows": 75,
+          "fieldResultRows": 2,
+          "leakDetails": 2,
+          "links": {
+            "web_application": "https://utilis.giscloud.com/map/3183119/demoville-a",
+            "leaksheets_dataform": "",
+            "gis_files": "https://utiliscorp.sharepoint.com/:f:/g/IgBydXS4vHHgQojhnuw-4hYSAaMWkkieYe1psuB_mJJEcrg?e=jLJEfq",
+            "wms": "https://utilis.giscloud.com/wms/maps/3183119"
+          },
+          "sharepoint": {
+            "ok": true,
+            "method": "puppeteer + SP REST API",
+            "files": 3,
+            "totalBytes": 1161590,
+            "outputDir": "eo-discover/sub-projects/676251/binaries/sharepoint"
+          }
+        }
+      ],
+      "errors": [
+        { "step": "leak-report", "sp": "676251", "status": 524, "note": "Cloudflare 524 — vendor backend exceeds 100s edge timeout. Confirmed both flows (per-row inline-blob with isResTable:true, AND bulk async-via-email) hit the same wall. Bulk-async target email on this demo tenant is the placeholder 'Demoville1@1.com', so async delivery is unrecoverable. PDF/EXCEL/KML for the dashboard data are client-side builds in the SPA (functions IUe/jUe/hZe) and can be regenerated offline from the harvester's JSON dumps without any server call — only PHOTOS and LEAK REPORT actually need the vendor backend." },
+        { "step": "photos",      "sp": "676251", "status": 524, "note": "Cloudflare 524 — same root cause. The demo dataset has no leak photos uploaded so the zip would have been empty regardless (per-leak /api/utilis-finding-photos returned null for all 2 inspections)." }
+      ]
+    },
+    "wms": {
+      "ok": true,
+      "url": "https://utilis.giscloud.com/wms/maps/3183119",
+      "status": 200,
+      "note": "Hosted on the separately-branded satellite-provider Map Viewer GIS Cloud tenant at utilis.giscloud.com. Auth is form login on giscloud.com; the same demo creds happen to work but that's coincidence (no SSO from EO-Discover). The SPA's WMS button only copies the URL into a popup — no credential handoff. GetCapabilities returns a single composite Layer 'Demoville A' (no Name attribute, so per-layer GetMap by name is rejected with LayerNotDefined). Supported CRS: EPSG:4326/3857/900913. GetMap formats: image/png, image/png8, image/jpeg. Max 2048x2048. Internal composition (visible in giscloud's native layer tree, not WMS): Field Results (id 7691538: Leak/Suspected/Repaired Leak), POIs - DR2 (id 7691544: ERA/Overlapping/Active Segment/Investigated Segment), Pipes (id 7691554), and Mapbox basemaps. WMS = operator cartography for QGIS/ArcMap users, not a programmatic API.",
+      "internalLayers": [
+        { "id": 7691538, "name": "Field Results", "subStyles": ["Leak", "Suspected", "Repaired Leak"] },
+        { "id": 7691544, "name": "POIs - DR2",    "subStyles": ["ERA", "Overlapping", "Active Segment", "Investigated Segment"] },
+        { "id": 7691554, "name": "Pipes",         "subStyles": [] },
+        { "id": 7691546, "name": "Mapbox Satellite Streets", "basemap": true },
+        { "id": 7691547, "name": "Mapbox Streets",           "basemap": true }
+      ]
+    }
+  },
+  "summary": {
+    "filesWritten": 30,
+    "jsonBytes": 14132000,
+    "binaryBytes": 3262791,
+    "endpointsHit": 26,
+    "endpointsFailed": 2,
+    "rowsCaptured": {
+      "recover_api_pois": 75,
+      "recover_api_field_results": 2,
+      "dashboard_mdc_pilot": 75,
+      "dashboard_field_results": 2,
+      "dashboard_leak_details": 2
+    }
+  },
+  "errors": []
+}

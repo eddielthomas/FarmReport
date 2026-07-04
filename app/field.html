@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content, maximum-scale=1.0"
+    />
+    <title>Report.Farm · Field</title>
+
+    <!-- Sprint 12 role gate — allowed only for field.technician,
+         ops.field_specialist, platform:admin. Others bounce to primary. -->
+    <script src="/role-gate-pack.js"></script>
+    <script src="/role-gate.js" data-surface="field.html"></script>
+
+    <!-- =====================================================================
+         PWA META — iOS/Android home-screen install + status bar color sync.
+         Field PWA defaults to DARK surface (techs work outdoors, dark UI
+         reduces glare and saves OLED battery).
+         ===================================================================== -->
+    <link rel="manifest" href="/field-manifest.json" />
+    <meta name="theme-color" content="#0B0C0F" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#F0F1F3" media="(prefers-color-scheme: light)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="RWR Field" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <link
+      rel="apple-touch-icon"
+      href="data:image/svg+xml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2724%27 fill=%27%23B9FF66%27/%3E%3Cpath fill=%27%230A0A0A%27 d=%27M50 14 C50 32,68 50,86 50 C68 50,50 68,50 86 C50 68,32 50,14 50 C32 50,50 32,50 14Z%27/%3E%3C/svg%3E"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- =====================================================================
+         SURFACE BOOTSTRAP — Field defaults to DARK (overrides the CRM light
+         default). If a tech has previously toggled light mode, that wins.
+         ===================================================================== -->
+    <script>
+      (function () {
+        try {
+          var raw = window.localStorage.getItem('rwr.surface-mode');
+          var parsed = raw ? JSON.parse(raw) : null;
+          var mode = parsed && parsed.state && parsed.state.mode === 'light' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-surface', mode);
+        } catch (e) {
+          document.documentElement.setAttribute('data-surface', 'dark');
+        }
+      })();
+    </script>
+
+    <style>
+      html, body, #root {
+        height: 100dvh;
+        margin: 0;
+        padding: 0;
+        background: #0B0C0F;
+        color: #fff;
+        overscroll-behavior: none;
+        -webkit-tap-highlight-color: transparent;
+      }
+      :root[data-surface='light'] html,
+      :root[data-surface='light'] body,
+      :root[data-surface='light'] #root {
+        background: #F0F1F3;
+        color: #0A0A0A;
+      }
+      body {
+        font-family: 'Urbanist', 'Inter', sans-serif;
+        touch-action: manipulation;
+      }
+      /* Safe-area insets for notch / dynamic island devices */
+      #root {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="crm"></div>
+    <script type="module" src="/src/crm/main-field.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en" data-surface="light">
+<head>
+<meta charset="utf-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Contact — Request a Farm Plan · Report.Farm</title>
+<meta name="description" content="Request a Report.Farm plan for your fields. We respond within one business day, NDA-ready by default. Direct lines to ops, onboarding, partnerships, and press." />
+<meta name="keywords" content="contact Report.Farm, farm plan request, satellite crop monitoring demo, Sentinel-2 farm demo, agriculture intelligence consultation, supply-chain sourcing monitoring" />
+<meta name="theme-color" content="#F0F1F3" />
+<meta name="author" content="Report.Farm" />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<meta name="color-scheme" content="light" />
+<link rel="canonical" href="https://report.farm/contact.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Report.Farm" />
+<meta property="og:title" content="Contact — Request a Farm Plan · Report.Farm" />
+<meta property="og:description" content="Request a Report.Farm plan for your fields or sourcing regions. We respond within one business day, NDA-ready by default." />
+<meta property="og:url" content="https://report.farm/contact.html" />
+<meta property="og:image" content="https://report.farm/og/contact.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Report.Farm — Request a Farm Plan" />
+<meta property="og:locale" content="en_US" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@ReportFarm" />
+<meta name="twitter:title" content="Contact — Request a Farm Plan · Report.Farm" />
+<meta name="twitter:description" content="Request a farm plan. NDA-ready by default. Response within one business day." />
+<meta name="twitter:image" content="https://report.farm/og/contact.png" />
+<meta name="twitter:image:alt" content="Report.Farm — Request a Farm Plan" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="./marketing/site.css">
+<link rel="stylesheet" href="./marketing/premium.css">
+<link rel="stylesheet" href="/src/marketing-tokens.css">
+
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://report.farm/#org",
+      "name": "Report.Farm",
+      "url": "https://report.farm/",
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "email": "ops@report.farm",
+          "availableLanguage": ["en"],
+          "areaServed": "Worldwide"
+        },
+        {
+          "@type": "ContactPoint",
+          "contactType": "onboarding",
+          "email": "onboarding@report.farm",
+          "availableLanguage": ["en"],
+          "areaServed": "Worldwide"
+        },
+        {
+          "@type": "ContactPoint",
+          "contactType": "partnerships",
+          "email": "partners@report.farm",
+          "availableLanguage": ["en"],
+          "areaServed": "Worldwide"
+        },
+        {
+          "@type": "ContactPoint",
+          "contactType": "press",
+          "email": "press@report.farm",
+          "availableLanguage": ["en"],
+          "areaServed": "Worldwide"
+        }
+      ]
+    },
+    {
+      "@type": "ContactPage",
+      "name": "Contact Report.Farm",
+      "description": "Request a Report.Farm plan for your fields, start onboarding, or contact farm ops.",
+      "url": "https://report.farm/contact.html"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home",    "item": "https://report.farm/" },
+        { "@type": "ListItem", "position": 2, "name": "Contact", "item": "https://report.farm/contact.html" }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+  /* ── Premium LIGHT contact polish on top of site.css ── */
+
+  /* Trust ribbon under hero */
+  .trust-ribbon {
+    display:flex; flex-wrap:wrap; gap:10px 14px; align-items:center;
+    margin-top:22px;
+  }
+  .trust-ribbon .tr-item {
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--text-subtle);
+  }
+  .trust-ribbon .tr-item .dot {
+    width:7px; height:7px; border-radius:var(--radius-full);
+    background:var(--green); box-shadow:0 0 0 4px var(--green-soft);
+  }
+  .trust-ribbon .tr-sep { color:var(--border-strong); }
+
+  /* Stakes band — cited industry statistics */
+  .stakes-grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:16px;
+  }
+  .stake {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius-lg); padding:22px 20px;
+    box-shadow:var(--shadow-card);
+  }
+  .stake .kpi {
+    font-family:var(--font-display); font-weight:800;
+    font-size:30px; letter-spacing:var(--tracking-tight);
+    color:var(--accent-deep); line-height:1.05;
+  }
+  .stake .lab {
+    margin-top:8px; font-size:13.5px; line-height:1.55; color:var(--text-muted);
+  }
+  .stake .src {
+    margin-top:10px; font-family:var(--font-mono); font-size:10.5px;
+    letter-spacing:0.04em; color:var(--text-faint);
+  }
+  @media(max-width:900px){ .stakes-grid{ grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:560px){ .stakes-grid{ grid-template-columns:1fr; } }
+
+  /* Audience cards */
+  .aud-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  @media(max-width:900px){ .aud-grid{ grid-template-columns:1fr; } }
+  .aud {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius-lg); padding:26px 24px;
+    box-shadow:var(--shadow-card);
+  }
+  .aud .tag {
+    font-family:var(--font-mono); font-size:11px; letter-spacing:var(--tracking-wider);
+    text-transform:uppercase; color:var(--accent-deep);
+  }
+  .aud h3 {
+    font-family:var(--font-display); font-weight:700; font-size:19px;
+    color:var(--text); margin:10px 0 8px;
+  }
+  .aud p { color:var(--text-muted); font-size:14px; line-height:1.6; }
+  .aud ul { list-style:none; margin:14px 0 0; padding:0; }
+  .aud ul li {
+    position:relative; padding-left:20px; margin-bottom:8px;
+    color:var(--text-muted); font-size:13.5px; line-height:1.5;
+  }
+  .aud ul li::before {
+    content:'▸'; position:absolute; left:0; color:var(--accent-deep); font-weight:700;
+  }
+
+  /* ── Contact form (LIGHT) ── */
+  .contact-form .err  { display:none; margin-top:6px; font-size:11px; color:var(--rose); font-family:var(--font-mono); letter-spacing:0.04em; }
+  .contact-form .field-bad input,
+  .contact-form .field-bad select,
+  .contact-form .field-bad textarea { border-color:var(--rose) !important; }
+  .contact-form .field-bad .err { display:block; }
+  .contact-form .submitting button { opacity:0.55; cursor:not-allowed; }
+  .contact-form .hp { position:absolute; left:-9999px; opacity:0; pointer-events:none; }
+  .contact-form details.more-fields {
+    margin: 4px 0 14px;
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    background:var(--surface-2);
+    padding:12px 16px;
+  }
+  .contact-form details.more-fields summary {
+    cursor:pointer; list-style:none;
+    font-family:var(--font-mono); font-size:12px; letter-spacing:0.08em;
+    text-transform:uppercase; color:var(--text-subtle);
+    padding:6px 0;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .contact-form details.more-fields summary::-webkit-details-marker { display:none; }
+  .contact-form details.more-fields summary::after {
+    content:'+'; font-size:18px; color:var(--text-subtle); transition:transform .25s ease;
+  }
+  .contact-form details.more-fields[open] summary::after { content:'−'; }
+  .contact-form details.more-fields > div.more-body { padding-top:14px; }
+  .contact-form .consent-row {
+    display:flex; align-items:flex-start; gap:10px;
+    padding:12px 14px; border-radius:var(--radius-sm);
+    background:var(--accent-soft); border:1px solid var(--border);
+    margin-top:6px;
+  }
+  .contact-form .consent-row input[type="checkbox"] { width:18px; height:18px; margin-top:2px; cursor:pointer; accent-color:var(--accent); }
+  .contact-form .consent-row a { color:var(--accent-deep); text-decoration:underline; }
+  .contact-form .field-bad.consent-row { border-color:var(--rose) !important; background:var(--surface-2); }
+  .contact-form .turnstile-wrap { margin:14px 0 6px; min-height:65px; }
+  .contact-form .compliance-note {
+    margin-top:12px; font-size:11px; color:var(--text-subtle);
+    font-family:var(--font-mono); letter-spacing:0.04em; line-height:1.55;
+  }
+  .contact-form input[type="checkbox"]{ accent-color:var(--accent); }
+
+  .contact-success {
+    display:none; padding:36px 28px; text-align:center;
+    background:linear-gradient(135deg,var(--accent-tint),var(--surface));
+    border:1px solid var(--border); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-card);
+  }
+  .contact-success.show { display:block; }
+  .contact-success h3 { font-family:var(--font-display); font-size:24px; font-weight:700; margin-bottom:10px; color:var(--text); }
+  .contact-success p  { color:var(--text-muted); font-size:14px; line-height:1.6; }
+  .contact-success .ck {
+    width:56px; height:56px; border-radius:var(--radius-full);
+    background:var(--accent);
+    margin:0 auto 18px; display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 0 6px var(--accent-soft);
+    font-size:24px; color:var(--text-on-accent); font-weight:900;
+  }
+  .sidebar-meta {
+    margin-top:18px; padding:14px 16px;
+    border:1px solid var(--border); border-radius:var(--radius);
+    background:var(--surface-2);
+    font-size:13px; color:var(--text-muted); line-height:1.7;
+  }
+  .sidebar-meta strong { color:var(--text); font-weight:600; }
+
+  /* Reassurance strip beside the form */
+  .why-list { list-style:none; margin:20px 0 0; padding:0; }
+  .why-list li {
+    position:relative; padding-left:26px; margin-bottom:14px;
+    color:var(--text-muted); font-size:13.5px; line-height:1.55;
+  }
+  .why-list li::before {
+    content:'✓'; position:absolute; left:0; top:0;
+    color:var(--green); font-weight:800; font-size:14px;
+  }
+  .why-list li strong { color:var(--text); font-weight:600; }
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div class="grid-bg"></div>
+<div class="glow-orb a"></div>
+<div class="glow-orb b"></div>
+
+<nav class="nav">
+  <a class="nav-logo" href="./"><span class="logo-mark"></span><span><span class="nav-logo-text">Report.Farm</span><span class="nav-logo-sub">Autonomous farm intelligence</span></span></a>
+  <div class="nav-links">
+    <div class="nav-item"><a class="nav-trigger" href="./solutions.html">Solutions</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./industries.html">Industries</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./platform.html">Platform</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./company.html">Company</a></div>
+  </div>
+  <div class="nav-cta">
+    <a class="btn btn-ghost btn-sm" href="./contact.html">Contact</a>
+    <a class="btn btn-primary btn-sm" href="./access.html">Open Report.Farm →</a>
+    <button class="nav-burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<aside class="mobile-drawer">
+  <h4>Pages</h4><a href="./">Home</a><a href="./solutions.html">Solutions</a><a href="./industries.html">Industries</a><a href="./platform.html">Platform</a><a href="./company.html">Company</a><a href="./contact.html">Contact</a><a href="./access.html">Open Report.Farm →</a>
+</aside>
+
+<header class="page-hero">
+  <div class="crumbs"><a href="./">Report.Farm</a><span>/</span><span>Contact</span></div>
+  <span class="eyebrow"><span class="dot pulse"></span>Farm Desk · Open</span>
+  <h1>Request a <span class="grad">farm plan</span>.</h1>
+  <p class="lead reveal">Tell us the fields you farm and the change you can't afford to miss. We'll return a tailored farm plan — the signals we'd run, expected outcomes, and a path to your first report — within one business day. NDA-ready by default.</p>
+  <div class="trust-ribbon reveal">
+    <span class="tr-item"><span class="dot"></span>Response within 1 business day</span>
+    <span class="tr-sep">·</span>
+    <span class="tr-item">NDA on request</span>
+    <span class="tr-sep">·</span>
+    <span class="tr-item">No procurement commitment to start</span>
+  </div>
+</header>
+
+<section style="padding-top:30px">
+  <div class="container narrow">
+    <div class="grid c2" style="align-items:start">
+      <!-- ──────────── Contact form ──────────── -->
+      <div>
+        <form id="contactForm" class="form-card reveal contact-form" novalidate>
+          <!-- honeypot for bots -->
+          <div class="hp"><label>Website</label><input type="text" name="website" tabindex="-1" autocomplete="off" /></div>
+
+          <div class="form-row">
+            <div class="form-field" data-field="first_name">
+              <label for="firstName">First name</label>
+              <input id="firstName" name="first_name" type="text" required autocomplete="given-name" minlength="1" maxlength="60" />
+              <span class="err" data-err>Required</span>
+            </div>
+            <div class="form-field" data-field="last_name">
+              <label for="lastName">Last name</label>
+              <input id="lastName" name="last_name" type="text" required autocomplete="family-name" minlength="1" maxlength="60" />
+              <span class="err" data-err>Required</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field" data-field="email">
+              <label for="email">Work email</label>
+              <input id="email" name="email" type="email" required autocomplete="email" maxlength="254" />
+              <span class="err" data-err>Valid work email required</span>
+            </div>
+            <div class="form-field" data-field="company">
+              <label for="company">Company</label>
+              <input id="company" name="company" type="text" required autocomplete="organization" minlength="2" maxlength="120" />
+              <span class="err" data-err>Required</span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field" data-field="industry">
+              <label for="industry">Operation type</label>
+              <select id="industry" name="industry" required>
+                <option value="water">Row Crops</option>
+                <option value="oil_gas">Orchard / Vineyard</option>
+                <option value="power">Livestock / Mixed</option>
+                <option value="defense">Agribusiness / Buyer</option>
+                <option value="insurance">Ag Insurance / Re</option>
+                <option value="asset_finance">Ag Lending / Finance</option>
+                <option value="other">Other</option>
+              </select>
+              <span class="err" data-err>Select an operation type</span>
+            </div>
+            <div class="form-field" data-field="mission_line">
+              <label for="missionLine">What to monitor</label>
+              <select id="missionLine" name="mission_line" required>
+                <option value="leak_loss">Crop &amp; Water Monitoring</option>
+                <option value="asset_recovery">Field Change Detection</option>
+                <option value="infra_risk">Yield &amp; Risk Intelligence</option>
+                <option value="physical_ai">Farm Digital Twin</option>
+                <option value="integration">Systems Integration</option>
+                <option value="ops">Reports &amp; Alerts</option>
+              </select>
+              <span class="err" data-err>Select what to monitor</span>
+            </div>
+          </div>
+
+          <div class="form-field" data-field="message">
+            <label for="message">Tell us about your farm</label>
+            <textarea id="message" name="message" required rows="5" minlength="20" maxlength="4000" placeholder="Location, crops, acreage, what you want to catch, timeline…"></textarea>
+            <span class="err" data-err>At least 20 characters</span>
+          </div>
+
+          <!-- ─── Progressive disclosure: optional context ─── -->
+          <details class="more-fields">
+            <summary>Add more context (optional)</summary>
+            <div class="more-body">
+              <div class="form-row">
+                <div class="form-field" data-field="phone">
+                  <label for="phone">Phone</label>
+                  <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="32" placeholder="+1 (555) 123-4567" />
+                  <span class="err" data-err>Invalid phone</span>
+                </div>
+                <div class="form-field" data-field="role">
+                  <label for="role">Role / title</label>
+                  <input id="role" name="role" type="text" autocomplete="organization-title" maxlength="120" placeholder="Director of Operations" />
+                  <span class="err" data-err>Invalid role</span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field" data-field="country">
+                  <label for="country">Country</label>
+                  <select id="country" name="country">
+                    <option value="">—</option>
+                    <option value="US">United States</option>
+                    <option value="CA">Canada</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="AU">Australia</option>
+                    <option value="DE">Germany</option>
+                    <option value="FR">France</option>
+                    <option value="NL">Netherlands</option>
+                    <option value="JP">Japan</option>
+                    <option value="SG">Singapore</option>
+                    <option value="AE">United Arab Emirates</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </div>
+                <div class="form-field" data-field="timeline">
+                  <label for="timeline">Timeline</label>
+                  <select id="timeline" name="timeline">
+                    <option value="">—</option>
+                    <option value="30d">Within 30 days</option>
+                    <option value="1_3m">1–3 months</option>
+                    <option value="3_6m">3–6 months</option>
+                    <option value="exploring">Just exploring</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-field" data-field="how_heard">
+                  <label for="howHeard">How did you hear about us?</label>
+                  <select id="howHeard" name="how_heard">
+                    <option value="">—</option>
+                    <option value="google">Google</option>
+                    <option value="referral">Referral</option>
+                    <option value="conference">Conference</option>
+                    <option value="linkedin">LinkedIn</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div class="form-field" data-field="nda_required" style="display:flex;align-items:center;padding-top:24px">
+                  <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-weight:500;color:var(--text);font-size:13.5px">
+                    <input id="ndaRequired" name="nda_required" type="checkbox" style="width:16px;height:16px;cursor:pointer" />
+                    <span>An NDA is required before our first call</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <div class="form-field" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:500;color:var(--text)">
+              <input id="newsletter" name="newsletter" type="checkbox" style="width:16px;height:16px;cursor:pointer" />
+              <span>Send me product updates (no spam, unsubscribe any time)</span>
+            </label>
+          </div>
+
+          <!-- ─── Required consent ─── -->
+          <div class="consent-row form-field" data-field="consent_privacy">
+            <input id="consentPrivacy" name="consent_privacy" type="checkbox" required />
+            <label for="consentPrivacy" style="font-size:13px;color:var(--text);line-height:1.55;cursor:pointer">
+              I agree to Report.Farm's <a href="/privacy.html">privacy policy</a> and consent to be contacted about my request.
+              <span class="err" data-err style="display:none;margin-top:4px">Required to submit</span>
+            </label>
+          </div>
+
+          <!-- ─── Cloudflare Turnstile ─── -->
+          <div class="turnstile-wrap">
+            <div class="cf-turnstile" data-sitekey="0x0000000000000000000000000000000000000000" data-callback="onTurnstileSuccess" data-theme="light"></div>
+          </div>
+
+          <button class="btn btn-primary" type="submit" style="width:100%">Request farm plan</button>
+          <p style="margin-top:14px;font-size:11.5px;color:var(--text-subtle);text-align:center;font-family:var(--font-mono);letter-spacing:1px">RESPONSE WITHIN 1 BUSINESS DAY · NDA-READY BY DEFAULT</p>
+
+          <p class="compliance-note">
+            Security &amp; compliance program — SOC 2, GDPR/CCPA-aligned data handling, SSO and RBAC — underway; not yet independently audited.
+          </p>
+        </form>
+
+        <!-- success state, revealed by JS or ?status=sent -->
+        <div id="contactSuccess" class="contact-success">
+          <div class="ck">✓</div>
+          <h3>Farm plan request received.</h3>
+          <p>Thank you — we'll be in touch within one business day. A copy of your request has been sent to your inbox.<br/><span id="successRef" style="display:block;margin-top:10px;font-family:var(--font-mono);font-size:12px;color:var(--text-subtle);letter-spacing:0.06em"></span></p>
+        </div>
+      </div>
+
+      <!-- ──────────── Side info ──────────── -->
+      <div class="reveal" style="padding:8px 0">
+        <h3 style="font-family:var(--font-display);font-size:22px;font-weight:700;margin-bottom:14px;color:var(--text)">What to expect.</h3>
+        <ul class="why-list">
+          <li><strong>A plan, not a pitch.</strong> You'll get a written farm plan scoped to your fields — the signals we'd run, expected outcomes, and timeline to your first report.</li>
+          <li><strong>Built for procurement.</strong> Clear scope, pricing tiers, and security posture you can route through legal and finance without surprises.</li>
+          <li><strong>Share only what you want.</strong> As much or as little as you like; an NDA is in place before anything sensitive changes hands.</li>
+          <li><strong>One business-day response.</strong> A real person reads every request — not a sales queue.</li>
+        </ul>
+
+        <h3 style="font-family:var(--font-display);font-size:22px;font-weight:700;margin:30px 0 14px;color:var(--text)">Direct paths.</h3>
+        <p style="color:var(--text-muted);font-size:14px;line-height:1.65;margin-bottom:24px">Already know what you need? Reach the right desk directly.</p>
+
+        <div class="card" style="margin-bottom:14px"><div class="ico">◔</div><h3>Farm ops desk</h3><p>For time-sensitive findings and in-season questions. On-call during the season.</p><a class="more" href="mailto:ops@report.farm">ops@report.farm</a></div>
+        <div class="card" style="margin-bottom:14px"><div class="ico">◇</div><h3>Onboarding</h3><p>Get your farm mapped and monitoring started with our onboarding lead.</p><a class="more" href="mailto:onboarding@report.farm">onboarding@report.farm</a></div>
+        <div class="card" style="margin-bottom:14px"><div class="ico">⌂</div><h3>Partnerships</h3><p>System integrators, data providers and machinery partners.</p><a class="more" href="mailto:partners@report.farm">partners@report.farm</a></div>
+        <div class="card"><div class="ico">⊞</div><h3>Press &amp; analysts</h3><p>Press, analysts and research inquiries.</p><a class="more" href="mailto:press@report.farm">press@report.farm</a></div>
+
+        <div class="sidebar-meta">
+          <div><strong>Office:</strong> Remote-first, US-based</div>
+          <div><strong>Response SLO:</strong> 1 business day</div>
+          <div><strong>NDA-ready:</strong> yes, on request</div>
+          <div><strong>Who we work with:</strong> growers, landowners, agribusiness &amp; buyers</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── Who we serve ──────────── -->
+<section class="reveal" style="background:var(--bg-soft)">
+  <div class="container">
+    <div class="section-eyebrow">Who we plan for</div>
+    <h2 class="section-title">Built for the people who carry the yield.</h2>
+    <p class="section-sub" style="max-width:720px">Whether you farm thousands of acres, steward the land, or source from it, the question is the same: what changed out there, and what is it going to cost? We answer it while there's still time to act.</p>
+
+    <div class="aud-grid" style="margin-top:34px">
+      <div class="aud">
+        <span class="tag">Farmers &amp; growers</span>
+        <h3>Row crops, orchards &amp; vineyards</h3>
+        <p>Watch every zone for crop stress, water anomalies and disease across land too large to walk. We surface change before it erodes yield.</p>
+        <ul>
+          <li>Crop stress &amp; disease clusters, caught early</li>
+          <li>Irrigation &amp; water anomalies within days</li>
+          <li>Early warning that protects the crop and the season</li>
+        </ul>
+      </div>
+      <div class="aud">
+        <span class="tag">Landowners &amp; estates</span>
+        <h3>Ranches, plantations &amp; estates</h3>
+        <p>Protect water, soil and property value across the whole property line — and keep an evidence-grade record you can put in front of a lender, insurer or buyer.</p>
+        <ul>
+          <li>Whole-property coverage from above</li>
+          <li>Water loss, seepage &amp; land movement</li>
+          <li>Condition data for lending &amp; underwriting</li>
+        </ul>
+      </div>
+      <div class="aud">
+        <span class="tag">Agribusiness &amp; buyers</span>
+        <h3>Buyers · traders · lenders &amp; insurers</h3>
+        <p>Monitor a portfolio of suppliers and sourcing regions from one place — early warning on drought, flood and yield shortfall before it reaches your contracts.</p>
+        <ul>
+          <li>Portfolio view across suppliers &amp; regions</li>
+          <li>Early warning on drought, flood &amp; shortfall</li>
+          <li>Independent condition data for sourcing decisions</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────── The stakes (cited) ──────────── -->
+<section class="reveal">
+  <div class="container">
+    <div class="section-eyebrow">Why this matters</div>
+    <h2 class="section-title">The cost of finding out too late.</h2>
+    <p class="section-sub" style="max-width:720px">Crop, water and land change build quietly, and the bill lands on growers, landowners and buyers. These are the numbers a farm plan is designed to move.</p>
+
+    <div class="stakes-grid" style="margin-top:34px">
+      <div class="stake">
+        <div class="kpi">~40%</div>
+        <div class="lab">Of global crop production lost each year to pests and diseases.</div>
+        <div class="src">Source: FAO, 2021</div>
+      </div>
+      <div class="stake">
+        <div class="kpi">~70%</div>
+        <div class="lab">Of the world's freshwater withdrawals go to agriculture.</div>
+        <div class="src">Source: FAO / UN-Water</div>
+      </div>
+      <div class="stake">
+        <div class="kpi">5 days</div>
+        <div class="lab">Sentinel-2 revisit at the equator with two satellites — a free, high-frequency baseline.</div>
+        <div class="src">Source: Copernicus / ESA</div>
+      </div>
+      <div class="stake">
+        <div class="kpi">Day + night</div>
+        <div class="lab">Sentinel-1 C-band radar sees through cloud and darkness for consistent coverage.</div>
+        <div class="src">Source: ESA Copernicus</div>
+      </div>
+      <div class="stake">
+        <div class="kpi">50+ yrs</div>
+        <div class="lab">Open Landsat Earth-observation record since 1972 — decades of baseline.</div>
+        <div class="src">Source: USGS / NASA</div>
+      </div>
+      <div class="stake">
+        <div class="kpi">~24%</div>
+        <div class="lab">Of global GHG emissions come from agriculture, forestry and land use.</div>
+        <div class="src">Source: IPCC AR5</div>
+      </div>
+      <div class="stake">
+        <div class="kpi">~828M</div>
+        <div class="lab">People affected by hunger worldwide — the stakes behind every lost harvest.</div>
+        <div class="src">Source: FAO SOFI, 2022</div>
+      </div>
+      <div class="stake">
+        <div class="kpi">Free</div>
+        <div class="lab">Copernicus Sentinel and Landsat Collection 2 open data — the baseline we run on.</div>
+        <div class="src">Source: ESA / USGS</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-band reveal" style="padding-block:38px">
+      <h2 style="font-size:26px">Prefer to talk first?</h2>
+      <p>Schedule a call with farm ops — we'll find a slot within one business day.</p>
+      <div class="a">
+        <a class="btn btn-primary btn-lg" href="mailto:ops@report.farm?subject=Schedule%20a%20call">Schedule a call</a>
+        <a class="btn btn-outline btn-lg" href="./platform.html">See the platform</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand"><a class="nav-logo" href="./"><span class="logo-mark"></span><span><span class="nav-logo-text">Report.Farm</span><span class="nav-logo-sub">Autonomous farm intelligence</span></span></a><p>Farm-scale Earth-observation intelligence, crop and water monitoring, and scheduled reports plus urgent alerts — delivered as a service.</p></div>
+    <div><h5>Solutions</h5><a href="./solutions.html#leak-detection">Crop &amp; Water</a><a href="./solutions.html#asset-recovery">Change Detection</a><a href="./solutions.html#infra-risk">Yield &amp; Risk</a><a href="./solutions.html#physical-ai">Farm Digital Twin</a><a href="./solutions.html#operations">Reports &amp; Alerts</a></div>
+    <div><h5>Industries</h5><a href="./industries.html#growers">Row Crops</a><a href="./industries.html#buyers">Orchards &amp; Vineyards</a><a href="./industries.html#brands">Livestock &amp; Mixed</a><a href="./industries.html#advisors">Agribusiness &amp; Buyers</a><a href="./industries.html#insurers">Ag Insurance</a></div>
+    <div><h5>Platform</h5><a href="./platform.html#how">Data Layer</a><a href="./platform.html#intelligence">Intelligence</a><a href="./platform.html#command-center">Command Center</a><a href="./platform.html#api-integration">Integrations</a><a href="./platform.html#security-compliance">Security</a></div>
+    <div><h5>Company</h5><a href="./company.html">About</a><a href="./company.html#careers">Careers</a><a href="./contact.html">Contact</a><a href="./access.html">Open Report.Farm</a></div>
+  </div>
+  <div class="foot-bar"><div>© <span data-year>2026</span> Report.Farm · Pilot v0.9</div><div class="l"><a href="./company.html#privacy">Privacy</a><a href="./company.html#security">Security</a><a href="./company.html#terms">Terms</a></div></div>
+</footer>
+
+<script type="module" src="./marketing/site.js" defer></script>
+<script type="module" src="./marketing/reveal.js"></script>
+<script type="module">
+// =============================================================================
+// Contact form — client validation + POST /api/v1/contact + success state.
+// =============================================================================
+const form    = document.getElementById('contactForm');
+const success = document.getElementById('contactSuccess');
+const successRef = document.getElementById('successRef');
+
+// ─── Render success card if landing with ?status=sent ───
+(function renderFromQuery() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('status') === 'sent') {
+      form.style.display = 'none';
+      success.classList.add('show');
+      const id = params.get('id');
+      if (id && successRef) successRef.textContent = 'Reference: ' + id;
+      success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  } catch (_) { /* no-op */ }
+})();
+
+// ─── Field error mapping (server error code → field name) ───
+const SERVER_ERROR_MAP = {
+  first_name_required:   { field: 'first_name',   msg: 'Required' },
+  last_name_required:    { field: 'last_name',    msg: 'Required' },
+  email_invalid:         { field: 'email',        msg: 'Valid work email required' },
+  company_required:      { field: 'company',      msg: 'Required' },
+  industry_required:     { field: 'industry',     msg: 'Select an industry' },
+  mission_line_required: { field: 'mission_line', msg: 'Select a mission line' },
+  message_too_short:     { field: 'message',      msg: 'At least 20 characters' },
+  consent_required:      { field: 'consent_privacy', msg: 'Required to submit' },
+};
+
+function setBad(name, bad, customMsg) {
+  const f = form.querySelector(`[data-field="${name}"]`);
+  if (!f) return;
+  f.classList.toggle('field-bad', bad);
+  if (bad && customMsg) {
+    const e = f.querySelector('[data-err]');
+    if (e) { e.textContent = customMsg; e.style.display = 'block'; }
+  }
+}
+function clearAll() {
+  form.querySelectorAll('.field-bad').forEach(el => el.classList.remove('field-bad'));
+  form.querySelectorAll('[data-err]').forEach(el => { el.style.display = ''; });
+  const banner = form.querySelector('.send-fail');
+  if (banner) banner.remove();
+}
+
+function validate(data) {
+  let ok = true;
+  if (!data.first_name?.trim()) { setBad('first_name', true); ok = false; }
+  if (!data.last_name?.trim())  { setBad('last_name', true);  ok = false; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email ?? '')) { setBad('email', true); ok = false; }
+  if (!data.company?.trim())    { setBad('company', true);   ok = false; }
+  if (!data.industry?.trim())   { setBad('industry', true);  ok = false; }
+  if (!data.mission_line?.trim()){ setBad('mission_line', true); ok = false; }
+  if ((data.message?.trim().length ?? 0) < 20) { setBad('message', true); ok = false; }
+  if (data.consent_privacy !== 'on') { setBad('consent_privacy', true); ok = false; }
+  return ok;
+}
+
+// Clear field error on input
+form.querySelectorAll('input, select, textarea').forEach(el => {
+  el.addEventListener('input', () => {
+    const wrap = el.closest('[data-field]');
+    if (wrap) wrap.classList.remove('field-bad');
+  });
+  el.addEventListener('change', () => {
+    const wrap = el.closest('[data-field]');
+    if (wrap) wrap.classList.remove('field-bad');
+  });
+});
+
+// Turnstile callback (global)
+window.onTurnstileSuccess = function (token) {
+  // token will be auto-attached as input[name=cf-turnstile-response]
+  // no-op for now; available for future UI feedback
+};
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearAll();
+  const fd   = new FormData(form);
+  const data = Object.fromEntries(fd.entries());
+
+  // honeypot — silently drop bot submissions
+  if (data.website) {
+    window.location.href = '/contact.html?status=sent';
+    return;
+  }
+  if (!validate(data)) return;
+
+  form.classList.add('submitting');
+  const btn = form.querySelector('button[type="submit"]');
+  const orig = btn.textContent;
+  btn.textContent = 'Sending…'; btn.disabled = true;
+
+  // Read Turnstile token from the hidden input the widget injects
+  const tsInput = form.querySelector('input[name="cf-turnstile-response"]');
+  const turnstile_token = tsInput ? tsInput.value : '';
+
+  try {
+    const res = await fetch('/api/v1/contact', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        first_name:       data.first_name,
+        last_name:        data.last_name,
+        email:            data.email,
+        company:          data.company,
+        industry:         data.industry,
+        mission_line:     data.mission_line,
+        message:          data.message,
+        phone:            data.phone || '',
+        role:             data.role || '',
+        country:          data.country || '',
+        timeline:         data.timeline || '',
+        nda_required:     data.nda_required === 'on',
+        how_heard:        data.how_heard || '',
+        consent_privacy:  data.consent_privacy === 'on',
+        newsletter:       data.newsletter === 'on',
+        turnstile_token:  turnstile_token,
+        source:           'contact_page',
+      }),
+    });
+
+    if (!res.ok) {
+      // Try to parse field-level errors from the backend
+      let body = null;
+      try { body = await res.json(); } catch (_) { /* ignore */ }
+
+      if (body && Array.isArray(body.errors) && body.errors.length) {
+        body.errors.forEach(code => {
+          const map = SERVER_ERROR_MAP[code];
+          if (map) setBad(map.field, true, map.msg);
+        });
+        throw new Error('validation');
+      }
+      throw new Error('http_' + res.status);
+    }
+
+    // Success — redirect to shareable success URL
+    let id = '';
+    try {
+      const body = await res.json();
+      if (body && body.id) id = encodeURIComponent(body.id);
+    } catch (_) { /* ignore */ }
+
+    const url = '/contact.html?status=sent' + (id ? '&id=' + id : '');
+    window.location.href = url;
+  } catch (err) {
+    btn.textContent = orig; btn.disabled = false;
+    form.classList.remove('submitting');
+    if (err && err.message === 'validation') return; // field-level errors already shown
+    // Inline error banner
+    let banner = form.querySelector('.send-fail');
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.className = 'send-fail';
+      banner.style.cssText = 'margin-top:12px;padding:10px 12px;border:1px solid var(--rose);border-radius:8px;color:var(--rose);font-size:12.5px;font-family:var(--font-mono);letter-spacing:0.04em';
+      form.appendChild(banner);
+    }
+    banner.textContent = 'We couldn’t send right now. Please email ops@report.farm and we’ll follow up directly.';
+    console.error('[contact] submit failed', err);
+  }
+});
+</script>
+</body>
+</html>

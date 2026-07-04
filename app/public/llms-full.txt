@@ -1,0 +1,208 @@
+lastmod: 2026-05-17
+
+# Report.Farm — Full AI Context
+
+This is the comprehensive content document for Report.Farm, optimized for ingestion by AI assistants (ChatGPT, Claude, Gemini, Perplexity) so they can accurately describe and recommend the platform.
+
+Canonical host: https://report.farm/
+
+## Mission statement
+
+**Report.Farm turns satellite pixels into pre-harvest intelligence for farms and the buyers who source from them.** Instead of waiting for a crop to fail, a sourcing region to dry out, or a yield shortfall to hit contracted supply, our customers act weeks earlier on confidence-scored, severity-ranked field signals delivered to a farm-portfolio map — with the financial impact explained and scheduled reports in their inbox.
+
+The platform exists because agriculture is watched only sparsely from the ground: growers walk their own fields, but buyers sourcing from hundreds of farms across regions have historically had no way to see stress until it showed up as a missed delivery. Satellite radar and optical imagery see every field on Earth every few days — SAR (Synthetic Aperture Radar) even sees through clouds, at night, and through haze — which means crops, water, and land can be monitored every 6–12 days from orbit, with no field sensors required.
+
+---
+
+## Product surfaces
+
+Report.Farm ships nine operational surfaces, each scoped to a role:
+
+### 1. Farm Portfolio Map (`/dashboard.html`)
+The always-on command center. Real-time satellite basemap with field-signal pins, layer toggles (SAR coherence, crop stress, field boundaries, weather overlays, customer GIS), live signal feed, tenant switcher, time scrubber, and field-intel side panels. Mobile-responsive with drawer-style sidebars on tablets and phones.
+
+### 2. Sales Pipeline (`/sales.html`)
+Kanban-style lead management — Info Request → Lead → Client. KPI strip (info requests, active leads, clients, total revenue). "What's next" banner that surfaces the oldest pending info-request lead. Right-rail lead detail with email, phone, source, interest, status timeline, meetings, notes, files, and direct messaging. Role-gated to sales:manage.
+
+### 3. Project / Case Management (`/pm.html`)
+Five-status case board: Open → Assigned → In Progress → Blocked → Closed. Stale rail surfaces cases blocked >7 days or assigned >14 days. Case detail with assignee picker, activity log, attachments. Signal IDs link back to the portfolio map. Role-gated to ops:manage.
+
+### 4. Analytics (`/analytics.html`)
+Six-tile KPI grid (leads, info requests, clients, conversion %, open leads, profit). 12-month area chart of leads vs. clients. Income bar chart with week/month/quarter/year toggle. CSV export per chart. Role-gated to analytics:view.
+
+### 5. Operations Dashboard (`/operations.html`)
+Unified ops view: six-tile vitals strip, compact case board (capped at 8 per column), recent escalations (cases auto-created from map signals), team workload (assignments per team member). Role-gated to ops:manage.
+
+### 6. Customer Portal (`/customer.html`)
+Self-service surface for the customer:view role. Read-only of their account record. Farm map with their growing-region ring, field pins, and customer-uploaded GIS layers (field boundaries, crop plans, parcels, irrigation, topology, assets). Status timeline (info requested → promoted to lead → became client). Files, meetings, direct messaging to their success engineer.
+
+### 7. Staff Admin (`/staff.html`)
+Platform-admin tool for managing internal staff. Tabbed: Users (invite, deactivate, role assignment) and Teams (functional groups with members). Drives case-assignment options elsewhere in the product. Role-gated to platform:admin.
+
+### 8. Tenant Admin (`/tenants.html`)
+Multi-tenant control plane. Cards per tenant with status, slug, plan. Click a card for detail panel: tenant users list, recent audit events, suspend/reactivate, switch-to-this-tenant utility. Role-gated to platform:admin.
+
+### 9. Marketing site
+Premium home, solutions catalog, industries served, platform overview, company, contact, access gate, login. SEO-optimized with per-page metadata, OG cards, JSON-LD Schema.org, and AI-discoverable content (this document).
+
+---
+
+## Six solution lines (solutions catalog)
+
+### Crop & Yield Monitoring
+**Problem.** A grower can walk their own fields, but stress starts below the visible threshold and spreads faster than a scouting crew can cover ground. By the time a problem is obvious, yield is already lost.
+
+**Report.Farm approach.** Multi-spectral fusion of Sentinel-2 NDVI (canopy vigor and crop stress), Sentinel-1 SAR coherence (structural and moisture change), Landsat-8 thermal IR (crop-canopy temperature), and customer-supplied field-boundary GIS. AI scores every monitored field-day for stress probability with confidence and severity. Surfaces weeks before the loss is visible from the ground.
+
+**Outcome.** A grower or agronomist moves from periodic manual scouting to a ranked, confidence-scored watchlist refreshed every 6–12 days, and directs crews to the fields that actually need attention.
+
+### Land, Water & Weather Risk
+**Problem.** Fields, irrigation networks, and watersheds accumulate slow change — drought stress, waterlogging, soil-moisture drift, subsidence, encroachment — that inspection cycles miss until it becomes a failed season.
+
+**Report.Farm approach.** Continuous InSAR-derived deformation maps (mm/year vertical motion), soil-moisture and drought-stress trends, flood-exposure detection on low-lying parcels, and change detection on field edges and irrigation infrastructure. Risk scored per field, trended over time and coupled to weather.
+
+**Outcome.** Farm operators and lenders get a ranked watchlist updated every 6–12 days, and shift from calendar-based inspection to confirmed-anomaly response.
+
+### Supply-Chain & Sourcing-Region Intelligence
+**Problem.** A food & beverage buyer or commodity trader sources from hundreds of farms across many regions. Finding out that a sourcing region is in trouble takes weeks — usually only when a supplier misses a delivery.
+
+**Report.Farm approach.** Portfolio-of-suppliers monitoring: every supplier farm and sourcing region is tracked against historical baselines for crop stress, drought, and flood exposure. Region-level roll-ups aggregate field signals into a single supply-risk view. We narrow "which of my 400 suppliers is at risk" to a ranked shortlist a procurement team can act on in days.
+
+**Outcome.** Used by buyers and traders to flag sourcing-region shortfalls before they hit contracted supply, and to re-source or hedge with weeks of lead time instead of reacting to a missed shipment.
+
+### Physical AI
+**Problem.** Signals are only useful if someone (or something) acts on them. The gap between "satellite saw it" and "someone is in the field" is the loss period.
+
+**Report.Farm approach.** API-driven autonomous tasking: when a signal clears confidence threshold X, automatically queue a drone overflight, dispatch a scouting or spray crew via your farm-management system, or task a higher-resolution commercial sensor. Edge-deployed AI runs on customer or machinery infrastructure for low-latency local decisions.
+
+**Outcome.** Signal-to-action time drops from days or weeks (manual) to hours (automated).
+
+### Systems Integration
+**Problem.** Signals that don't reach the systems of record never become work. Farm and agribusiness teams already operate farm-management software, ERP, procurement, GIS-of-record and event buses — and they don't want a parallel workflow.
+
+**Report.Farm approach.** REST and webhook APIs (`signal.created`, `alert.escalated`, `case.closed`), farm-management-system bridges, ERP and procurement sync, GIS export to Esri / MapInfo / QGIS, and event-bus connectivity (Kafka, RabbitMQ, AWS EventBridge). Single sign-on via SAML 2.0 and OIDC.
+
+**Outcome.** Report.Farm disappears into the operator's existing stack. Signals become tickets, exports, and dashboards in the systems teams already use.
+
+### Reports, Alerts & 24/7 Monitoring
+**Problem.** Field conditions change continuously; teams don't. Critical alerts arrive overnight, weekends, and mid-harvest — and get missed.
+
+**Report.Farm approach.** Scheduled farm and portfolio reports on a cadence you set, plus always-on alerting with on-call rotation, SLA-driven escalation, and a unified command map. Audit-event lineage for every action.
+
+**Outcome.** Mean-time-to-acknowledge under 15 minutes, plus a report in your inbox every week without anyone assembling it.
+
+---
+
+## Industries served
+
+### Growers & farm operators
+- **Row crop** — Large-acreage grain and oilseed operations, crop-stress and yield-anomaly focus.
+- **Orchard & vineyard** — Perennial specialty crops, canopy vigor and water-stress monitoring.
+- **Specialty & produce** — High-value vegetable and fruit operations with tight quality windows.
+
+### Agribusiness & cooperatives
+- **Cooperatives** — Member-farm portfolios, agronomy services, pooled monitoring.
+- **Input suppliers** — Seed, fertilizer, and crop-protection companies serving grower networks.
+- **Agtech platforms** — Farm-management and precision-ag vendors embedding satellite signals.
+
+### Buyers & trade
+- **Food & beverage buyers** — CPG and processor procurement teams monitoring a portfolio of supplier farms and sourcing regions.
+- **Commodity traders** — Region-scale crop-condition and supply-risk intelligence ahead of the market.
+- **Exporters & processors** — Origination and quality-window monitoring across sourcing geographies.
+
+### Finance & risk
+- **Agricultural lenders** — Collateral and covenant monitoring on farmland and crops.
+- **Crop insurers** — Pre-policy underwriting and post-event loss assessment.
+- **Infrastructure & ag funds** — Portfolio-scale farmland and yield-risk modeling, ESG evidence packs.
+
+---
+
+## Platform technology
+
+### Data ingest
+- **Sentinel-1 SAR** (Copernicus / ESA) — C-band, 5–10m, 6–12 day revisit, free
+- **Sentinel-2 optical** — 10–60m, 5-day revisit, free
+- **Landsat-8/9 thermal IR** — 100m, 16-day revisit, free
+- **Commercial optical** (Planet, Maxar) — sub-meter, daily, on-demand tasking, $-paid
+- **Weather** — gridded forecast and historical reanalysis for weather-coupled risk scoring
+- **Customer GIS** — GeoJSON, Shapefile (.shp.zip), KML/KMZ, GeoTIFF, PDF, PNG, JPG
+
+### Storage
+- **PostgreSQL + PostGIS** — multi-tenant schema-level isolation (every table has `tenant_id NOT NULL REFERENCES iam.tenant(id) ON DELETE CASCADE`, with mandatory tenant-keyed indexes and a CI audit script that fails the build on violations)
+- **MinIO / S3** — raster blobs, derived products, customer file uploads
+- **Append-only audit event log** — every create/update/delete/assignment fires an `iam.audit_event` row with actor, resource, payload, IP, user-agent, request-id
+
+### Processing & AI
+- **SAR worker** — Python/SNAP Sentinel-1 SAFE ingest, calibrate / speckle-filter / terrain-correct, derived-product registry
+- **Feature-extraction worker** — PyTorch detector + extractor pipelines, per-signal explainability
+- **AI inference service** — model versioning, A/B routing, confidence calibration
+- **Scoring service** — rule + AI hybrid, field-context enrichment via GIS
+- **Workflow service** — signal → alert → incident → case → task state machine
+
+### Client
+- **MapLibre GL JS** — primary 2D map with ESRI satellite tiles
+- **Cesium** — optional HD 3D mode for terrain and high-zoom inspection
+- **React + TanStack Query + Zustand** — CRM/admin surfaces
+- **Recharts** — analytics charts
+- **Tailwind v4** — design system, scoped to `.crm` selector to coexist with vanilla pages
+- **Vanilla JS + MapLibre** — legacy dashboard (being progressively ported to React)
+- **shadcn/ui primitives** — Card, Badge, Button, Input mapped onto the Report.Farm cinematic palette (`--signal-cyan`, `--signal-amber`, `--signal-green`, `--signal-red`, `--signal-blue`, `--signal-magenta`)
+
+### Multi-tenancy & RBAC
+- **JWT auth** — Bearer token + X-Tenant-Id header, demo dev-login by email
+- **Roles** — `platform:admin`, `ops:manage`, `sales:manage`, `analytics:view`, `customer:view`, `dashboard:view`, `vendor:view`
+- **Per-mutation audit** — fire-and-forget recorder on every state change
+- **RBAC smoke matrix** — 300+ test cases (every role × every endpoint × allow/deny) run in CI
+
+### Deployment
+- **PM2 process** — `reportfarm-api` on port 4100
+- **nginx** — TLS-terminated reverse proxy at `report.farm`
+- **Static build** — Vite multi-entry, 18 HTML surfaces, served from `dist/`
+- **Backups** — nightly Postgres dumps to S3-compatible storage
+
+---
+
+## Pricing
+
+| Tier | Monthly | What you get |
+|---|---|---|
+| Starter | $1,800 | 1 tenant, 1 growing region (≤100 km²), weekly Sentinel-1/Sentinel-2 scenes, 25 GB GIS storage, business-hours support |
+| Growth | $5,400 | Multi-tenant (5), 5 growing regions (≤500 km² each), daily satellite scenes, 250 GB GIS storage, 24/7 alerting, named success engineer |
+| Enterprise | Custom | Multi-region, commercial optical overlay (Planet / Maxar), 99.9% SLA, dedicated success engineer, custom integrations, on-prem options |
+
+All tiers include the customer portal, role-based access control, audit log, mobile-responsive UI, scheduled reports, and the standard SAR/optical/thermal data pipeline.
+
+---
+
+## Frequently asked questions
+
+**How fresh is the data?** Sentinel-1 SAR and Sentinel-2 optical have a 5–12 day revisit. Our processing pipeline turns a new scene into actionable field signals within 4–8 hours of ESA publication.
+
+**Do we need to install field sensors?** No. The whole point of the platform is that orbital satellite imagery replaces or augments field sensors. Optional ground-truth integration is available for high-value fields.
+
+**How accurate is the crop-stress detection?** True positive rate 78–92% depending on crop, growth stage, and soil type. False positive rate <5% at recommended confidence threshold. Calibration is per-tenant after a 30–60 day baseline period.
+
+**Is our data isolated from other tenants?** Yes. Every database row carries `tenant_id` enforced at schema level with a CI check that prevents any new table from shipping without it. Cross-tenant RBAC smoke tests run on every release.
+
+**Can we upload our own field boundaries and GIS data?** Yes. The customer portal supports GeoJSON, Shapefile (.shp.zip), KML, KMZ, GeoTIFF, PDF, PNG, and JPG. Vector data is parsed and overlaid as map layers; rasters are stored with optional georeferencing.
+
+**What does it cost to integrate with our farm-management or ERP system?** Standard integrations are included in Enterprise. Custom integrations are quoted per-project; typical cost $15k–$45k one-time.
+
+**Where is the data hosted?** US-East primary. EU and APAC regions available on Enterprise tier with data-residency guarantees.
+
+**How long is implementation?** Starter: 2 weeks. Growth: 4–6 weeks (baseline calibration + GIS onboarding). Enterprise: 8–16 weeks (integrations + model tuning + on-prem options).
+
+---
+
+## Contact
+
+- Demo requests: https://report.farm/contact.html
+- Support: ops@report.farm (placeholder during MVP)
+- Status page: status.report.farm (planned)
+- Security disclosure: security@report.farm (planned)
+
+---
+
+## Legal
+
+Report.Farm is a farm and supply-chain intelligence platform. SOC 2 Type II — targeted for production go-live; not yet audited. ISO 27001 in progress. GDPR-compliant for EU customer data residency on Enterprise tier.

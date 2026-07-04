@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en" data-surface="light">
+<head>
+<meta charset="utf-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Report.Farm · Access</title>
+<meta name="description" content="Restricted preview. Enter your invite passcode to access the Report.Farm intelligence console." />
+<meta name="theme-color" content="#F0F1F3" />
+<meta name="color-scheme" content="light" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="./marketing/site.css">
+<link rel="stylesheet" href="/src/marketing-tokens.css">
+<style>
+  /* Local layout — full-screen centered card. All chrome / colour /
+     typography is inherited from /src/marketing-tokens.css. */
+  body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+</style>
+</head>
+<body>
+
+<div class="access-shell">
+  <div class="access-card">
+    <div class="brand-spark" aria-hidden="true">
+      <!-- 4-pointed BrandMark spark (matches src/crm/components/ui/brand-mark.tsx) -->
+      <svg width="32" height="32" viewBox="0 0 100 100" role="img" aria-label="Report.Farm">
+        <path d="M50 14 C50 32, 68 50, 86 50 C68 50, 50 68, 50 86 C50 68, 32 50, 14 50 C32 50, 50 32, 50 14 Z" fill="#0A0A0A"/>
+        <title>Report.Farm</title>
+      </svg>
+    </div>
+    <div class="br">Report.Farm · Pilot Access</div>
+    <h1>Restricted Preview.</h1>
+    <p class="sb">The Report.Farm intelligence console is in private pilot. Enter the passcode from your invite to continue. Sessions are scoped to this browser and reset when you close the tab.</p>
+
+    <!--
+      S10B — the form posts to /api/v1/access/verify. The server validates the
+      code, sets the `rwr.access_pass` cookie, and we redirect to the `next`
+      query param (or /login.html). S10A handles the visual re-skin; the
+      action + input name MUST be preserved for the gate to keep working.
+    -->
+    <form id="accessForm" action="/api/v1/access/verify" method="post" autocomplete="off">
+      <label for="code">Invite passcode</label>
+      <input id="code" name="code" type="password" autocomplete="off" placeholder="••••••••••••" required />
+      <div id="err" class="err" role="alert" aria-live="polite"></div>
+
+      <div class="row">
+        <a class="back" href="./">← Back</a>
+        <button id="go" type="submit">Enter Report.Farm →</button>
+      </div>
+    </form>
+
+    <div class="meta-row">
+      <div class="meta"><b>v0.9</b><span>Pilot build</span></div>
+      <div class="meta"><b>SOC2</b><span>In progress</span></div>
+      <div class="meta"><b>24 / 7</b><span>Mission desk</span></div>
+    </div>
+
+    <div class="ft">No public release · Issued under NDA</div>
+  </div>
+</div>
+
+<script>
+  // S10B — server-side access gate.
+  //
+  // Flow:
+  //   1. If the cookie `rwr.access_pass=…` is already present, treat the
+  //      gate as satisfied and forward to `?next=` (or /login.html).
+  //   2. Otherwise: POST { code } to /api/v1/access/verify as JSON. The
+  //      server sets the cookie on a 200 response.
+  //   3. On 401 invalid_code, show "Invalid access code. Try again."
+  //
+  // We DELIBERATELY keep the legacy `sessionStorage.rwr_gate_ok` flag in
+  // sync so older dashboard.html guards (which still consult sessionStorage)
+  // don't bounce a user who just passed the server-side gate.
+  (function () {
+    const PASS_COOKIE = 'rwr.access_pass';
+    const params = new URLSearchParams(location.search);
+    const next = params.get('next') || './login.html';
+
+    function hasPassCookie() {
+      return document.cookie.split(';').some((c) => c.trim().startsWith(PASS_COOKIE + '='));
+    }
+
+    if (hasPassCookie()) {
+      sessionStorage.setItem('rwr_gate_ok', '1');
+      location.replace(next);
+      return;
+    }
+
+    const form = document.getElementById('accessForm');
+    const inp  = document.getElementById('code');
+    const btn  = document.getElementById('go');
+    const err  = document.getElementById('err');
+
+    async function submit(ev) {
+      if (ev) ev.preventDefault();
+      const v = (inp.value || '').trim();
+      if (!v) { inp.focus(); return; }
+
+      btn.disabled = true;
+      err.textContent = '';
+      const original = btn.textContent;
+
+      try {
+        const r = await fetch('/api/v1/access/verify', {
+          method:  'POST',
+          credentials: 'same-origin',
+          headers: { 'content-type': 'application/json', 'accept': 'application/json' },
+          body:    JSON.stringify({ code: v }),
+        });
+
+        if (r.status === 401) {
+          err.textContent = 'Invalid access code. Try again.';
+          inp.value = '';
+          inp.focus();
+          btn.disabled = false;
+          btn.textContent = original;
+          btn.animate(
+            [{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],
+            {duration:240}
+          );
+          return;
+        }
+
+        if (!r.ok) {
+          err.textContent = 'Verification failed (' + r.status + '). Please retry.';
+          btn.disabled = false;
+          btn.textContent = original;
+          return;
+        }
+
+        // Success — cookie is set server-side. Keep the legacy sessionStorage
+        // flag in sync for guards that still consult it.
+        sessionStorage.setItem('rwr_gate_ok', '1');
+        btn.textContent = 'GRANTED · BOOTING…';
+        setTimeout(() => location.replace(next), 250);
+      } catch (e) {
+        err.textContent = 'Network error — check your connection.';
+        btn.disabled = false;
+        btn.textContent = original;
+      }
+    }
+
+    form.addEventListener('submit', submit);
+    inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') submit(e); });
+    inp.focus();
+  })();
+</script>
+<script type="module" src="./marketing/site.js" defer></script>
+</body>
+</html>

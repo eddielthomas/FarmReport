@@ -1,0 +1,111 @@
+[
+  {
+    "sub_project": 676251,
+    "total_leaks_with_wo": 2,
+    "surface": 0,
+    "not_surface": 2,
+    "pipe_km_investigated_with_wo": 1.5,
+    "greenhouse_gas_reduction_with_wo": 14663.0457126,
+    "water_save_with_wo": 34420295.1,
+    "water_cost_savings_with_wo": 53351.457405,
+    "energy_saved_with_wo": 20652.17706,
+    "energy_cost_savings_with_wo": 2945.000448756,
+    "investigated_poi_leaks_with_wo": 2,
+    "total_poi_with_wo": 75,
+    "poi_investigated_with_wo": 2,
+    "total_poi_without_wo": 75,
+    "total_leaks_without_wo": 2,
+    "investigated_poi_leaks_without_wo": 2,
+    "total_pipe_km_without_wo": 68.1,
+    "pipe_km_investigated_without_wo": 1.5,
+    "poi_investigated_without_wo": 2,
+    "greenhouse_gas_reduction_without_wo": 14663.0457126,
+    "water_save_without_wo": 34420295.1,
+    "water_cost_savings_without_wo": 53351.457405,
+    "energy_saved_without_wo": 20652.17706,
+    "energy_cost_savings_without_wo": 2945.000448756,
+    "leaks_per_poi_per_license": [
+      {
+        "id": 305655,
+        "leaks_per_poi": 100,
+        "percent_investigate": 100
+      }
+    ],
+    "leak_type_total_with_wo": {
+      "customer_side": 0,
+      "main": 2,
+      "service": 0,
+      "WO": 0,
+      "other": 0
+    },
+    "leak_type_total_without_wo": {
+      "customer_side": 0,
+      "main": 2,
+      "service": 0,
+      "WO": 0,
+      "other": 0
+    },
+    "leak_type_customer_side": {},
+    "leak_type_service": {},
+    "leak_type_main": {
+      "connections_fittings": 0,
+      "fire_hydrant": 0,
+      "pipe": 1,
+      "valve": 1
+    },
+    "results_by_date_days_with_wo": {
+      "data": [
+        {
+          "date": "2026-04-30",
+          "leaks": 2,
+          "suspected": 0
+        }
+      ]
+    },
+    "results_by_date_days_without_wo": {
+      "data": [
+        {
+          "date": "2026-04-30",
+          "leaks": 2,
+          "suspected": 0
+        }
+      ]
+    },
+    "results_by_date_weeks_with_wo": {
+      "data": [
+        {
+          "date": "2026-18",
+          "leaks": 2,
+          "suspected": 0
+        }
+      ]
+    },
+    "results_by_date_weeks_without_wo": {
+      "data": [
+        {
+          "date": "2026-18",
+          "leaks": 2,
+          "suspected": 0
+        }
+      ]
+    },
+    "results_by_date_months_with_wo": {
+      "data": [
+        {
+          "date": "2026-04",
+          "leaks": 2,
+          "suspected": 0
+        }
+      ]
+    },
+    "results_by_date_months_without_wo": {
+      "data": [
+        {
+          "date": "2026-04",
+          "leaks": 2,
+          "suspected": 0
+        }
+      ]
+    }
+  }
+]

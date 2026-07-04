@@ -1,0 +1,35 @@
+{
+  "refreshedAt": "2026-05-06T16:26:17.367482+00:00",
+  "stages": {
+    "discover": {
+      "status": "done",
+      "count": 4,
+      "message": "4 files"
+    },
+    "kmz": {
+      "status": "done",
+      "count": 75,
+      "message": "D:\\Projects\\RWR\\mvp\\src\\data\\harvest\\poi-attrs.json"
+    },
+    "shp": {
+      "status": "done",
+      "count": 75,
+      "message": "D:\\Projects\\RWR\\mvp\\src\\data\\harvest\\poi-geometry.geojson"
+    },
+    "xlsx": {
+      "status": "done",
+      "count": 75,
+      "message": "D:\\Projects\\RWR\\mvp\\src\\data\\harvest\\inspections.json"
+    },
+    "giscloud": {
+      "status": "skipped",
+      "count": 0,
+      "message": "no api key"
+    },
+    "publish": {
+      "status": "done",
+      "count": null,
+      "message": "D:\\Projects\\RWR\\mvp\\src\\data\\harvest\\refresh-manifest.json"
+    }
+  }
+}

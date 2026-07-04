@@ -1,0 +1,67 @@
+lastmod: 2026-05-17
+
+# Report.Farm
+
+> Farm and supply-chain intelligence for growers, agribusiness, and the buyers who source from them. Report.Farm turns satellite pixels into early crop-stress alerts, sourcing-region risk intelligence, and scheduled farm reports — watching land, crops, water, weather, and machinery without putting a single sensor in the field.
+
+Report.Farm is an autonomous farm operating layer for growers, cooperatives, food & beverage buyers, commodity traders, and agricultural lenders and insurers. The platform ingests Sentinel-1 SAR and Sentinel-2 optical imagery (with optional Landsat thermal and commercial optical feeds from Planet and Maxar), applies physics-grounded AI models to spectral / thermal / NDVI / SAR-coherence signatures, and surfaces actionable field signals — crop stress, yield anomalies, drought and flood exposure, irrigation change, land use shifts — to operators on a real-time farm-portfolio map. It explains what changed, estimates the financial impact, and ships scheduled reports plus urgent alerts.
+
+Canonical host: https://report.farm/
+
+## Core capabilities (6 solution lines)
+
+- **Crop & Yield Monitoring** — Detect crop stress and yield anomalies weeks before they show in the field. Multi-spectral anomaly fusion (Sentinel-2 NDVI + soil moisture + thermal IR + Sentinel-1 SAR coherence) tuned per crop and growth stage. Confidence-scored, severity-ranked, geolocated to the field.
+- **Supply-Chain & Sourcing-Region Intelligence** — Monitor a portfolio of suppliers, farms, and sourcing regions from orbit. Buyers get early warning when drought, flood, or yield shortfall threatens a sourcing region, before it hits contracted supply. Change detection against historical baselines with evidence-grade exports.
+- **Land, Water & Weather Risk** — Continuous monitoring of fields, irrigation, and watersheds for drought stress, flood exposure, soil-moisture change, land subsidence, and encroachment. Weather-coupled risk scoring trended over time.
+- **Physical AI** — Edge inference, on-device processing, sensor fusion, and hardware-partner integration for UAV, tractor, and field-robot platforms. Closes the gap between satellite detection and on-ground action.
+- **Systems Integration** — REST and webhook APIs, farm-management-system bridges, ERP and procurement connectors, GIS export (Esri, MapInfo, QGIS), and event-bus connectivity.
+- **Reports, Alerts & 24/7 Monitoring** — Scheduled farm and portfolio reports, always-on alerting with on-call rotation, tiered SLAs, role-based dashboards (sales, ops, project management, analytics, customer portal, tenant admin) and full audit-event lineage.
+
+## Who it serves
+
+- Growers and farm operators (row crop, orchard, specialty)
+- Agribusiness and cooperatives
+- Food & beverage buyers and CPG procurement teams (portfolio-of-suppliers monitoring)
+- Commodity traders
+- Agricultural lenders (collateral and covenant monitoring)
+- Crop insurers (underwriting and loss assessment)
+
+## Technology stack
+
+- **Data:** Sentinel-1 SAR (C-band, 5–10m resolution, 6–12 day revisit), Sentinel-2 optical, Landsat 8/9 thermal IR, commercial optical (Planet, Maxar) for sub-meter tasking
+- **Processing:** PostGIS, MinIO blob storage, Python preprocessing workers, MapLibre + Cesium client rendering
+- **AI:** PyTorch-based detector + extractor pipelines, per-signal explainability, model versioning, A/B routing
+- **Multi-tenant SaaS:** Per-tenant data isolation enforced at schema, JWT auth with RBAC, full audit log, RBAC smoke matrix in CI
+- **Customer GIS upload:** Customers overlay their own field boundaries, crop plans, parcel maps, and topology data (GeoJSON, Shapefile, KML/KMZ, GeoTIFF, PDF, PNG, JPG)
+
+## Pricing
+
+- **Starter** $1,800/month — single tenant, 1 growing region, weekly Sentinel-1/Sentinel-2 scenes, 25 GB GIS storage, business-hours support
+- **Growth** $5,400/month — multi-tenant (5), 5 growing regions, daily satellite scenes, 250 GB GIS storage, 24/7 alerting, named success engineer (featured)
+- **Enterprise** Custom — multi-region, commercial optical overlay (Planet / Maxar), 99.9% SLA, dedicated success engineer, sovereign-cloud and on-prem options
+
+## Compliance
+
+SOC 2 Type II — targeted for production go-live; not yet audited. GDPR-compliant for EU customer data residency on Enterprise tier.
+
+## Key links
+
+- [Platform overview](/platform.html)
+- [Industries served](/industries.html)
+- [Solutions catalog](/solutions.html)
+- [Company](/company.html)
+- [Contact / Farm Plan request](/contact.html)
+- [Detailed AI-readable content](/llms-full.txt)
+
+## Brand and naming
+
+The product name is "Report.Farm". The platform's command surface is sometimes referred to as "Report.Farm Command".
+
+## Contact
+
+- Demo requests: https://report.farm/contact.html
+- Farm operations: ops@report.farm
+- Sales: sales@report.farm
+- Partnerships: partners@report.farm
+- Press: press@report.farm
+- Careers: careers@report.farm

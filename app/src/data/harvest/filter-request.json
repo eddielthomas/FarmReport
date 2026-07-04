@@ -1,0 +1,1306 @@
+{
+  "ok": true,
+  "at": "2026-05-01T18:49:52.984Z",
+  "userId": "3048",
+  "userRole": 1,
+  "subProjects": [
+    "676251"
+  ],
+  "filters": {
+    "releaseDate": [],
+    "time": [],
+    "leakType": []
+  },
+  "filteredMdcPilot": [
+    {
+      "sub_project": "676251",
+      "utilis_id": "20028",
+      "verification_result": null,
+      "pipe_length": 491.3749919530121,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20029",
+      "verification_result": null,
+      "pipe_length": 927.5505435356247,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20030",
+      "verification_result": null,
+      "pipe_length": 598.6525179391369,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20031",
+      "verification_result": null,
+      "pipe_length": 980.0294439842237,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20032",
+      "verification_result": null,
+      "pipe_length": 895.1218794288696,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20033",
+      "verification_result": null,
+      "pipe_length": 668.4129509797924,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20034",
+      "verification_result": null,
+      "pipe_length": 516.0121666315001,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20035",
+      "verification_result": null,
+      "pipe_length": 604.5832639433052,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20036",
+      "verification_result": null,
+      "pipe_length": 264.81167773622656,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20038",
+      "verification_result": null,
+      "pipe_length": 898.3948188410593,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20037",
+      "verification_result": null,
+      "pipe_length": 1127.2937561828758,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20039",
+      "verification_result": null,
+      "pipe_length": 984.9962055347528,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20040",
+      "verification_result": null,
+      "pipe_length": 422.8036211057842,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20041",
+      "verification_result": null,
+      "pipe_length": 548.9804013849636,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20042",
+      "verification_result": null,
+      "pipe_length": 246.69763075433985,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20043",
+      "verification_result": null,
+      "pipe_length": 1047.9954896882562,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20044",
+      "verification_result": null,
+      "pipe_length": 1109.4850573640992,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20045",
+      "verification_result": null,
+      "pipe_length": 1258.7169056740222,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20046",
+      "verification_result": null,
+      "pipe_length": 1159.1822486873498,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20047",
+      "verification_result": null,
+      "pipe_length": 511.2415619408677,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20049",
+      "verification_result": null,
+      "pipe_length": 581.9204384571449,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20051",
+      "verification_result": null,
+      "pipe_length": 849.8478647498148,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20052",
+      "verification_result": null,
+      "pipe_length": 1017.0944508239627,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20053",
+      "verification_result": null,
+      "pipe_length": 611.1593708942639,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20054",
+      "verification_result": null,
+      "pipe_length": 966.0358319831428,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20055",
+      "verification_result": null,
+      "pipe_length": 977.1942676723596,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20056",
+      "verification_result": null,
+      "pipe_length": 949.6225003353927,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20057",
+      "verification_result": null,
+      "pipe_length": 503.73418203387337,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20058",
+      "verification_result": null,
+      "pipe_length": 705.6249148863603,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20059",
+      "verification_result": null,
+      "pipe_length": 560.3044467157471,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20060",
+      "verification_result": null,
+      "pipe_length": 966.1979437871527,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20061",
+      "verification_result": null,
+      "pipe_length": 601.3410503919285,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20062",
+      "verification_result": null,
+      "pipe_length": 380.3528111071717,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20063",
+      "verification_result": null,
+      "pipe_length": 709.4913221197187,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20064",
+      "verification_result": null,
+      "pipe_length": 361.33775202739446,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20065",
+      "verification_result": null,
+      "pipe_length": 373.41192933714467,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20066",
+      "verification_result": null,
+      "pipe_length": 282.2942862804201,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20067",
+      "verification_result": null,
+      "pipe_length": 712.9208044363288,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20068",
+      "verification_result": null,
+      "pipe_length": 420.63492720606155,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20069",
+      "verification_result": null,
+      "pipe_length": 533.2815904023867,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20070",
+      "verification_result": null,
+      "pipe_length": 361.68931136769584,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20071",
+      "verification_result": null,
+      "pipe_length": 619.5218241196417,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20072",
+      "verification_result": null,
+      "pipe_length": 296.7195546161978,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20073",
+      "verification_result": null,
+      "pipe_length": 528.1703536226946,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20074",
+      "verification_result": null,
+      "pipe_length": 451.5137010739333,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20075",
+      "verification_result": null,
+      "pipe_length": 407.43207472218256,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20001",
+      "verification_result": null,
+      "pipe_length": 1445.3846863918643,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20002",
+      "verification_result": null,
+      "pipe_length": 1617.5496634064802,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20003",
+      "verification_result": null,
+      "pipe_length": 1314.9381476952638,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20004",
+      "verification_result": null,
+      "pipe_length": 2100.676598068868,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20005",
+      "verification_result": null,
+      "pipe_length": 1992.9133207221025,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20006",
+      "verification_result": null,
+      "pipe_length": 1685.3423994298394,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20007",
+      "verification_result": null,
+      "pipe_length": 1668.1779241123452,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20008",
+      "verification_result": null,
+      "pipe_length": 1755.8417424664924,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20009",
+      "verification_result": null,
+      "pipe_length": 1300.8405199790818,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20010",
+      "verification_result": null,
+      "pipe_length": 1925.3047725595918,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20011",
+      "verification_result": null,
+      "pipe_length": 1058.8602054440253,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20012",
+      "verification_result": null,
+      "pipe_length": 1435.437301629736,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20013",
+      "verification_result": null,
+      "pipe_length": 1498.5596321903654,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20014",
+      "verification_result": null,
+      "pipe_length": 937.6509185888642,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20015",
+      "verification_result": null,
+      "pipe_length": 1475.03634379108,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20016",
+      "verification_result": null,
+      "pipe_length": 1951.3372845609617,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20017",
+      "verification_result": null,
+      "pipe_length": 1516.3050004269676,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20018",
+      "verification_result": null,
+      "pipe_length": 1496.192364071407,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20019",
+      "verification_result": null,
+      "pipe_length": 1707.7242592329353,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20021",
+      "verification_result": null,
+      "pipe_length": 1532.4791149090197,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20020",
+      "verification_result": null,
+      "pipe_length": 966.9858425493736,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20022",
+      "verification_result": null,
+      "pipe_length": 833.6740217378675,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20023",
+      "verification_result": null,
+      "pipe_length": 771.5333655691786,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20024",
+      "verification_result": null,
+      "pipe_length": 405.0654836919417,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20025",
+      "verification_result": null,
+      "pipe_length": 240.10409536337008,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20026",
+      "verification_result": null,
+      "pipe_length": 467.52439980544636,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20027",
+      "verification_result": null,
+      "pipe_length": 457.3676929700827,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20050",
+      "verification_result": "Leak",
+      "pipe_length": 639.2531352233508,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_id": "20048",
+      "verification_result": "Leak",
+      "pipe_length": 907.5966853014675,
+      "release_date": "2026-04-30T11:36:36.450Z"
+    }
+  ],
+  "filteredMdcFieldResTest": [
+    {
+      "sub_project": "676251",
+      "utilis_finding": "20050",
+      "verification_result": "Leak",
+      "leak_type": "Main",
+      "visible": "No",
+      "timestamp_corrected": "2026-04-30T08:05:00.000Z",
+      "__owner": 305655,
+      "main_sub_type": "Pipe",
+      "service_sub_type": null,
+      "cust_sub_type": null,
+      "repaired": "no",
+      "timestamp_date": "30-04-2026",
+      "timestamp_hour": "08"
+    },
+    {
+      "sub_project": "676251",
+      "utilis_finding": "20048",
+      "verification_result": "Leak",
+      "leak_type": "Main",
+      "visible": "No",
+      "timestamp_corrected": "2026-04-30T08:07:00.000Z",
+      "__owner": 305655,
+      "main_sub_type": "Valve",
+      "service_sub_type": null,
+      "cust_sub_type": null,
+      "repaired": "no",
+      "timestamp_date": "30-04-2026",
+      "timestamp_hour": "08"
+    }
+  ],
+  "chartsData": {
+    "extractedMetrics": {
+      "averageLeaksPerCrewDay": 1.3,
+      "averageLeaksPerLength": 0.3,
+      "totalWorkingDays": 0
+    },
+    "roiVsActualGraphs": {
+      "graphHeader": {
+        "graphName": "dashboard.roiVsActual.progressTowardGoal",
+        "graphSubName": "dashboard.roiVsActual.accLast12Months",
+        "buttonsName": [
+          {
+            "roiButton": "waterSaved",
+            "value": "dashboard.roiVsActual.waterSaved"
+          },
+          {
+            "roiButton": "moneySaved",
+            "value": "dashboard.roiVsActual.moneySaved"
+          }
+        ]
+      },
+      "waterSaveData": {
+        "totalSaveNumber": 34420295.099999994,
+        "metricSave": " L",
+        "currencySave": null,
+        "xDataKey": "month",
+        "xLabelValue": "dashboard.resultsByDate.months",
+        "yLabelValue": "dashboard.roiVsActual.waterSaved",
+        "yLabelUnit": "L",
+        "lineDataKey": "expectWaterSave",
+        "lineDataKeyName": "dashboard.roiVsActual.accMonthlyTarget",
+        "barDataKey": "waterSave",
+        "barDataKeyName": "dashboard.roiVsActual.accumulated",
+        "graphResult": [
+          {
+            "monthName": "Jun 2025",
+            "month": 1,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Jul 2025",
+            "month": 2,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Aug 2025",
+            "month": 3,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Sep 2025",
+            "month": 4,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Oct 2025",
+            "month": 5,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Nov 2025",
+            "month": 6,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Dec 2025",
+            "month": 7,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Jan 2026",
+            "month": 8,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Feb 2026",
+            "month": 9,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Mar 2026",
+            "month": 10,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Apr 2026",
+            "month": 11,
+            "waterSave": 34420295,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "May 2026",
+            "month": 12,
+            "waterSave": 34420295,
+            "expectWaterSave": 0
+          }
+        ],
+        "tooltipHeader": "monthName"
+      },
+      "waterSaveDataNonAcc": {
+        "totalSaveNumber": 34420295.099999994,
+        "metricSave": " L",
+        "currencySave": null,
+        "xDataKey": "month",
+        "xLabelValue": "dashboard.resultsByDate.months",
+        "yLabelValue": "dashboard.roiVsActual.waterSaved",
+        "yLabelUnit": "L",
+        "lineDataKey": "expectWaterSave",
+        "lineDataKeyName": "dashboard.roiVsActual.accMonthlyTarget",
+        "barDataKey": "waterSave",
+        "barDataKeyName": "dashboard.roiVsActual.accumulated",
+        "graphResult": [
+          {
+            "monthName": "Jun 2025",
+            "month": 1,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Jul 2025",
+            "month": 2,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Aug 2025",
+            "month": 3,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Sep 2025",
+            "month": 4,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Oct 2025",
+            "month": 5,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Nov 2025",
+            "month": 6,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Dec 2025",
+            "month": 7,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Jan 2026",
+            "month": 8,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Feb 2026",
+            "month": 9,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Mar 2026",
+            "month": 10,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "Apr 2026",
+            "month": 11,
+            "waterSave": 34420295,
+            "expectWaterSave": 0
+          },
+          {
+            "monthName": "May 2026",
+            "month": 12,
+            "waterSave": 0,
+            "expectWaterSave": 0
+          }
+        ],
+        "tooltipHeader": "monthName"
+      },
+      "moneySaveData": {
+        "totalSaveNumber": 56296,
+        "metricSave": "",
+        "currencySave": null,
+        "xDataKey": "month",
+        "xLabelValue": "dashboard.resultsByDate.months",
+        "yLabelValue": "dashboard.roiVsActual.moneySaved",
+        "yLabelUnit": null,
+        "lineDataKey": "expectMoneySave",
+        "lineDataKeyName": "dashboard.roiVsActual.accMonthlyTarget",
+        "barDataKey": "moneySave",
+        "barDataKeyName": "dashboard.roiVsActual.accumulated",
+        "graphResult": [
+          {
+            "monthName": "Jun 2025",
+            "month": 1,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Jul 2025",
+            "month": 2,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Aug 2025",
+            "month": 3,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Sep 2025",
+            "month": 4,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Oct 2025",
+            "month": 5,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Nov 2025",
+            "month": 6,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Dec 2025",
+            "month": 7,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Jan 2026",
+            "month": 8,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Feb 2026",
+            "month": 9,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Mar 2026",
+            "month": 10,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Apr 2026",
+            "month": 11,
+            "moneySave": 56296,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "May 2026",
+            "month": 12,
+            "moneySave": 56296,
+            "expectMoneySave": 0
+          }
+        ],
+        "tooltipHeader": "monthName"
+      },
+      "moneySaveDataNonAcc": {
+        "totalSaveNumber": 56296,
+        "metricSave": "",
+        "currencySave": null,
+        "xDataKey": "month",
+        "xLabelValue": "dashboard.resultsByDate.months",
+        "yLabelValue": "dashboard.roiVsActual.moneySaved",
+        "yLabelUnit": null,
+        "lineDataKey": "expectMoneySave",
+        "lineDataKeyName": "dashboard.roiVsActual.accMonthlyTarget",
+        "barDataKey": "moneySave",
+        "barDataKeyName": "dashboard.roiVsActual.accumulated",
+        "graphResult": [
+          {
+            "monthName": "Jun 2025",
+            "month": 1,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Jul 2025",
+            "month": 2,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Aug 2025",
+            "month": 3,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Sep 2025",
+            "month": 4,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Oct 2025",
+            "month": 5,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Nov 2025",
+            "month": 6,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Dec 2025",
+            "month": 7,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Jan 2026",
+            "month": 8,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Feb 2026",
+            "month": 9,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Mar 2026",
+            "month": 10,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "Apr 2026",
+            "month": 11,
+            "moneySave": 56296,
+            "expectMoneySave": 0
+          },
+          {
+            "monthName": "May 2026",
+            "month": 12,
+            "moneySave": 0,
+            "expectMoneySave": 0
+          }
+        ],
+        "tooltipHeader": "monthName"
+      }
+    },
+    "resultsByDateGraphs": {
+      "leakCount": {
+        "graphData": {
+          "days": [
+            {
+              "date": "2026-04-30",
+              "leaks": 2,
+              "suspected": 0
+            }
+          ],
+          "weeks": [
+            {
+              "date": "18-2026",
+              "leaks": 2,
+              "suspected": 0
+            }
+          ],
+          "months": [
+            {
+              "date": "2026-04",
+              "leaks": 2,
+              "suspected": 0
+            }
+          ]
+        },
+        "xAxis": "date",
+        "dataKey": "leaks",
+        "suspectedTooltip": "dashboard.resultsByDate.suspected",
+        "leaksTooltip": "dashboard.resultsByDate.leaks",
+        "yAxis": "dashboard.resultsByDate.leaks"
+      },
+      "leaksPerKm": {
+        "graphData": {
+          "days": [
+            {
+              "date": "2026-04-30",
+              "leaks": 1.29,
+              "suspected": 0
+            }
+          ],
+          "weeks": [
+            {
+              "date": "18-2026",
+              "leaks": 1.29,
+              "suspected": 0
+            }
+          ],
+          "months": [
+            {
+              "date": "2026-04",
+              "leaks": 1.29,
+              "suspected": 0
+            }
+          ]
+        },
+        "xAxis": "date",
+        "dataKey": "leaks",
+        "suspectedTooltip": "dashboard.resultsByDate.suspected",
+        "leaksTooltip": "dashboard.resultsByDate.leaks",
+        "yAxis": "dashboard.resultsByDate.leaksKm"
+      },
+      "graphName": "dashboard.resultsByDate.resultsByDate",
+      "dropDownType": [
+        {
+          "value": "leakCount",
+          "label": "dashboard.resultsByDate.leakCount"
+        },
+        {
+          "value": "leaksPerKm",
+          "label": "dashboard.resultsByDate.leaksPerKm"
+        }
+      ],
+      "dropDownDate": [
+        {
+          "value": "days",
+          "label": "dashboard.resultsByDate.days"
+        },
+        {
+          "value": "weeks",
+          "label": "dashboard.resultsByDate.weeks"
+        },
+        {
+          "value": "months",
+          "label": "dashboard.resultsByDate.months"
+        }
+      ]
+    },
+    "leaksFoundComponentData": {
+      "data": [
+        {
+          "title": "dashboard.graphs.surfaced",
+          "value": 0,
+          "color": "var(--graph-black)",
+          "className": "black"
+        },
+        {
+          "title": "dashboard.graphs.nonSurfacing",
+          "value": 2,
+          "color": "var(--primary-color-blue)",
+          "className": "blue"
+        }
+      ],
+      "topNumber": 2,
+      "bottomNumber": 100,
+      "titleStart": "dashboard.graphs.titleStart",
+      "subTitle": "homePage.recover.overall.nonSurfacingLeaks",
+      "subTitleNumber": "100%"
+    },
+    "investigatedData": [
+      1546.8498205248184,
+      66549.99373982474,
+      0,
+      68096.84356034956,
+      1.5,
+      1
+    ],
+    "leakTypeGraphData": {
+      "graphData": {
+        "All": [
+          {
+            "name": "Main",
+            "value": 2
+          },
+          {
+            "name": "Service",
+            "value": 0
+          },
+          {
+            "name": "Customer-Side",
+            "value": 0
+          },
+          {
+            "name": "WO",
+            "value": 0
+          },
+          {
+            "name": "Other",
+            "value": 0
+          }
+        ],
+        "Main": [
+          {
+            "name": "Pipe",
+            "value": 1
+          },
+          {
+            "name": "Connections-Fittings",
+            "value": 0
+          },
+          {
+            "name": "Valve",
+            "value": 1
+          },
+          {
+            "name": "Fire hydrant",
+            "value": 0
+          }
+        ],
+        "Service": [
+          {
+            "name": "Pipe",
+            "value": 0
+          },
+          {
+            "name": "Curb stop-Stop tap",
+            "value": 0
+          },
+          {
+            "name": "Meter",
+            "value": 0
+          },
+          {
+            "name": "Connections-Fittings",
+            "value": 0
+          }
+        ],
+        "Customer-Side": [
+          {
+            "name": "Pipe",
+            "value": 0
+          },
+          {
+            "name": "Utility loss",
+            "value": 0
+          },
+          {
+            "name": "Meter",
+            "value": 0
+          },
+          {
+            "name": "Parks & recreation",
+            "value": 0
+          }
+        ],
+        "WO": [],
+        "Other": []
+      },
+      "dropdownOptions": [
+        {
+          "value": "All",
+          "label": "All (2)"
+        },
+        {
+          "value": "Main",
+          "label": "Main (2)"
+        },
+        {
+          "value": "Service",
+          "label": "Service (0)"
+        },
+        {
+          "value": "Customer-Side",
+          "label": "Customer-Side (0)"
+        }
+      ]
+    },
+    "performanceByLicenseGraph": {
+      "graphName": "dashboard.performanceByLicense.performanceByLicense",
+      "graphData": [
+        {
+          "name": "Demoville1",
+          "investigatedKm": 1.5,
+          "investigatedLeaks": 2,
+          "leaksFoundPerKm": 1.3
+        }
+      ],
+      "graphAttribute": [
+        {
+          "keyName": "investigatedKm",
+          "type": "bar",
+          "label": "dashboard.performanceByLicense.investigatedKm",
+          "className": "investigated-km"
+        },
+        {
+          "keyName": "investigatedLeaks",
+          "type": "bar",
+          "label": "dashboard.performanceByLicense.investigatedLeaks",
+          "className": "investigated-leaks-bar"
+        },
+        {
+          "keyName": "leaksFoundPerKm",
+          "type": "xAxisLabel",
+          "label": "dashboard.performanceByLicense.leaksFoundPerKm",
+          "className": "leaks-found-bar"
+        }
+      ]
+    },
+    "poiTypes": [
+      {
+        "label": "dashboard.investigatedResults.leaks",
+        "percent": 3,
+        "value": 2,
+        "color": "var(--primary-color-blue)"
+      },
+      {
+        "label": "dashboard.investigatedResults.unverified",
+        "percent": 97,
+        "value": 73,
+        "color": "var(--primary-color-faintGray)"
+      }
+    ],
+    "leaksFoundPerUnit": 1.3,
+    "leaksPerCrewDay": 2
+  },
+  "stats": {
+    "waterSavedTotal": 34420295.099999994,
+    "waterCostPerYear": 53351.45740499999,
+    "energySaved": 20652.177059999995,
+    "energyCostSavings": 2945.0004487559995,
+    "greenhouseGasReduction": 14663.045712599995,
+    "roiMetrics": 56296.45785375599,
+    "uniqueCrewDays": [
+      "2026-04-30"
+    ],
+    "uniqueMdcPilotReleases": [
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z",
+      "2026-04-30T11:36:36.450Z"
+    ],
+    "activeLeaks": 2,
+    "repairedLeaks": 0,
+    "suspectedLocations": 0
+  },
+  "counts": {
+    "filteredMdcPilot": 75,
+    "filteredMdcFieldResTest": 2
+  }
+}

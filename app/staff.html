@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report.Farm · Staff &amp; Teams</title>
+    <!-- Sprint 12 role gate — runs before any paint. -->
+    <script src="/role-gate-pack.js"></script>
+    <script src="/role-gate.js" data-surface="staff.html"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (function () {
+        try {
+          var raw = window.localStorage.getItem('rwr.surface-mode');
+          var parsed = raw ? JSON.parse(raw) : null;
+          var mode = parsed && parsed.state && parsed.state.mode === 'dark' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-surface', mode);
+        } catch (e) {
+          document.documentElement.setAttribute('data-surface', 'light');
+        }
+      })();
+    </script>
+    <style>
+      html, body, #root { height: 100%; margin: 0; padding: 0; background: #F0F1F3; color: #0A0A0A; }
+      :root[data-surface='dark'] html, :root[data-surface='dark'] body, :root[data-surface='dark'] #root { background: #000; color: #fff; }
+      body { font-family: 'Urbanist', 'Inter', sans-serif; }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="crm"></div>
+    <script type="module" src="/src/crm/main-staff.tsx"></script>
+  </body>
+</html>

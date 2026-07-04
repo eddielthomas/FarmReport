@@ -1,0 +1,214 @@
+# =============================================================================
+# farm.yaml — Report.Farm SolutionPack (P1, Lane B).
+# -----------------------------------------------------------------------------
+# The Report.Farm vertical: farm + supply-chain intelligence layered over the
+# OperationsOS/RWR multi-tenant substrate with NO code fork. Modelled 1:1 on
+# rwr.yaml (the reference pack) — same sections, farm values. Selected by env
+# RWR_VERTICAL=farm. Validated against solution-pack.schema.json by the loader.
+#
+# Roles + permission strings below are the CANONICAL Report.Farm set; Lane A
+# seeds the SAME strings in the DB (farm RBAC seed). The farm.* keys are the
+# fine-grained permission universe; the tier roles (platform:admin, ops:manage,
+# sales:manage, analytics:view, dashboard:view, customer:view, vendor:*,
+# field.technician) drive surface routing exactly as they do for RWR. See
+# ADR-0023 and docs/06_DECISIONS.md D2 (supply-chain / buyers wedge).
+# =============================================================================
+id: farm
+name: Report.Farm
+displayName: Report.Farm
+version: 1.0.0
+extends: rwr
+
+# --- Lever 1: Roles ----------------------------------------------------------
+# Two groups, both merged into KNOWN_ROLES by the loader:
+#   (a) tier/routing roles — reach farm surfaces (mirror RWR's tier set, farm
+#       labels). These are what roleSurfaceAllowList / primarySurfaceByRole key
+#       on.
+#   (b) farm domain permission strings + legacy prefix roles — the canonical
+#       Report.Farm RBAC universe Lane A seeds in the DB.
+roles:
+  # (a) tier / routing roles
+  - { key: "platform:admin", tier: platform,  label: "Platform Admin" }
+  - { key: "ops:manage",     tier: ops,        label: "Farm Operations Manager" }
+  - { key: "sales:manage",   tier: sales,      label: "Buyer Success Manager" }
+  - { key: "analytics:view", tier: analytics,  label: "Analytics Viewer" }
+  - { key: "dashboard:view", tier: vertical,   label: "Dashboard Viewer (legacy)" }
+  - { key: "customer:view",  tier: customer,   label: "Grower (portal)" }
+  - { key: "vendor:view",    tier: vendor,     label: "Supplier (view)" }
+  - { key: "vendor:manage",  tier: vendor,     label: "Supplier (manage)" }
+  - { key: "vendor:billing", tier: vendor,     label: "Supplier (billing)" }
+  - { key: "field.technician", tier: field,    label: "Field Agronomist / Scout" }
+  # (b) farm domain permission strings (canonical — Lane A DB-aligned)
+  - { key: "farm.profile.read",    tier: vertical, label: "Farm profile — read" }
+  - { key: "farm.profile.write",   tier: vertical, label: "Farm profile — write" }
+  - { key: "farm.zone.read",       tier: vertical, label: "Zone — read" }
+  - { key: "farm.zone.write",      tier: vertical, label: "Zone — write" }
+  - { key: "farm.scan.read",       tier: vertical, label: "Scan — read" }
+  - { key: "farm.scan.request",    tier: vertical, label: "Scan — request" }
+  - { key: "farm.observation.read", tier: vertical, label: "Observation — read" }
+  - { key: "farm.alert.read",      tier: vertical, label: "Alert — read" }
+  - { key: "farm.alert.manage",    tier: vertical, label: "Alert — manage" }
+  - { key: "farm.report.read",     tier: vertical, label: "Report — read" }
+  - { key: "farm.report.generate", tier: vertical, label: "Report — generate" }
+  - { key: "farm.connector.manage", tier: vertical, label: "Connector — manage" }
+  - { key: "farm.copilot.query",   tier: vertical, label: "Copilot — query" }
+  - { key: "farm.portfolio.view",  tier: vertical, label: "Buyer portfolio — view" }
+  # (b) legacy prefix roles (retained for compatibility with older grants)
+  - { key: "farm:view",       tier: vertical, label: "Farm viewer (legacy)" }
+  - { key: "farm:onboard",    tier: vertical, label: "Farm onboarding (legacy)" }
+  - { key: "report:generate", tier: vertical, label: "Report generate (legacy)" }
+  - { key: "alert:manage",    tier: vertical, label: "Alert manage (legacy)" }
+
+# --- Lever 2: Surfaces + role->surface allow-list -----------------------------
+# Same physical HTML entries as RWR; farm-relabelled (Sales Manager->Buyer
+# Success, Customer Portal->Grower Portal, Operations->Farm Operations).
+surfaces:
+  - { id: tenants.html,    label: "Tenants" }
+  - { id: staff.html,      label: "Staff" }
+  - { id: sales.html,      label: "Buyer Success" }
+  - { id: pm.html,         label: "Project Mgmt" }
+  - { id: analytics.html,  label: "Analytics" }
+  - { id: operations.html, label: "Farm Operations" }
+  - { id: customer.html,   label: "Grower Portal" }
+  - { id: vendor.html,     label: "Supplier Portal" }
+  - { id: field.html,      label: "Field PWA" }
+  - { id: dashboard.html,  label: "Dashboard (legacy)" }
+  - { id: login.html,      label: "Login" }
+
+# roleSurfaceAllowList — role -> allowed surfaces. Same evaluation order as RWR:
+#   1. '*admin' -> ALL surfaces (super-user)
+#   2. 'vendor:*' -> supplier portal only
+#   3. field tier -> field.html only
+#   4. ops:manage -> farm operations cluster
+#   5. sales:manage / farm.portfolio.view -> buyer success + analytics
+#   6. analytics:view -> analytics only
+#   7. customer:view / farm:view -> grower portal only
+# login.html is implicitly added to every non-admin bundle by the consumer.
+roleSurfaceAllowList:
+  "*admin": [tenants.html, staff.html, sales.html, pm.html, analytics.html, operations.html, customer.html, vendor.html, field.html, dashboard.html, login.html]
+  "vendor:*": [vendor.html]
+  "field.technician": [field.html]
+  "field:technician": [field.html]
+  "ops:manage": [operations.html, dashboard.html, pm.html, analytics.html]
+  "sales:manage": [sales.html, analytics.html]
+  "farm.portfolio.view": [sales.html, analytics.html]
+  "analytics:view": [analytics.html]
+  "customer:view": [customer.html]
+  "farm:view": [customer.html]
+
+# primarySurfaceByRole — first matching key (in this object's order) wins.
+# 'vendor:*' matches any vendor:* role.
+primarySurfaceByRole:
+  "platform:admin": tenants.html
+  "vendor:*": vendor.html
+  "field.technician": field.html
+  "field:technician": field.html
+  "ops:manage": operations.html
+  "sales:manage": sales.html
+  "farm.portfolio.view": sales.html
+  "analytics:view": analytics.html
+  "customer:view": customer.html
+  "farm:view": customer.html
+  "dashboard:view": dashboard.html
+
+# --- Lever 3: Basemaps -------------------------------------------------------
+# A subset of the S13 catalogue (ids the dashboard engine already renders),
+# relabelled for agronomy. Default = satellite.
+basemaps:
+  - { id: satellite,    name: "Satellite",    use: "True-color imagery — field baseline" }
+  - { id: greenline,    name: "CropVigor",    use: "NDVI vegetation index — canopy vigor and biomass; stress and gaps stand out" }
+  - { id: hydrovision,  name: "SoilMoisture", use: "Moisture saturation pseudo-color — irrigation coverage and waterlogging" }
+  - { id: thermsight,   name: "CanopyTherm",  use: "Thermal infrared — crop water stress and evapotranspiration hotspots" }
+  - { id: echoscan,     name: "RadarScan",    use: "Sentinel-1 SAR backscatter — soil moisture and structure through cloud cover" }
+  - { id: coherencemap, name: "ChangeMap",    use: "InSAR change-detection — tillage, harvest, and field change between passes" }
+  - { id: deepgrid,     name: "ParcelGrid",   use: "Minimal-clutter streets — parcel/boundary drawing and route planning" }
+  - { id: riskatlas,    name: "RiskAtlas",    use: "Risk heatmap fused over satellite — portfolio/executive briefing view" }
+defaultBasemap: satellite
+
+# --- Lever 4: Vocabulary -----------------------------------------------------
+# Canonical entity slots (so code reading detection/areaOfInterest still
+# resolves) remapped to farm nouns, plus farm-specific keys.
+vocabulary:
+  entities:
+    detection: "observation"
+    detectionPlural: "observations"
+    areaOfInterest: "parcel"
+    pointOfInterest: "zone"
+    asset: "field"
+    farm: "farm"
+    parcel: "parcel"
+    zone: "zone"
+    supplier: "supplier"
+    sourcingRegion: "sourcing region"
+    observation: "observation"
+    alert: "alert"
+    report: "report"
+  kpis:
+    detections: "Observations recorded"
+    aoiCount: "Parcels monitored"
+    suppliersTracked: "Suppliers tracked"
+    yieldAtRisk: "Estimated yield at risk"
+    responseTime: "Mean response time"
+
+# --- Lever 5: Brand tokens ---------------------------------------------------
+# Extends the S7A token system + brand.js with Report.Farm identity.
+brandTokens:
+  brandName: "Report.Farm"
+  brandLegalName: "Report.Farm"
+  brandHost: "https://report.farm"
+  emailFrom: "noreply@report.farm"
+  emailOps: "ops@report.farm"
+  emailSupport: "support@report.farm"
+  accentColor: "#3fa34d"
+
+# --- Investigation types -----------------------------------------------------
+investigationTypes:
+  - { key: crop_stress,   label: "Crop stress",         description: "NDVI/thermal-flagged vegetation stress" }
+  - { key: water_stress,  label: "Water stress",        description: "Soil-moisture / irrigation anomaly" }
+  - { key: parcel_survey, label: "Parcel survey",       description: "Scheduled parcel monitoring run" }
+  - { key: field_verify,  label: "Field verification",  description: "On-site confirmation of a remote observation" }
+  - { key: supplier_risk, label: "Supplier risk",       description: "Portfolio-level sourcing disruption signal" }
+
+# --- Lever 6: Seed scenes ----------------------------------------------------
+# Central Valley farmland used as the pack-level template; tenant seeders
+# substitute per-tenant lat/lon.
+seedScenes:
+  - title: "Farm Overview"
+    description: "Default parcel view — observations + zones on satellite"
+    isDefault: true
+    ordinal: 0
+    centerLat: 36.7468
+    centerLon: -119.7726
+    zoom: 12.0
+    pitch: 0.0
+    bearing: 0.0
+    basemapId: satellite
+    sarOverlay: false
+    sarOpacity: 60
+    activeLayers: [parcels, zones, observations]
+  - title: "Crop vigor"
+    description: "CropVigor basemap — NDVI canopy vigor and stress"
+    isDefault: false
+    ordinal: 1
+    centerLat: 36.7468
+    centerLon: -119.7726
+    zoom: 15.0
+    pitch: 0.0
+    bearing: 0.0
+    basemapId: greenline
+    sarOverlay: false
+    sarOpacity: 60
+    activeLayers: [parcels, observations]
+  - title: "Water stress"
+    description: "CanopyTherm — crop water stress and irrigation hotspots"
+    isDefault: false
+    ordinal: 2
+    centerLat: 36.7468
+    centerLon: -119.7726
+    zoom: 14.0
+    pitch: 0.0
+    bearing: 0.0
+    basemapId: thermsight
+    sarOverlay: false
+    sarOpacity: 60
+    activeLayers: [parcels, zones, observations]

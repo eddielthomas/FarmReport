@@ -1,0 +1,40 @@
+{
+  "share": "https://utiliscorp.sharepoint.com/:f:/g/IgBydXS4vHHgQojhnuw-4hYSAaMWkkieYe1psuB_mJJEcrg?e=jLJEfq",
+  "folderRoot": "/RD/Demoville A/GIS Files",
+  "capturedAt": "2026-05-01T18:55:00.000Z",
+  "method": "Anonymous-share TLS handshake requires a real browser context. Drove puppeteer to the share URL (which establishes SP federation cookies via redirect), enumerated via /_api/web/GetFolderByServerRelativeUrl('<path>')/{Folders,Files}, then downloaded via /_api/web/GetFileByServerRelativeUrl('<path>')/$value. Plain node fetch / curl ECONNRESETs at the TLS layer.",
+  "files": [
+    {
+      "name": "Demoville_A_RI_List_Apr26_DataRelease2.xlsx",
+      "sourcePath": "/RD/Demoville A/GIS Files/DR2/Demoville_A_RI_List_Apr26_DataRelease2.xlsx",
+      "bytes": 22562,
+      "kind": "customer-inspection-list",
+      "description": "Excel ResultsItem (RI) list for the customer inspection team — one row per leak."
+    },
+    {
+      "name": "Demoville_A_SHP_Apr26_DataRelease2.zip",
+      "sourcePath": "/RD/Demoville A/GIS Files/DR2/Demoville_A_SHP_Apr26_DataRelease2.zip",
+      "bytes": 490740,
+      "kind": "esri-shapefile-bundle",
+      "description": "Esri shapefile bundle: .shp/.shx/.dbf/.prj/.cpg/.sbn/.sbx/.lyr (with ArcMap layer file). Polygon geometry of every POI for the release.",
+      "contents": [
+        "Demoville_A_SHP_Apr26_DataRelease2.prj (145 B)",
+        "Demoville_A_SHP_Apr26_DataRelease2.shp (746,260 B)",
+        "Demoville_A_SHP_Apr26_DataRelease2.shp.xml (1,228 B)",
+        "Demoville_A_SHP_Apr26_DataRelease2.shx (700 B)",
+        "Demoville_A_LYR_Apr26_DataRelease2.lyr (9,216 B)",
+        "Demoville_A_SHP_Apr26_DataRelease2.cpg (5 B)",
+        "Demoville_A_SHP_Apr26_DataRelease2.dbf (47,133 B)",
+        "Demoville_A_SHP_Apr26_DataRelease2.sbn (932 B)",
+        "Demoville_A_SHP_Apr26_DataRelease2.sbx (212 B)"
+      ]
+    },
+    {
+      "name": "Demoville_A_KML_Apr26_DataRelease2.kmz",
+      "sourcePath": "/RD/Demoville A/GIS Files/DR2/Demoville_A_KML_Apr26_DataRelease2.kmz",
+      "bytes": 648288,
+      "kind": "google-earth-kmz",
+      "description": "Google Earth KMZ. Inside: doc.kml (1,965,656 B) with all POI polygons and a stylesheet."
+    }
+  ]
+}

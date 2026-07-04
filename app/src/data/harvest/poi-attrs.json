@@ -1,0 +1,1502 @@
+{
+  "20001": {
+    "utilisId": "20001",
+    "insideX": -95.769127,
+    "insideY": 29.999412,
+    "eraScore": 1.0,
+    "pipeLength": 4742.08,
+    "address": "Fairfield Interchange, TX-99, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "0",
+      "Utilis_ID": "20001",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.769127",
+      "INSIDE_Y": "29.999412",
+      "Address": "Fairfield Interchange, TX-99, Cypress, TX 77433, USA",
+      "ERA_SCORE": "1",
+      "PIPE_LENGT": "4742.08",
+      "name": "20001"
+    }
+  },
+  "20002": {
+    "utilisId": "20002",
+    "insideX": -95.768709,
+    "insideY": 30.002817,
+    "eraScore": 0.0,
+    "pipeLength": 5306.92,
+    "address": "263J+4G Cypress, Houston, TX, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "1",
+      "Utilis_ID": "20002",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.768709",
+      "INSIDE_Y": "30.002817",
+      "Address": "263J+4G Cypress, Houston, TX, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "5306.92",
+      "name": "20002"
+    }
+  },
+  "20003": {
+    "utilisId": "20003",
+    "insideX": -95.761277,
+    "insideY": 29.999217,
+    "eraScore": 3.0,
+    "pipeLength": 4314.1,
+    "address": "29900 US-290, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "2",
+      "Utilis_ID": "20003",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.761277",
+      "INSIDE_Y": "29.999217",
+      "Address": "29900 US-290, Cypress, TX 77433, USA",
+      "ERA_SCORE": "3",
+      "PIPE_LENGT": "4314.1",
+      "name": "20003"
+    }
+  },
+  "20004": {
+    "utilisId": "20004",
+    "insideX": -95.759074,
+    "insideY": 29.996898,
+    "eraScore": 0.0,
+    "pipeLength": 6891.98,
+    "address": "29300 US-290, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "3",
+      "Utilis_ID": "20004",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.759074",
+      "INSIDE_Y": "29.996898",
+      "Address": "29300 US-290, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "6891.98",
+      "name": "20004"
+    }
+  },
+  "20005": {
+    "utilisId": "20005",
+    "insideX": -95.75658,
+    "insideY": 29.998198,
+    "eraScore": 0.0,
+    "pipeLength": 6538.43,
+    "address": "29300 Hempstead Rd Suite 1114, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "4",
+      "Utilis_ID": "20005",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.75658",
+      "INSIDE_Y": "29.998198",
+      "Address": "29300 Hempstead Rd Suite 1114, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "6538.43",
+      "name": "20005"
+    }
+  },
+  "20006": {
+    "utilisId": "20006",
+    "insideX": -95.753409,
+    "insideY": 29.994997,
+    "eraScore": 3.0,
+    "pipeLength": 5529.34,
+    "address": "29110 US-290, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "5",
+      "Utilis_ID": "20006",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.753409",
+      "INSIDE_Y": "29.994997",
+      "Address": "29110 US-290, Cypress, TX 77433, USA",
+      "ERA_SCORE": "3",
+      "PIPE_LENGT": "5529.34",
+      "name": "20006"
+    }
+  },
+  "20007": {
+    "utilisId": "20007",
+    "insideX": -95.74911,
+    "insideY": 29.993171,
+    "eraScore": 0.0,
+    "pipeLength": 5473.02,
+    "address": "X7V2+79 Cypress, Houston, TX, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "6",
+      "Utilis_ID": "20007",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.74911",
+      "INSIDE_Y": "29.993171",
+      "Address": "X7V2+79 Cypress, Houston, TX, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "5473.02",
+      "name": "20007"
+    }
+  },
+  "20008": {
+    "utilisId": "20008",
+    "insideX": -95.746008,
+    "insideY": 29.991163,
+    "eraScore": 1.0,
+    "pipeLength": 5760.64,
+    "address": "28550 US-290, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "7",
+      "Utilis_ID": "20008",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.746008",
+      "INSIDE_Y": "29.991163",
+      "Address": "28550 US-290, Cypress, TX 77433, USA",
+      "ERA_SCORE": "1",
+      "PIPE_LENGT": "5760.64",
+      "name": "20008"
+    }
+  },
+  "20009": {
+    "utilisId": "20009",
+    "insideX": -95.743437,
+    "insideY": 29.991432,
+    "eraScore": 0.0,
+    "pipeLength": 4267.85,
+    "address": "28404 Northwest Fwy, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "8",
+      "Utilis_ID": "20009",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.743437",
+      "INSIDE_Y": "29.991432",
+      "Address": "28404 Northwest Fwy, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "4267.85",
+      "name": "20009"
+    }
+  },
+  "20010": {
+    "utilisId": "20010",
+    "insideX": -95.741368,
+    "insideY": 29.988539,
+    "eraScore": 2.0,
+    "pipeLength": 6316.62,
+    "address": "15000 Mason Rd, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "9",
+      "Utilis_ID": "20010",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.741368",
+      "INSIDE_Y": "29.988539",
+      "Address": "15000 Mason Rd, Cypress, TX 77433, USA",
+      "ERA_SCORE": "2",
+      "PIPE_LENGT": "6316.62",
+      "name": "20010"
+    }
+  },
+  "20011": {
+    "utilisId": "20011",
+    "insideX": -95.736283,
+    "insideY": 29.990975,
+    "eraScore": 0.0,
+    "pipeLength": 3473.95,
+    "address": "20403 Cypresswood Dr, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "10",
+      "Utilis_ID": "20011",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.736283",
+      "INSIDE_Y": "29.990975",
+      "Address": "20403 Cypresswood Dr, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3473.95",
+      "name": "20011"
+    }
+  },
+  "20012": {
+    "utilisId": "20012",
+    "insideX": -95.736738,
+    "insideY": 29.987618,
+    "eraScore": 0.0,
+    "pipeLength": 4709.44,
+    "address": "28020 US-290, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "11",
+      "Utilis_ID": "20012",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.736738",
+      "INSIDE_Y": "29.987618",
+      "Address": "28020 US-290, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "4709.44",
+      "name": "20012"
+    }
+  },
+  "20013": {
+    "utilisId": "20013",
+    "insideX": -95.732004,
+    "insideY": 29.985923,
+    "eraScore": 0.0,
+    "pipeLength": 4916.53,
+    "address": "27700 Northwest Fwy, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "12",
+      "Utilis_ID": "20013",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.732004",
+      "INSIDE_Y": "29.985923",
+      "Address": "27700 Northwest Fwy, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "4916.53",
+      "name": "20013"
+    }
+  },
+  "20014": {
+    "utilisId": "20014",
+    "insideX": -95.729079,
+    "insideY": 29.988074,
+    "eraScore": 0.0,
+    "pipeLength": 3076.28,
+    "address": "14903 Carolina Hills Dr, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "13",
+      "Utilis_ID": "20014",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.729079",
+      "INSIDE_Y": "29.988074",
+      "Address": "14903 Carolina Hills Dr, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3076.28",
+      "name": "20014"
+    }
+  },
+  "20015": {
+    "utilisId": "20015",
+    "insideX": -95.725573,
+    "insideY": 29.983018,
+    "eraScore": 0.0,
+    "pipeLength": 4839.36,
+    "address": "28802 US-290 Frontage Rd., Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "14",
+      "Utilis_ID": "20015",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.725573",
+      "INSIDE_Y": "29.983018",
+      "Address": "28802 US-290 Frontage Rd., Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "4839.36",
+      "name": "20015"
+    }
+  },
+  "20016": {
+    "utilisId": "20016",
+    "insideX": -95.722404,
+    "insideY": 29.981796,
+    "eraScore": 0.0,
+    "pipeLength": 6402.03,
+    "address": "27200 US-290 Ste 180, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "15",
+      "Utilis_ID": "20016",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.722404",
+      "INSIDE_Y": "29.981796",
+      "Address": "27200 US-290 Ste 180, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "6402.03",
+      "name": "20016"
+    }
+  },
+  "20017": {
+    "utilisId": "20017",
+    "insideX": -95.717471,
+    "insideY": 29.98078,
+    "eraScore": 0.0,
+    "pipeLength": 4974.75,
+    "address": "14147 Mueschke Rd, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "16",
+      "Utilis_ID": "20017",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.717471",
+      "INSIDE_Y": "29.98078",
+      "Address": "14147 Mueschke Rd, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "4974.75",
+      "name": "20017"
+    }
+  },
+  "20018": {
+    "utilisId": "20018",
+    "insideX": -95.715305,
+    "insideY": 29.979093,
+    "eraScore": 1.0,
+    "pipeLength": 4908.77,
+    "address": "27030 Northwest Fwy, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "17",
+      "Utilis_ID": "20018",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.715305",
+      "INSIDE_Y": "29.979093",
+      "Address": "27030 Northwest Fwy, Cypress, TX 77429, USA",
+      "ERA_SCORE": "1",
+      "PIPE_LENGT": "4908.77",
+      "name": "20018"
+    }
+  },
+  "20019": {
+    "utilisId": "20019",
+    "insideX": -95.711993,
+    "insideY": 29.977648,
+    "eraScore": 0.0,
+    "pipeLength": 5602.77,
+    "address": "26944 Hempstead Rd, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "18",
+      "Utilis_ID": "20019",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.711993",
+      "INSIDE_Y": "29.977648",
+      "Address": "26944 Hempstead Rd, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "5602.77",
+      "name": "20019"
+    }
+  },
+  "20021": {
+    "utilisId": "20021",
+    "insideX": -95.699774,
+    "insideY": 29.974142,
+    "eraScore": 0.0,
+    "pipeLength": 5027.82,
+    "address": "26260 Hempstead Rd, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "19",
+      "Utilis_ID": "20021",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.699774",
+      "INSIDE_Y": "29.974142",
+      "Address": "26260 Hempstead Rd, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "5027.82",
+      "name": "20021"
+    }
+  },
+  "20020": {
+    "utilisId": "20020",
+    "insideX": -95.70144,
+    "insideY": 29.975297,
+    "eraScore": 0.0,
+    "pipeLength": 3172.53,
+    "address": "14315 Cypress Rose Hill Rd #162, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "20",
+      "Utilis_ID": "20020",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.70144",
+      "INSIDE_Y": "29.975297",
+      "Address": "14315 Cypress Rose Hill Rd #162, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3172.53",
+      "name": "20020"
+    }
+  },
+  "20022": {
+    "utilisId": "20022",
+    "insideX": -95.699466,
+    "insideY": 29.977702,
+    "eraScore": 0.0,
+    "pipeLength": 2735.15,
+    "address": "14322 Floret Estates Ct, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "21",
+      "Utilis_ID": "20022",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.699466",
+      "INSIDE_Y": "29.977702",
+      "Address": "14322 Floret Estates Ct, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "2735.15",
+      "name": "20022"
+    }
+  },
+  "20023": {
+    "utilisId": "20023",
+    "insideX": -95.699726,
+    "insideY": 29.982655,
+    "eraScore": 0.0,
+    "pipeLength": 2531.28,
+    "address": "18006 Pinson Dr, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "22",
+      "Utilis_ID": "20023",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.699726",
+      "INSIDE_Y": "29.982655",
+      "Address": "18006 Pinson Dr, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "2531.28",
+      "name": "20023"
+    }
+  },
+  "20024": {
+    "utilisId": "20024",
+    "insideX": -95.700363,
+    "insideY": 29.985271,
+    "eraScore": 1.0,
+    "pipeLength": 1328.96,
+    "address": "18210 Maple Mill Dr, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "23",
+      "Utilis_ID": "20024",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.700363",
+      "INSIDE_Y": "29.985271",
+      "Address": "18210 Maple Mill Dr, Cypress, TX 77429, USA",
+      "ERA_SCORE": "1",
+      "PIPE_LENGT": "1328.96",
+      "name": "20024"
+    }
+  },
+  "20025": {
+    "utilisId": "20025",
+    "insideX": -95.70515,
+    "insideY": 29.988361,
+    "eraScore": 0.0,
+    "pipeLength": 787.74,
+    "address": "14906 Woodcypress Ln, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "24",
+      "Utilis_ID": "20025",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.70515",
+      "INSIDE_Y": "29.988361",
+      "Address": "14906 Woodcypress Ln, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "787.74",
+      "name": "20025"
+    }
+  },
+  "20026": {
+    "utilisId": "20026",
+    "insideX": -95.705625,
+    "insideY": 29.984141,
+    "eraScore": 0.0,
+    "pipeLength": 1533.87,
+    "address": "14606 Bladenboro Dr, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "25",
+      "Utilis_ID": "20026",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.705625",
+      "INSIDE_Y": "29.984141",
+      "Address": "14606 Bladenboro Dr, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1533.87",
+      "name": "20026"
+    }
+  },
+  "20027": {
+    "utilisId": "20027",
+    "insideX": -95.710439,
+    "insideY": 29.979753,
+    "eraScore": 0.0,
+    "pipeLength": 1500.55,
+    "address": "18903 Juniper Bend Ln, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "26",
+      "Utilis_ID": "20027",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.710439",
+      "INSIDE_Y": "29.979753",
+      "Address": "18903 Juniper Bend Ln, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1500.55",
+      "name": "20027"
+    }
+  },
+  "20028": {
+    "utilisId": "20028",
+    "insideX": -95.715299,
+    "insideY": 29.986902,
+    "eraScore": 0.0,
+    "pipeLength": 1612.12,
+    "address": "18910 Oriole Point Ct, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "27",
+      "Utilis_ID": "20028",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.715299",
+      "INSIDE_Y": "29.986902",
+      "Address": "18910 Oriole Point Ct, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1612.12",
+      "name": "20028"
+    }
+  },
+  "20029": {
+    "utilisId": "20029",
+    "insideX": -95.717355,
+    "insideY": 29.984979,
+    "eraScore": 0.0,
+    "pipeLength": 3043.14,
+    "address": "19011 Jasmine Bloom Ln, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "28",
+      "Utilis_ID": "20029",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.717355",
+      "INSIDE_Y": "29.984979",
+      "Address": "19011 Jasmine Bloom Ln, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3043.14",
+      "name": "20029"
+    }
+  },
+  "20030": {
+    "utilisId": "20030",
+    "insideX": -95.719083,
+    "insideY": 29.986586,
+    "eraScore": 1.0,
+    "pipeLength": 1964.08,
+    "address": "19114 Knoll Dale Ct, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "29",
+      "Utilis_ID": "20030",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.719083",
+      "INSIDE_Y": "29.986586",
+      "Address": "19114 Knoll Dale Ct, Cypress, TX 77429, USA",
+      "ERA_SCORE": "1",
+      "PIPE_LENGT": "1964.08",
+      "name": "20030"
+    }
+  },
+  "20031": {
+    "utilisId": "20031",
+    "insideX": -95.715862,
+    "insideY": 29.993469,
+    "eraScore": 0.0,
+    "pipeLength": 3215.32,
+    "address": "15002 Irish Elm Ct, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "30",
+      "Utilis_ID": "20031",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.715862",
+      "INSIDE_Y": "29.993469",
+      "Address": "15002 Irish Elm Ct, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3215.32",
+      "name": "20031"
+    }
+  },
+  "20032": {
+    "utilisId": "20032",
+    "insideX": -95.710999,
+    "insideY": 29.996983,
+    "eraScore": 0.0,
+    "pipeLength": 2936.75,
+    "address": "18815 Aspen Heights Trail, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "31",
+      "Utilis_ID": "20032",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.710999",
+      "INSIDE_Y": "29.996983",
+      "Address": "18815 Aspen Heights Trail, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "2936.75",
+      "name": "20032"
+    }
+  },
+  "20033": {
+    "utilisId": "20033",
+    "insideX": -95.706952,
+    "insideY": 30.002041,
+    "eraScore": 0.0,
+    "pipeLength": 2192.96,
+    "address": "16120 Stone Oak Estates Ct, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "32",
+      "Utilis_ID": "20033",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.706952",
+      "INSIDE_Y": "30.002041",
+      "Address": "16120 Stone Oak Estates Ct, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "2192.96",
+      "name": "20033"
+    }
+  },
+  "20034": {
+    "utilisId": "20034",
+    "insideX": -95.704451,
+    "insideY": 30.005722,
+    "eraScore": 0.0,
+    "pipeLength": 1692.95,
+    "address": "18214 Coreland Ln, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "33",
+      "Utilis_ID": "20034",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.704451",
+      "INSIDE_Y": "30.005722",
+      "Address": "18214 Coreland Ln, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1692.95",
+      "name": "20034"
+    }
+  },
+  "20035": {
+    "utilisId": "20035",
+    "insideX": -95.717607,
+    "insideY": 30.012608,
+    "eraScore": 1.0,
+    "pipeLength": 1983.54,
+    "address": "19711 Green Imperial Ln, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "34",
+      "Utilis_ID": "20035",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.717607",
+      "INSIDE_Y": "30.012608",
+      "Address": "19711 Green Imperial Ln, Cypress, TX 77433, USA",
+      "ERA_SCORE": "1",
+      "PIPE_LENGT": "1983.54",
+      "name": "20035"
+    }
+  },
+  "20036": {
+    "utilisId": "20036",
+    "insideX": -95.720832,
+    "insideY": 30.014085,
+    "eraScore": 0.0,
+    "pipeLength": 868.8,
+    "address": "19870 Cypress Church Rd, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "35",
+      "Utilis_ID": "20036",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.720832",
+      "INSIDE_Y": "30.014085",
+      "Address": "19870 Cypress Church Rd, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "868.8",
+      "name": "20036"
+    }
+  },
+  "20038": {
+    "utilisId": "20038",
+    "insideX": -95.725812,
+    "insideY": 30.014137,
+    "eraScore": 3.0,
+    "pipeLength": 2947.49,
+    "address": "16507 Mueschke Rd Suite 400, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "36",
+      "Utilis_ID": "20038",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.725812",
+      "INSIDE_Y": "30.014137",
+      "Address": "16507 Mueschke Rd Suite 400, Cypress, TX 77433, USA",
+      "ERA_SCORE": "3",
+      "PIPE_LENGT": "2947.49",
+      "name": "20038"
+    }
+  },
+  "20037": {
+    "utilisId": "20037",
+    "insideX": -95.724545,
+    "insideY": 30.012575,
+    "eraScore": 0.0,
+    "pipeLength": 3698.47,
+    "address": "16352 Mueschke Rd, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "37",
+      "Utilis_ID": "20037",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.724545",
+      "INSIDE_Y": "30.012575",
+      "Address": "16352 Mueschke Rd, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3698.47",
+      "name": "20037"
+    }
+  },
+  "20039": {
+    "utilisId": "20039",
+    "insideX": -95.727305,
+    "insideY": 30.012253,
+    "eraScore": 0.0,
+    "pipeLength": 3231.61,
+    "address": "16333 Schiel Rd, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "38",
+      "Utilis_ID": "20039",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.727305",
+      "INSIDE_Y": "30.012253",
+      "Address": "16333 Schiel Rd, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3231.61",
+      "name": "20039"
+    }
+  },
+  "20040": {
+    "utilisId": "20040",
+    "insideX": -95.728624,
+    "insideY": 30.008385,
+    "eraScore": 2.0,
+    "pipeLength": 1387.15,
+    "address": "16106 Merle Rd, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "39",
+      "Utilis_ID": "20040",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.728624",
+      "INSIDE_Y": "30.008385",
+      "Address": "16106 Merle Rd, Cypress, TX 77433, USA",
+      "ERA_SCORE": "2",
+      "PIPE_LENGT": "1387.15",
+      "name": "20040"
+    }
+  },
+  "20041": {
+    "utilisId": "20041",
+    "insideX": -95.724823,
+    "insideY": 30.006412,
+    "eraScore": 0.0,
+    "pipeLength": 1801.12,
+    "address": "15915 Mueschke Rd Ste B, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "40",
+      "Utilis_ID": "20041",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.724823",
+      "INSIDE_Y": "30.006412",
+      "Address": "15915 Mueschke Rd Ste B, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1801.12",
+      "name": "20041"
+    }
+  },
+  "20042": {
+    "utilisId": "20042",
+    "insideX": -95.725851,
+    "insideY": 30.004375,
+    "eraScore": 0.0,
+    "pipeLength": 809.38,
+    "address": "15835 Mueschke Rd, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "41",
+      "Utilis_ID": "20042",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.725851",
+      "INSIDE_Y": "30.004375",
+      "Address": "15835 Mueschke Rd, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "809.38",
+      "name": "20042"
+    }
+  },
+  "20043": {
+    "utilisId": "20043",
+    "insideX": -95.721741,
+    "insideY": 29.997785,
+    "eraScore": 2.0,
+    "pipeLength": 3438.31,
+    "address": "Cypress Landing, 15306 Macy Dr, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "42",
+      "Utilis_ID": "20043",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.721741",
+      "INSIDE_Y": "29.997785",
+      "Address": "Cypress Landing, 15306 Macy Dr, Cypress, TX 77429, USA",
+      "ERA_SCORE": "2",
+      "PIPE_LENGT": "3438.31",
+      "name": "20043"
+    }
+  },
+  "20044": {
+    "utilisId": "20044",
+    "insideX": -95.725188,
+    "insideY": 29.996933,
+    "eraScore": 0.0,
+    "pipeLength": 3640.04,
+    "address": "15218 Paxton Landing Ln, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "43",
+      "Utilis_ID": "20044",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.725188",
+      "INSIDE_Y": "29.996933",
+      "Address": "15218 Paxton Landing Ln, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3640.04",
+      "name": "20044"
+    }
+  },
+  "20045": {
+    "utilisId": "20045",
+    "insideX": -95.732474,
+    "insideY": 29.99687,
+    "eraScore": 0.0,
+    "pipeLength": 4129.65,
+    "address": "15406 Pattington Cypress Dr, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "44",
+      "Utilis_ID": "20045",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.732474",
+      "INSIDE_Y": "29.99687",
+      "Address": "15406 Pattington Cypress Dr, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "4129.65",
+      "name": "20045"
+    }
+  },
+  "20046": {
+    "utilisId": "20046",
+    "insideX": -95.738091,
+    "insideY": 29.999183,
+    "eraScore": 0.0,
+    "pipeLength": 3803.09,
+    "address": "15434 Rocky Bridge Ln, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "45",
+      "Utilis_ID": "20046",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.738091",
+      "INSIDE_Y": "29.999183",
+      "Address": "15434 Rocky Bridge Ln, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3803.09",
+      "name": "20046"
+    }
+  },
+  "20047": {
+    "utilisId": "20047",
+    "insideX": -95.736476,
+    "insideY": 30.003172,
+    "eraScore": 2.0,
+    "pipeLength": 1677.3,
+    "address": "20002 Maple Village Dr, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "46",
+      "Utilis_ID": "20047",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.736476",
+      "INSIDE_Y": "30.003172",
+      "Address": "20002 Maple Village Dr, Cypress, TX 77433, USA",
+      "ERA_SCORE": "2",
+      "PIPE_LENGT": "1677.3",
+      "name": "20047"
+    }
+  },
+  "20048": {
+    "utilisId": "20048",
+    "insideX": -95.738754,
+    "insideY": 30.005265,
+    "eraScore": 1.0,
+    "pipeLength": 2977.68,
+    "address": "20322 Lakeland Falls Dr, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "47",
+      "Utilis_ID": "20048",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.738754",
+      "INSIDE_Y": "30.005265",
+      "Address": "20322 Lakeland Falls Dr, Cypress, TX 77433, USA",
+      "ERA_SCORE": "1",
+      "PIPE_LENGT": "2977.68",
+      "name": "20048"
+    }
+  },
+  "20049": {
+    "utilisId": "20049",
+    "insideX": -95.734408,
+    "insideY": 30.007384,
+    "eraScore": 0.0,
+    "pipeLength": 1909.19,
+    "address": "15806 Pebble Creek Trail, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "48",
+      "Utilis_ID": "20049",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.734408",
+      "INSIDE_Y": "30.007384",
+      "Address": "15806 Pebble Creek Trail, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1909.19",
+      "name": "20049"
+    }
+  },
+  "20050": {
+    "utilisId": "20050",
+    "insideX": -95.73659,
+    "insideY": 30.007771,
+    "eraScore": 0.0,
+    "pipeLength": 2097.29,
+    "address": "16007 Pebble Creek Trail, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "49",
+      "Utilis_ID": "20050",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.73659",
+      "INSIDE_Y": "30.007771",
+      "Address": "16007 Pebble Creek Trail, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "2097.29",
+      "name": "20050"
+    }
+  },
+  "20051": {
+    "utilisId": "20051",
+    "insideX": -95.73861,
+    "insideY": 30.009583,
+    "eraScore": 0.0,
+    "pipeLength": 2788.21,
+    "address": "20203 Country Fair Ln, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "50",
+      "Utilis_ID": "20051",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.73861",
+      "INSIDE_Y": "30.009583",
+      "Address": "20203 Country Fair Ln, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "2788.21",
+      "name": "20051"
+    }
+  },
+  "20052": {
+    "utilisId": "20052",
+    "insideX": -95.743471,
+    "insideY": 30.00982,
+    "eraScore": 0.0,
+    "pipeLength": 3336.92,
+    "address": "16218 Bloom Meadow Tr, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "51",
+      "Utilis_ID": "20052",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.743471",
+      "INSIDE_Y": "30.00982",
+      "Address": "16218 Bloom Meadow Tr, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3336.92",
+      "name": "20052"
+    }
+  },
+  "20053": {
+    "utilisId": "20053",
+    "insideX": -95.747219,
+    "insideY": 30.007268,
+    "eraScore": 3.0,
+    "pipeLength": 2005.12,
+    "address": "20702 Bradford Creek Ct, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "52",
+      "Utilis_ID": "20053",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.747219",
+      "INSIDE_Y": "30.007268",
+      "Address": "20702 Bradford Creek Ct, Cypress, TX 77433, USA",
+      "ERA_SCORE": "3",
+      "PIPE_LENGT": "2005.12",
+      "name": "20053"
+    }
+  },
+  "20054": {
+    "utilisId": "20054",
+    "insideX": -95.750436,
+    "insideY": 30.001718,
+    "eraScore": 0.0,
+    "pipeLength": 3169.41,
+    "address": "21235 Fair Falls Way, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "53",
+      "Utilis_ID": "20054",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.750436",
+      "INSIDE_Y": "30.001718",
+      "Address": "21235 Fair Falls Way, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3169.41",
+      "name": "20054"
+    }
+  },
+  "20055": {
+    "utilisId": "20055",
+    "insideX": -95.756751,
+    "insideY": 30.006096,
+    "eraScore": 0.0,
+    "pipeLength": 3206.02,
+    "address": "15202 Blue Thistle Dr, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "54",
+      "Utilis_ID": "20055",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.756751",
+      "INSIDE_Y": "30.006096",
+      "Address": "15202 Blue Thistle Dr, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3206.02",
+      "name": "20055"
+    }
+  },
+  "20056": {
+    "utilisId": "20056",
+    "insideX": -95.760806,
+    "insideY": 30.00811,
+    "eraScore": 0.0,
+    "pipeLength": 3115.56,
+    "address": "15015 Heath Green Cir, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "55",
+      "Utilis_ID": "20056",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.760806",
+      "INSIDE_Y": "30.00811",
+      "Address": "15015 Heath Green Cir, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3115.56",
+      "name": "20056"
+    }
+  },
+  "20057": {
+    "utilisId": "20057",
+    "insideX": -95.765145,
+    "insideY": 30.011309,
+    "eraScore": 0.0,
+    "pipeLength": 1652.67,
+    "address": "14711 Red Canary Ct, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "56",
+      "Utilis_ID": "20057",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.765145",
+      "INSIDE_Y": "30.011309",
+      "Address": "14711 Red Canary Ct, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1652.67",
+      "name": "20057"
+    }
+  },
+  "20058": {
+    "utilisId": "20058",
+    "insideX": -95.765096,
+    "insideY": 30.014905,
+    "eraScore": 2.0,
+    "pipeLength": 2315.04,
+    "address": "21919 White Truffle Trail, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "57",
+      "Utilis_ID": "20058",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.765096",
+      "INSIDE_Y": "30.014905",
+      "Address": "21919 White Truffle Trail, Cypress, TX 77433, USA",
+      "ERA_SCORE": "2",
+      "PIPE_LENGT": "2315.04",
+      "name": "20058"
+    }
+  },
+  "20059": {
+    "utilisId": "20059",
+    "insideX": -95.763471,
+    "insideY": 30.016665,
+    "eraScore": 0.0,
+    "pipeLength": 1838.27,
+    "address": "16623 Blue Shine Trail, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "58",
+      "Utilis_ID": "20059",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.763471",
+      "INSIDE_Y": "30.016665",
+      "Address": "16623 Blue Shine Trail, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1838.27",
+      "name": "20059"
+    }
+  },
+  "20060": {
+    "utilisId": "20060",
+    "insideX": -95.755572,
+    "insideY": 30.012609,
+    "eraScore": 0.0,
+    "pipeLength": 3169.94,
+    "address": "15311 Ochre Leaf Trail, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "59",
+      "Utilis_ID": "20060",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.755572",
+      "INSIDE_Y": "30.012609",
+      "Address": "15311 Ochre Leaf Trail, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "3169.94",
+      "name": "20060"
+    }
+  },
+  "20061": {
+    "utilisId": "20061",
+    "insideX": -95.754614,
+    "insideY": 30.010368,
+    "eraScore": 0.0,
+    "pipeLength": 1972.9,
+    "address": "21918 Amber Elm Trail, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "60",
+      "Utilis_ID": "20061",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.754614",
+      "INSIDE_Y": "30.010368",
+      "Address": "21918 Amber Elm Trail, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1972.9",
+      "name": "20061"
+    }
+  },
+  "20062": {
+    "utilisId": "20062",
+    "insideX": -95.74463,
+    "insideY": 30.020516,
+    "eraScore": 0.0,
+    "pipeLength": 1247.88,
+    "address": "16818 Violet Trace Ct, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "61",
+      "Utilis_ID": "20062",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.74463",
+      "INSIDE_Y": "30.020516",
+      "Address": "16818 Violet Trace Ct, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1247.88",
+      "name": "20062"
+    }
+  },
+  "20063": {
+    "utilisId": "20063",
+    "insideX": -95.74437,
+    "insideY": 30.018145,
+    "eraScore": 1.0,
+    "pipeLength": 2327.73,
+    "address": "16706 E Lazy Daisy Cir, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "62",
+      "Utilis_ID": "20063",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.74437",
+      "INSIDE_Y": "30.018145",
+      "Address": "16706 E Lazy Daisy Cir, Cypress, TX 77433, USA",
+      "ERA_SCORE": "1",
+      "PIPE_LENGT": "2327.73",
+      "name": "20063"
+    }
+  },
+  "20064": {
+    "utilisId": "20064",
+    "insideX": -95.73988,
+    "insideY": 30.015179,
+    "eraScore": 0.0,
+    "pipeLength": 1185.49,
+    "address": "16502 Saddle Ridge Pass, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "63",
+      "Utilis_ID": "20064",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.73988",
+      "INSIDE_Y": "30.015179",
+      "Address": "16502 Saddle Ridge Pass, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1185.49",
+      "name": "20064"
+    }
+  },
+  "20065": {
+    "utilisId": "20065",
+    "insideX": -95.737052,
+    "insideY": 30.020544,
+    "eraScore": 0.0,
+    "pipeLength": 1225.1,
+    "address": "16643 Bridle Oak Dr, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "64",
+      "Utilis_ID": "20065",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.737052",
+      "INSIDE_Y": "30.020544",
+      "Address": "16643 Bridle Oak Dr, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1225.1",
+      "name": "20065"
+    }
+  },
+  "20066": {
+    "utilisId": "20066",
+    "insideX": -95.736153,
+    "insideY": 30.025337,
+    "eraScore": 0.0,
+    "pipeLength": 926.16,
+    "address": "16830 Bridle Oak Dr, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "65",
+      "Utilis_ID": "20066",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.736153",
+      "INSIDE_Y": "30.025337",
+      "Address": "16830 Bridle Oak Dr, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "926.16",
+      "name": "20066"
+    }
+  },
+  "20067": {
+    "utilisId": "20067",
+    "insideX": -95.725067,
+    "insideY": 30.020343,
+    "eraScore": 1.0,
+    "pipeLength": 2338.98,
+    "address": "16799 Mueschke Rd, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "66",
+      "Utilis_ID": "20067",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.725067",
+      "INSIDE_Y": "30.020343",
+      "Address": "16799 Mueschke Rd, Cypress, TX 77433, USA",
+      "ERA_SCORE": "1",
+      "PIPE_LENGT": "2338.98",
+      "name": "20067"
+    }
+  },
+  "20068": {
+    "utilisId": "20068",
+    "insideX": -95.724761,
+    "insideY": 30.025461,
+    "eraScore": 0.0,
+    "pipeLength": 1380.04,
+    "address": "17146 Mueschke Rd, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "67",
+      "Utilis_ID": "20068",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.724761",
+      "INSIDE_Y": "30.025461",
+      "Address": "17146 Mueschke Rd, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1380.04",
+      "name": "20068"
+    }
+  },
+  "20069": {
+    "utilisId": "20069",
+    "insideX": -95.717658,
+    "insideY": 30.023971,
+    "eraScore": 0.0,
+    "pipeLength": 1749.61,
+    "address": "18937 Kz Rd, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "68",
+      "Utilis_ID": "20069",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.717658",
+      "INSIDE_Y": "30.023971",
+      "Address": "18937 Kz Rd, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1749.61",
+      "name": "20069"
+    }
+  },
+  "20070": {
+    "utilisId": "20070",
+    "insideX": -95.708251,
+    "insideY": 30.032263,
+    "eraScore": 0.0,
+    "pipeLength": 1186.64,
+    "address": "18162 E Cypress Hill Cir, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "69",
+      "Utilis_ID": "20070",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.708251",
+      "INSIDE_Y": "30.032263",
+      "Address": "18162 E Cypress Hill Cir, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1186.64",
+      "name": "20070"
+    }
+  },
+  "20071": {
+    "utilisId": "20071",
+    "insideX": -95.715944,
+    "insideY": 30.038857,
+    "eraScore": 0.0,
+    "pipeLength": 2032.55,
+    "address": "19435 Juergen Rd, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "70",
+      "Utilis_ID": "20071",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.715944",
+      "INSIDE_Y": "30.038857",
+      "Address": "19435 Juergen Rd, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "2032.55",
+      "name": "20071"
+    }
+  },
+  "20072": {
+    "utilisId": "20072",
+    "insideX": -95.70466,
+    "insideY": 30.044758,
+    "eraScore": 3.0,
+    "pipeLength": 973.49,
+    "address": "18440 Juergen Rd, Tomball, TX 77377, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "71",
+      "Utilis_ID": "20072",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.70466",
+      "INSIDE_Y": "30.044758",
+      "Address": "18440 Juergen Rd, Tomball, TX 77377, USA",
+      "ERA_SCORE": "3",
+      "PIPE_LENGT": "973.49",
+      "name": "20072"
+    }
+  },
+  "20073": {
+    "utilisId": "20073",
+    "insideX": -95.699056,
+    "insideY": 30.04125,
+    "eraScore": 0.0,
+    "pipeLength": 1732.84,
+    "address": "18811 Cypress Rose Hill Rd, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "72",
+      "Utilis_ID": "20073",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.699056",
+      "INSIDE_Y": "30.04125",
+      "Address": "18811 Cypress Rose Hill Rd, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1732.84",
+      "name": "20073"
+    }
+  },
+  "20074": {
+    "utilisId": "20074",
+    "insideX": -95.696963,
+    "insideY": 30.040613,
+    "eraScore": 0.0,
+    "pipeLength": 1481.34,
+    "address": "18518 Cypress Rose Hill Rd, Cypress, TX 77429, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "73",
+      "Utilis_ID": "20074",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.696963",
+      "INSIDE_Y": "30.040613",
+      "Address": "18518 Cypress Rose Hill Rd, Cypress, TX 77429, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1481.34",
+      "name": "20074"
+    }
+  },
+  "20075": {
+    "utilisId": "20075",
+    "insideX": -95.755246,
+    "insideY": 30.023537,
+    "eraScore": 0.0,
+    "pipeLength": 1336.72,
+    "address": "17203 Sheffield Park Dr, Cypress, TX 77433, USA",
+    "imageDate": "04-01-2026",
+    "raw": {
+      "FID": "74",
+      "Utilis_ID": "20075",
+      "Image_date": "04-01-2026",
+      "INSIDE_X": "-95.755246",
+      "INSIDE_Y": "30.023537",
+      "Address": "17203 Sheffield Park Dr, Cypress, TX 77433, USA",
+      "ERA_SCORE": "0",
+      "PIPE_LENGT": "1336.72",
+      "name": "20075"
+    }
+  }
+}

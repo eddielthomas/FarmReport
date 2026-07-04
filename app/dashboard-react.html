@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0B0C0F" />
+  <title>Report.Farm · Operational Map</title>
+
+  <script>
+    // Auth gate — bounce to /login.html if no token.
+    (function () {
+      try {
+        const raw = localStorage.getItem('rwr.auth.v1');
+        if (raw && JSON.parse(raw)?.state?.token) return;
+      } catch {}
+      location.replace('./login.html?next=' + encodeURIComponent('/dashboard-react.html'));
+    })();
+  </script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #0B0C0F; color: #e4eaf4; font-size: 11px; -webkit-font-smoothing: antialiased; }
+    #dashboard-root { width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+  <div id="dashboard-root"></div>
+  <script type="module" src="/src/dashboard/main.tsx"></script>
+</body>
+</html>

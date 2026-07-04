@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report.Farm · Request portal access</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root { --bg:#F0F1F3; --card:#fff; --fg:#0A0A0A; --muted:#5b6470; --line:#e3e5e9;
+              --accent:#1763ff; --accent-d:#0f4fd6; --ok:#0a7d3b; --err:#c0392b; --warn:#9a6a00; }
+      * { box-sizing: border-box; }
+      html, body { height:100%; margin:0; background:var(--bg); color:var(--fg);
+                   font-family:'Urbanist','Inter',sans-serif; }
+      .wrap { min-height:100%; display:flex; align-items:center; justify-content:center; padding:32px 16px; }
+      .card { width:100%; max-width:440px; background:var(--card); border:1px solid var(--line);
+              border-radius:16px; padding:28px 26px; box-shadow:0 10px 40px rgba(10,12,20,.06); }
+      .brand { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+      .brand .dot { width:30px; height:30px; border-radius:8px;
+                    background:linear-gradient(135deg,var(--accent),#33d6a6); }
+      .brand b { font-size:18px; font-weight:800; letter-spacing:-.01em; }
+      h1 { font-size:20px; margin:0 0 4px; font-weight:700; }
+      p.sub { margin:0 0 20px; color:var(--muted); font-size:14px; line-height:1.45; }
+      label { display:block; font-size:12.5px; font-weight:600; color:var(--muted); margin:0 0 5px; }
+      .row { display:flex; gap:10px; }
+      .row > .field { flex:1; }
+      .field { margin-bottom:14px; }
+      input { width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
+              font-size:14px; font-family:inherit; background:#fafbfc; color:var(--fg); }
+      input:focus { outline:none; border-color:var(--accent); background:#fff; }
+      button { width:100%; padding:11px 14px; border:0; border-radius:10px; cursor:pointer;
+               background:var(--accent); color:#fff; font-size:15px; font-weight:700; font-family:inherit; }
+      button:hover { background:var(--accent-d); }
+      button:disabled { opacity:.6; cursor:default; }
+      .note { font-size:13px; line-height:1.5; padding:11px 12px; border-radius:10px; margin-bottom:16px; }
+      .note.ok   { background:#eaf7ef; color:var(--ok);  border:1px solid #bfe6cd; }
+      .note.err  { background:#fdecea; color:var(--err); border:1px solid #f3c6c0; }
+      .note.warn { background:#fdf6e3; color:var(--warn);border:1px solid #efe0b0; }
+      .foot { margin-top:16px; font-size:13px; color:var(--muted); text-align:center; }
+      .foot a { color:var(--accent); text-decoration:none; font-weight:600; }
+      .hidden { display:none !important; }
+      code { font-family:'Inter',monospace; word-break:break-all; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <div class="brand"><span class="dot"></span><b>AlphaGeo</b></div>
+
+        <div id="banner"></div>
+
+        <div id="closed" class="hidden">
+          <h1>Access is invite-only</h1>
+          <p class="sub">Self-registration isn't open right now. If you were given an access code, check back later, or contact your AlphaGeo representative to be invited directly.</p>
+          <div class="foot"><a href="/login.html">← Back to sign in</a></div>
+        </div>
+
+        <form id="form" class="hidden" autocomplete="on">
+          <h1>Request portal access</h1>
+          <p class="sub">Enter the access code your AlphaGeo contact gave you. We'll confirm your email, then a team member reviews your request.</p>
+          <div class="row">
+            <div class="field"><label for="first_name">First name</label><input id="first_name" name="given-name" autocomplete="given-name" /></div>
+            <div class="field"><label for="last_name">Last name</label><input id="last_name" name="family-name" autocomplete="family-name" /></div>
+          </div>
+          <div class="field"><label for="email">Work email *</label><input id="email" type="email" autocomplete="email" required /></div>
+          <div class="field"><label for="company">Company</label><input id="company" autocomplete="organization" /></div>
+          <div class="field"><label for="code">Access code *</label><input id="code" autocomplete="off" required placeholder="e.g. AG-XXXXXXXX" /></div>
+          <button id="submit" type="submit">Request access</button>
+          <div class="foot"><a href="/login.html">Already have an account? Sign in</a></div>
+        </form>
+
+        <div id="done" class="hidden">
+          <h1>Request received</h1>
+          <p class="sub" id="doneMsg"></p>
+          <div id="devLink"></div>
+          <div class="foot"><a href="/login.html">← Back to sign in</a></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var API = '/api/v1';
+      var $ = function (id) { return document.getElementById(id); };
+      function banner(kind, html) { $('banner').innerHTML = '<div class="note ' + kind + '">' + html + '</div>'; }
+
+      // Email-verify return (?verify=ok|expired|invalid) from the verify link.
+      (function () {
+        var v = new URLSearchParams(location.search).get('verify');
+        if (v === 'ok')      banner('ok',   'Email confirmed. Your request is now pending review — we\'ll email you once it\'s approved.');
+        else if (v === 'expired') banner('warn', 'That confirmation link expired. Submit the form again to get a fresh one.');
+        else if (v === 'invalid') banner('err',  'That confirmation link isn\'t valid. Submit the form again to get a new one.');
+      })();
+
+      // Gate the whole page on the server flag — Register simply doesn't exist when off.
+      fetch(API + '/auth/registration-config')
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          var enabled = j && (j.data ? j.data.enabled : j.enabled);
+          if (enabled) $('form').classList.remove('hidden');
+          else $('closed').classList.remove('hidden');
+        })
+        .catch(function () { $('closed').classList.remove('hidden'); });
+
+      $('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = $('submit'); btn.disabled = true; btn.textContent = 'Sending…';
+        $('banner').innerHTML = '';
+        var body = {
+          first_name: $('first_name').value.trim(),
+          last_name:  $('last_name').value.trim(),
+          email:      $('email').value.trim(),
+          company:    $('company').value.trim(),
+          code:       $('code').value.trim(),
+        };
+        fetch(API + '/auth/register-request', {
+          method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body),
+        })
+          .then(function (r) { return r.json().then(function (j) { return { status: r.status, j: j }; }); })
+          .then(function (res) {
+            var d = res.j && res.j.data ? res.j.data : res.j;
+            if (res.status >= 200 && res.status < 300) {
+              $('form').classList.add('hidden');
+              $('done').classList.remove('hidden');
+              $('doneMsg').textContent = (d && d.message) || 'Check your email to confirm your address.';
+              if (d && d.verify_url) {
+                $('devLink').innerHTML = '<div class="note warn">Email delivery isn\'t configured here, so confirm directly:<br/><a href="' + d.verify_url + '">' + d.verify_url + '</a></div>';
+              }
+            } else {
+              var msg = (d && (d.detail || d.error)) || 'Something went wrong. Please try again.';
+              if (d && d.error === 'invalid_access_code') msg = (d.detail || 'That access code is not recognised, has expired, or is used up.');
+              if (d && d.error === 'invalid_email') msg = 'Please enter a valid email address.';
+              if (d && d.error === 'access_code_required') msg = 'An access code is required.';
+              banner('err', msg);
+              btn.disabled = false; btn.textContent = 'Request access';
+            }
+          })
+          .catch(function () {
+            banner('err', 'Network error. Please try again.');
+            btn.disabled = false; btn.textContent = 'Request access';
+          });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,102 @@
+{
+  "676251": {
+    "projectDetails": {
+      "name": "Demoville A",
+      "date": "April 2026",
+      "type": "SaaS",
+      "insight_layer": true,
+      "country": "United States"
+    },
+    "baseValues": {
+      "sub_project": 676251,
+      "water_cost": "0.00155",
+      "power_cost": "0.1426",
+      "treatment_cost": "0",
+      "greenhouse_gas_emissions": "0.71",
+      "energy_per_liter": "0.0006",
+      "comments_and_remarks": ""
+    },
+    "links": {
+      "web_application": "https://utilis.giscloud.com/map/3183119/demoville-a",
+      "leaksheets_dataform": "",
+      "gis_files": "https://utiliscorp.sharepoint.com/:f:/g/IgBydXS4vHHgQojhnuw-4hYSAaMWkkieYe1psuB_mJJEcrg?e=jLJEfq",
+      "wms": "https://utilis.giscloud.com/wms/maps/3183119"
+    },
+    "licenseNames": [
+      {
+        "name": "Demoville1",
+        "owner_id": 305655
+      }
+    ],
+    "metricsValues": {
+      "sub_project": "676251",
+      "pipe": "20691969.31",
+      "hydrant": "6963643.518",
+      "valve": "13728325.79",
+      "service": "13728325.79",
+      "meter": "795844.9735",
+      "customer_fitting": "13728325.79",
+      "curbstop": "1392728.704",
+      "customer_side": "13728325.79",
+      "unit_type": "km"
+    },
+    "mdcPilot": [],
+    "fieldResults": [],
+    "mapBoundaries": {
+      "minX": -95.76912735,
+      "minY": 29.974142,
+      "maxX": -95.69696307,
+      "maxY": 30.04475805
+    },
+    "initialViewport": {
+      "center": {
+        "lng": -95.73304521,
+        "lat": 30.009456308463324
+      },
+      "zoom": 13,
+      "bounds": {
+        "minX": -95.76912735,
+        "minY": 29.974142,
+        "maxX": -95.69696307,
+        "maxY": 30.04475805
+      }
+    },
+    "benchmarkData": {
+      "subProject": "676251",
+      "annualGoals": [],
+      "nrwData": []
+    }
+  },
+  "layerData": {
+    "subProjects": [
+      "676251"
+    ]
+  },
+  "mapBoundaries": {
+    "minX": -95.76912735,
+    "minY": 29.974142,
+    "maxX": -95.69696307,
+    "maxY": 30.04475805
+  },
+  "projectBounds": {
+    "676251": {
+      "minX": -95.76912735,
+      "minY": 29.974142,
+      "maxX": -95.69696307,
+      "maxY": 30.04475805
+    }
+  },
+  "initialViewport": {
+    "center": {
+      "lng": -95.73304521,
+      "lat": 30.009456308463324
+    },
+    "zoom": 13,
+    "bounds": {
+      "minX": -95.76912735,
+      "minY": 29.974142,
+      "maxX": -95.69696307,
+      "maxY": 30.04475805
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "RWR Field",
+  "short_name": "Field",
+  "description": "RWR field service PWA for technicians — jobs, GPS check-in, multimedia upload, time tracking.",
+  "start_url": "/field.html",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "background_color": "#0B0C0F",
+  "theme_color": "#0B0C0F",
+  "categories": ["productivity", "utilities", "business"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "data:image/svg+xml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 192 192%27%3E%3Crect width=%27192%27 height=%27192%27 rx=%2746%27 fill=%27%23B9FF66%27/%3E%3Cpath fill=%27%230A0A0A%27 d=%27M96 27 C96 61,131 96,165 96 C131 96,96 131,96 165 C96 131,61 96,27 96 C61 96,96 61,96 27Z%27/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 512 512%27%3E%3Crect width=%27512%27 height=%27512%27 rx=%27122%27 fill=%27%23B9FF66%27/%3E%3Cpath fill=%27%230A0A0A%27 d=%27M256 72 C256 164,348 256,440 256 C348 256,256 348,256 440 C256 348,164 256,72 256 C164 256,256 164,256 72Z%27/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Jobs",
+      "short_name": "Jobs",
+      "description": "Jobs assigned to me",
+      "url": "/field.html#jobs"
+    },
+    {
+      "name": "Check-in",
+      "short_name": "Check-in",
+      "description": "GPS check-in at the next job",
+      "url": "/field.html#time"
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+# =============================================================================
+# Report.Farm — isolated local dev stack (Rancher Desktop or Docker Desktop)
+# -----------------------------------------------------------------------------
+#   farm-postgis   Postgres 16 + PostGIS 3.4   (host port 5444 -> container 5432)
+#   farm-minio     MinIO single-node           (host ports 9010 API, 9011 console)
+#   farm-minio-init  MinIO client (init: creates buckets + anonymous-read policy)
+#
+# Deliberately on SHIFTED ports/container names from the RWR stack (rwr-postgis
+# :5434, rwr-minio :9000-9001) so both can run simultaneously without collision
+# or risk to RWR's live data. GeoServer is dropped for Phase 0 — not needed to
+# prove tenancy/RLS/RBAC on the cloned skeleton; add back when farm imagery
+# tiling needs it.
+#
+# Usage:
+#   npm run infra:up
+#   npm run migrate
+# =============================================================================
+
+services:
+  farm-postgis:
+    image: postgis/postgis:16-3.4
+    container_name: farm-postgis
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER:     farm
+      POSTGRES_PASSWORD: farm
+      POSTGRES_DB:       farm
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - "5444:5432"
+    volumes:
+      - farm_postgis_data:/var/lib/postgresql/data
+      # Init scripts run alphabetically on first boot only. Only the generic
+      # PostGIS extensions file is mounted — RWR's rwr.* domain schema
+      # (leak sub-projects/pois/field-results) is intentionally NOT carried
+      # into the farm DB; farm.* schema arrives via api/v1/db/sql migrations.
+      - ./init-db-farm:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test:     ["CMD-SHELL", "pg_isready -U farm -d farm"]
+      interval: 5s
+      timeout:  5s
+      retries:  10
+
+  farm-minio:
+    image: minio/minio:RELEASE.2025-01-20T14-49-07Z
+    container_name: farm-minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER:     farm-admin
+      MINIO_ROOT_PASSWORD: farm-admin-secret
+      MINIO_REGION:        us-east-1
+    ports:
+      - "9010:9000"   # S3 API
+      - "9011:9001"   # Web console
+    volumes:
+      - farm_minio_data:/data
+    healthcheck:
+      test:     ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live || exit 1"]
+      interval: 5s
+      timeout:  5s
+      retries:  10
+
+  # One-shot init: create the farm buckets and set anonymous read for
+  # harvested/derived artifacts (mirrors RWR's minio-init pattern).
+  farm-minio-init:
+    image: minio/mc:RELEASE.2025-01-17T23-25-50Z
+    container_name: farm-minio-init
+    depends_on:
+      farm-minio:
+        condition: service_healthy
+    entrypoint: >
+      /bin/sh -c "
+      until mc alias set local http://farm-minio:9000 farm-admin farm-admin-secret; do sleep 2; done &&
+      mc mb -p local/farm-harvest         || true &&
+      mc mb -p local/farm-derived         || true &&
+      mc mb -p local/farm-field-uploads   || true &&
+      mc anonymous set download local/farm-harvest || true &&
+      echo 'farm minio init complete';
+      "
+
+volumes:
+  farm_postgis_data:
+  farm_minio_data:

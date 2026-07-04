@@ -1,0 +1,737 @@
+<!doctype html>
+<html lang="en" data-surface="light">
+<head>
+<meta charset="utf-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Report.Farm · Farm & Supply-Chain Intelligence</title>
+<meta name="description" content="Report.Farm watches farms, parcels and sourcing regions with satellite imagery, weather and field signals — explaining what changed, what it costs, and what to do about it. Scheduled reports and urgent alerts for farmers, landowners and supply-chain buyers." />
+<meta name="keywords" content="farm monitoring, satellite crop intelligence, autonomous farm reports, crop health, NDVI, precision agriculture, supply-chain risk, yield at risk, agricultural remote sensing, sourcing region monitoring, farm alerts, geospatial intelligence" />
+<meta name="author" content="Report.Farm" />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<meta name="theme-color" content="#FBFCFE" />
+<meta name="color-scheme" content="light" />
+<link rel="canonical" href="https://report.farm/" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Report.Farm" />
+<meta property="og:title" content="Report.Farm — See the Disruption Before It Reaches Your Supply" />
+<meta property="og:description" content="Autonomous farm intelligence from space. We watch every farm, parcel and sourcing region you depend on — explaining what changed, what it costs, and what to do — as scheduled reports and urgent alerts." />
+<meta property="og:url" content="https://report.farm/" />
+<meta property="og:image" content="https://report.farm/brand/og-home.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Report.Farm — portfolio risk across supplier farms on a satellite intelligence console" />
+<meta property="og:locale" content="en_US" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@ReportFarm" />
+<meta name="twitter:title" content="Report.Farm — See the Disruption Before It Reaches Your Supply" />
+<meta name="twitter:description" content="Autonomous farm + supply-chain intelligence from space, delivered as scheduled reports and urgent alerts. Built for growers, landowners and the buyers who depend on them." />
+<meta name="twitter:image" content="https://report.farm/brand/og-home.png" />
+<meta name="twitter:image:alt" content="Report.Farm — portfolio risk across supplier farms on a satellite intelligence console" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://report.farm/#org",
+      "name": "Report.Farm",
+      "legalName": "Report.Farm, Inc.",
+      "alternateName": "Report Farm",
+      "url": "https://report.farm/",
+      "logo": "https://report.farm/brand/logo-concept.png",
+      "contactPoint": { "@type": "ContactPoint", "email": "ops@report.farm", "url": "https://report.farm/contact.html", "contactType": "sales" }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://report.farm/#website",
+      "url": "https://report.farm/",
+      "name": "Report.Farm",
+      "publisher": { "@id": "https://report.farm/#org" },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://report.farm/search?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Report.Farm",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "Autonomous farm intelligence platform that watches land, crops, water, weather and machinery from satellite and field signals, explains what changed and what it costs, and delivers scheduled reports plus urgent alerts — for growers, landowners and supply-chain buyers.",
+      "offers": [
+        { "@type": "Offer", "name": "Starter",    "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "USD", "description": "Custom" } },
+        { "@type": "Offer", "name": "Growth",     "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "USD", "description": "Custom" } },
+        { "@type": "Offer", "name": "Enterprise", "priceSpecification": { "@type": "PriceSpecification", "priceCurrency": "USD", "description": "Custom" } }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "How is Report.Farm priced?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Pricing scales with the land under monitoring and the cadence you need. Routine monitoring runs on free open Earth observation (Sentinel-2, Landsat), so baseline coverage is inexpensive; commercial imagery and tasking are billed only when a farm profile or alert threshold calls for it. Start with a single field or supplier and grow to a full portfolio — contact us for a tailored plan." }
+        },
+        { "@type": "Question", "name": "What is your compliance posture?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Tenant isolation, per-mutation audit logging and role-based access are enforced at the schema level today. A SOC 2 program and GDPR/CCPA alignment are underway; the platform is built against these controls, with independent audit ahead of general availability. Not yet independently certified." }
+        },
+        { "@type": "Question", "name": "How does Report.Farm see change before it's obvious?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It fuses free satellite imagery, SAR radar (which sees through cloud and night), weather and optional field sensors into a live digital twin of each farm, then runs vegetation indices and change detection against each field's own baseline. Findings arrive with a confidence level and dated satellite evidence, and sharpen as feedback comes in." }
+        },
+        { "@type": "Question", "name": "How is Report.Farm deployed?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Default deployment is multi-tenant cloud. The heavy geospatial and ML work is delegated to an independent geospatial core, so the farm layer stays lightweight; co-located and self-hosted options are available for teams that need data to stay on their own infrastructure." }
+        },
+        { "@type": "Question", "name": "Where does our data live?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Tenants choose a primary data residency region at provisioning time. Every business table carries a tenant_id enforced at the schema level with a check that blocks any new table from shipping without it — so no buyer ever sees another's suppliers." }
+        },
+        { "@type": "Question", "name": "How do we start?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Request a farm plan from the contact page. We scope your fields or supplier network, confirm satellite coverage over your area of interest, and stand up a tenant with a baseline — from a single field to an entire portfolio, with your first report in short order." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="./marketing/site.css">
+<link rel="stylesheet" href="./marketing/premium.css">
+<link rel="stylesheet" href="/src/marketing-tokens.css">
+<style>
+  /* ============================================================
+     Premium home-only enhancements layered on top of site.css.
+     LIGHT system — every color references a canonical light token.
+     ============================================================ */
+  .home-hero{position:relative;min-height:88vh;display:flex;align-items:center;padding:148px 24px 80px;overflow:hidden;}
+  .home-hero .container{position:relative;z-index:2;max-width:1180px;margin:0 auto;}
+  .home-hero .eyebrow{display:inline-flex;align-items:center;gap:10px;padding:6px 14px;border:1px solid var(--border);border-radius:var(--radius-full);background:var(--surface);box-shadow:var(--shadow-soft);color:var(--accent-deep);font:600 10.5px/1 var(--font-mono),monospace;letter-spacing:.18em;text-transform:uppercase;margin-bottom:22px;}
+  .home-hero .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-soft);animation:pulse 2.4s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.35);opacity:.65}}
+  .home-hero h1{font:800 clamp(2.6rem,6vw,5rem)/1.03 var(--font-display),sans-serif;letter-spacing:-.02em;margin:0 0 22px;color:var(--text);max-width:900px;}
+  .home-hero h1 .grad{color:var(--accent-deep);}
+  .home-hero .lead{max-width:660px;font:400 clamp(1.05rem,1.4vw,1.24rem)/1.6 var(--font-sans),sans-serif;color:var(--text-muted);margin:0 0 36px;}
+  .home-hero .cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center;}
+  .home-hero .cta-row .btn{font-size:14px;padding:14px 22px;}
+  .home-hero .micro-trust{margin-top:30px;display:flex;flex-wrap:wrap;gap:18px 30px;color:var(--text-subtle);font:500 11px/1.4 var(--font-mono),monospace;letter-spacing:.04em;}
+  .home-hero .micro-trust span{display:inline-flex;align-items:center;gap:8px;}
+  .home-hero .micro-trust span::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);}
+  .home-hero .screenshot-slot{margin-top:42px;border:1px solid var(--border);border-radius:var(--radius-lg);background:linear-gradient(165deg,var(--accent-tint),var(--surface));box-shadow:var(--shadow-card);aspect-ratio:16/7;max-width:820px;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--text-subtle);font:500 11px/1 var(--font-mono),monospace;letter-spacing:.16em;text-transform:uppercase;}
+
+  /* Stat strip */
+  .stat-strip{padding:64px 24px 24px;}
+  .stat-strip .container{max-width:1180px;margin:0 auto;}
+  .stat-strip .head{max-width:720px;margin:0 auto 36px;text-align:center;}
+  .stat-strip .head .eyebrow{display:inline-block;color:var(--accent-deep);font:600 10px/1 var(--font-mono),monospace;letter-spacing:.2em;text-transform:uppercase;margin-bottom:12px;}
+  .stat-strip .head h2{font:700 clamp(1.6rem,3vw,2.3rem)/1.12 var(--font-display),sans-serif;color:var(--text);margin:0 0 10px;letter-spacing:-.015em;}
+  .stat-strip .head p{font:400 1rem/1.55 var(--font-sans),sans-serif;color:var(--text-muted);margin:0;}
+  .stat-strip .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:18px;}
+  .stat-strip .stat{padding:26px 24px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-card);transition:transform .25s,box-shadow .25s;}
+  .stat-strip .stat:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);}
+  .stat-strip .stat .v{font:700 clamp(1.5rem,2.4vw,2rem)/1.08 var(--font-display),sans-serif;color:var(--accent-deep);}
+  .stat-strip .stat .l{margin-top:8px;font:400 .9rem/1.5 var(--font-sans),sans-serif;color:var(--text-muted);}
+  .stat-strip .stat .src{margin-top:12px;font:500 9.5px/1.3 var(--font-mono),monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint);}
+  .stat-strip .strip-note{max-width:760px;margin:28px auto 0;text-align:center;font:400 .82rem/1.55 var(--font-sans),sans-serif;color:var(--text-subtle);}
+
+  /* Audience router */
+  .industries{padding:96px 24px;}
+  .industries .container{max-width:1180px;margin:0 auto;}
+  .ind-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;}
+  .ind-card{position:relative;display:block;padding:28px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-card);text-decoration:none;color:inherit;overflow:hidden;transition:transform .25s,border-color .25s,box-shadow .25s;}
+  .ind-card::before{content:'';position:absolute;inset:0 0 auto 0;height:3px;background:var(--accent);opacity:0;transition:opacity .25s;}
+  .ind-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift);}
+  .ind-card:hover::before{opacity:1;}
+  .ind-card .tag{font:600 10px/1 var(--font-mono),monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-deep);margin-bottom:14px;}
+  .ind-card h3{margin:0 0 10px;font:700 1.2rem/1.22 var(--font-display),sans-serif;color:var(--text);letter-spacing:-.01em;}
+  .ind-card p{margin:0 0 16px;font:400 .92rem/1.55 var(--font-sans),sans-serif;color:var(--text-muted);}
+  .ind-card .more{font:600 11px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-deep);display:inline-flex;align-items:center;gap:6px;}
+  .ind-card .more::after{content:'→';transition:transform .2s;}
+  .ind-card:hover .more::after{transform:translateX(4px);}
+
+  /* Mission lines */
+  .mission-lines{padding:96px 24px;background:linear-gradient(180deg,transparent,var(--accent-tint),transparent);}
+  .mission-lines .container{max-width:1180px;margin:0 auto;}
+  .mission-row{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center;padding:52px 0;border-top:1px solid var(--border);}
+  .mission-row:first-of-type{border-top:none;}
+  .mission-row.alt .text{order:2;}
+  .mission-row.alt .visual{order:1;}
+  @media(max-width:900px){.mission-row{grid-template-columns:1fr;gap:24px;padding:36px 0;}.mission-row.alt .text,.mission-row.alt .visual{order:initial;}}
+  .mission-row .text .tag{display:inline-block;padding:5px 11px;border:1px solid var(--border);border-radius:var(--radius-full);background:var(--accent-soft);color:var(--accent-deep);font:600 10px/1 var(--font-mono),monospace;letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px;}
+  .mission-row .text h3{margin:0 0 14px;font:700 clamp(1.6rem,2.4vw,2.1rem)/1.16 var(--font-display),sans-serif;color:var(--text);letter-spacing:-.015em;}
+  .mission-row .text p{margin:0 0 20px;font:400 1.02rem/1.65 var(--font-sans),sans-serif;color:var(--text-muted);}
+  .mission-row .text ul{list-style:none;padding:0;margin:0 0 24px;}
+  .mission-row .text li{padding:7px 0;font:500 .94rem/1.45 var(--font-sans),sans-serif;color:var(--text);display:flex;gap:10px;align-items:flex-start;}
+  .mission-row .text li::before{content:'▸';color:var(--accent);font-size:.85rem;margin-top:2px;}
+  .mission-row .visual{aspect-ratio:5/4;border:1px solid var(--border);border-radius:var(--radius-xl);background:linear-gradient(165deg,var(--accent-tint),var(--surface));box-shadow:var(--shadow-card);display:flex;align-items:center;justify-content:center;color:var(--text-subtle);font:500 11px/1 var(--font-mono),monospace;letter-spacing:.16em;text-transform:uppercase;position:relative;overflow:hidden;}
+
+  /* Value stack */
+  .stack{padding:96px 24px;}
+  .stack .container{max-width:920px;margin:0 auto;}
+  .stack .layers{display:flex;flex-direction:column;gap:10px;margin-top:40px;}
+  .stack .layer{display:grid;grid-template-columns:48px 1fr;align-items:center;gap:20px;padding:22px 24px;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);box-shadow:var(--shadow-card);transition:transform .2s,box-shadow .2s;}
+  .stack .layer:hover{transform:translateY(-2px);box-shadow:var(--shadow-lift);}
+  .stack .layer .idx{width:48px;height:48px;border-radius:var(--radius-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font:700 12px/1 var(--font-mono),monospace;letter-spacing:.06em;color:var(--accent-deep);}
+  .stack .layer .name{font:700 1.05rem/1.2 var(--font-display),sans-serif;color:var(--text);}
+  .stack .layer .desc{margin-top:4px;font:400 .94rem/1.5 var(--font-sans),sans-serif;color:var(--text-muted);}
+
+  /* Pilot programs */
+  .pilots{padding:96px 24px;background:linear-gradient(180deg,transparent,var(--accent-tint),transparent);}
+  .pilots .container{max-width:1180px;margin:0 auto;}
+  .pilot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;}
+  .pilot-card{padding:30px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-card);transition:transform .25s,box-shadow .25s;}
+  .pilot-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);}
+  .pilot-card .tag{display:inline-block;padding:5px 11px;border:1px solid var(--border);border-radius:var(--radius-full);background:var(--accent-soft);color:var(--accent-deep);font:600 10px/1 var(--font-mono),monospace;letter-spacing:.2em;text-transform:uppercase;margin-bottom:16px;}
+  .pilot-card h3{margin:0 0 10px;font:700 1.15rem/1.25 var(--font-display),sans-serif;color:var(--text);}
+  .pilot-card p{margin:0 0 16px;font:400 .94rem/1.6 var(--font-sans),sans-serif;color:var(--text-muted);}
+  .pilot-card .outcome{font:600 11px/1.4 var(--font-mono),monospace;letter-spacing:.1em;text-transform:uppercase;color:var(--green);display:inline-flex;align-items:center;gap:8px;}
+  .pilot-card .outcome::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-soft);}
+
+  /* Credibility band */
+  .cred{padding:88px 24px;}
+  .cred .container{max-width:1180px;margin:0 auto;}
+  .cred-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:44px;}
+  .cred-card{padding:26px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-card);}
+  .cred-card .ico{width:42px;height:42px;border-radius:var(--radius-sm);background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;}
+  .cred-card h4{margin:0 0 8px;font:700 1.02rem/1.25 var(--font-display),sans-serif;color:var(--text);}
+  .cred-card p{margin:0;font:400 .9rem/1.55 var(--font-sans),sans-serif;color:var(--text-muted);}
+
+  /* Section heads */
+  .section-head{text-align:center;max-width:780px;margin:0 auto 56px;}
+  .section-head .eyebrow{display:inline-block;color:var(--accent-deep);font:600 10px/1 var(--font-mono),monospace;letter-spacing:.2em;text-transform:uppercase;margin-bottom:18px;}
+  .section-head h2{font:700 clamp(2rem,3.6vw,2.8rem)/1.12 var(--font-display),sans-serif;color:var(--text);margin:0 0 14px;letter-spacing:-.02em;}
+  .section-head p{font:400 1.05rem/1.6 var(--font-sans),sans-serif;color:var(--text-muted);margin:0;}
+
+  /* Pricing tease */
+  .pricing{padding:96px 24px;background:linear-gradient(180deg,transparent,var(--accent-tint),transparent);}
+  .pricing .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px;max-width:1180px;margin:0 auto;}
+  .price-card{padding:32px;border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow-card);position:relative;display:flex;flex-direction:column;}
+  .price-card.featured{box-shadow:var(--shadow-lift),0 0 0 2px var(--accent);}
+  .price-card.featured::before{content:'Most popular';position:absolute;top:-12px;left:24px;padding:5px 12px;background:var(--accent);color:var(--text-on-accent);font:700 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;border-radius:var(--radius-full);}
+  .price-card .tier{font:700 11px/1 var(--font-mono),monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-deep);margin-bottom:14px;}
+  .price-card .price{font:700 2.3rem/1 var(--font-display),sans-serif;color:var(--text);margin-bottom:6px;}
+  .price-card .price small{font-size:.95rem;color:var(--text-subtle);font-weight:500;}
+  .price-card .price.custom{font-size:1.7rem;}
+  .price-card .desc{margin:0 0 22px;font:400 .92rem/1.6 var(--font-sans),sans-serif;color:var(--text-muted);}
+  .price-card ul{list-style:none;padding:0;margin:0 0 28px;flex:1;}
+  .price-card li{padding:7px 0;font:500 .9rem/1.45 var(--font-sans),sans-serif;color:var(--text);display:flex;gap:10px;align-items:flex-start;}
+  .price-card li::before{content:'▸';color:var(--accent);font-size:.8rem;margin-top:2px;}
+  .price-card .btn{width:100%;justify-content:center;text-align:center;}
+  .pricing .footnote{max-width:880px;margin:34px auto 0;text-align:center;font:400 .85rem/1.6 var(--font-sans),sans-serif;color:var(--text-subtle);}
+
+  /* FAQ */
+  .faq{padding:96px 24px;}
+  .faq .container{max-width:880px;margin:0 auto;}
+  .faq details{border:1px solid var(--border);border-radius:var(--radius-md);background:var(--surface);box-shadow:var(--shadow-soft);margin-bottom:10px;overflow:hidden;transition:box-shadow .2s;}
+  .faq summary{padding:20px 24px;cursor:pointer;font:700 1rem/1.35 var(--font-display),sans-serif;color:var(--text);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:18px;}
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary::after{content:'+';color:var(--accent-deep);font:700 1.2rem var(--font-mono),monospace;transition:transform .2s;}
+  .faq details[open] summary::after{transform:rotate(45deg);}
+  .faq details[open]{box-shadow:var(--shadow-card);}
+  .faq .answer{padding:0 24px 22px;font:400 .94rem/1.65 var(--font-sans),sans-serif;color:var(--text-muted);}
+
+  /* Final CTA band */
+  .final-cta{padding:104px 24px;position:relative;text-align:center;background:linear-gradient(180deg,var(--accent-soft),var(--surface));border-top:1px solid var(--border);}
+  .final-cta .container{position:relative;z-index:2;max-width:760px;margin:0 auto;}
+  .final-cta h2{font:700 clamp(2rem,3.8vw,3rem)/1.1 var(--font-display),sans-serif;color:var(--text);margin:0 0 18px;letter-spacing:-.02em;}
+  .final-cta p{font:400 1.1rem/1.6 var(--font-sans),sans-serif;color:var(--text-muted);margin:0 0 32px;}
+  .final-cta .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+  .final-cta .reassure{margin-top:22px;font:500 11px/1.5 var(--font-mono),monospace;letter-spacing:.06em;text-transform:uppercase;color:var(--text-subtle);}
+
+  /* Hero ambient visual — soft, light, non-neon */
+  .hero-visual{position:absolute;right:-6vw;top:50%;transform:translateY(-50%);width:52vw;max-width:720px;aspect-ratio:1;z-index:1;opacity:.9;pointer-events:none;}
+  .hero-visual::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at center,var(--accent-glow),transparent 62%);}
+  .hero-visual .ring{position:absolute;left:50%;top:50%;border-radius:50%;border:1px dashed var(--border-strong);transform:translate(-50%,-50%);}
+  .hero-visual .ring.r1{width:30%;aspect-ratio:1;animation:spin 60s linear infinite;}
+  .hero-visual .ring.r2{width:55%;aspect-ratio:1;animation:spin 90s linear infinite reverse;}
+  .hero-visual .ring.r3{width:82%;aspect-ratio:1;animation:spin 120s linear infinite;}
+  .hero-visual .pip{position:absolute;width:9px;height:9px;border-radius:50%;}
+  .hero-visual .pip.a{left:38%;top:42%;background:var(--rose);box-shadow:0 0 0 5px rgba(192,51,78,.12);animation:pulse 2.4s ease-in-out infinite;}
+  .hero-visual .pip.b{left:62%;top:54%;background:var(--amber);box-shadow:0 0 0 5px rgba(180,83,9,.12);animation:pulse 3.1s ease-in-out infinite;}
+  .hero-visual .pip.c{left:48%;top:66%;background:var(--green);box-shadow:0 0 0 5px var(--green-soft);animation:pulse 2.7s ease-in-out infinite;}
+  @keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg);}}
+  @media(max-width:1100px){.hero-visual{opacity:.4;}}
+  @media(prefers-reduced-motion:reduce){.hero-visual .ring,.hero-visual .pip,.home-hero .eyebrow .dot{animation:none;}}
+
+  /* Footer */
+  .home-footer{padding:54px 24px 34px;border-top:1px solid var(--border);background:var(--surface);}
+  .home-footer .container{max-width:1180px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;}
+  .home-footer .marks{display:flex;gap:14px;flex-wrap:wrap;}
+  .home-footer .mark{display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border:1px solid var(--border);border-radius:var(--radius-full);background:var(--surface-2);font:600 10px/1 var(--font-mono),monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-deep);}
+  .home-footer .mark .dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px var(--green-soft);}
+  .home-footer .legal{font:500 11px/1.5 var(--font-mono),monospace;color:var(--text-subtle);letter-spacing:.04em;}
+  .home-footer .legal a{color:var(--text-subtle);text-decoration:none;}
+  .home-footer .legal a:hover{color:var(--accent-deep);}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="nav-logo" href="./"><span class="logo-mark"></span><span><span class="nav-logo-text">Report.Farm</span><span class="nav-logo-sub">Farm &amp; Supply-Chain Intelligence</span></span></a>
+  <div class="nav-links">
+    <div class="nav-item"><a class="nav-trigger" href="./solutions.html">Solutions</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./industries.html">Industries</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./platform.html">Platform</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./company.html">Company</a></div>
+  </div>
+  <div class="nav-cta">
+    <a class="btn btn-ghost btn-sm" href="./login.html">Sign in</a>
+    <a class="btn btn-primary btn-sm" href="./contact.html">Request a farm plan</a>
+    <button class="nav-burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<aside class="mobile-drawer">
+  <h4>Pages</h4>
+  <a href="./">Home</a>
+  <a href="./solutions.html">Solutions</a>
+  <a href="./industries.html">Industries</a>
+  <a href="./platform.html">Platform</a>
+  <a href="./company.html">Company</a>
+  <a href="./contact.html">Contact</a>
+  <a href="./login.html">Sign in</a>
+  <a href="./contact.html">Request a farm plan</a>
+</aside>
+
+<!-- ============================================================
+     1. HERO
+     ============================================================ -->
+<section class="home-hero">
+  <div class="hero-visual" aria-hidden="true">
+    <div class="ring r1"></div>
+    <div class="ring r2"></div>
+    <div class="ring r3"></div>
+    <div class="pip a"></div>
+    <div class="pip b"></div>
+    <div class="pip c"></div>
+  </div>
+  <div class="container">
+    <div class="eyebrow"><span class="dot"></span>Autonomous farm intelligence · Scheduled reports + urgent alerts</div>
+    <h1>See the disruption <span class="grad">before it reaches your supply.</span></h1>
+    <p class="lead reveal">Report.Farm watches every farm, parcel and sourcing region you depend on — satellite imagery, weather and field signals fused into one autonomous intelligence layer that explains what changed, what it costs, and what to do about it. Scheduled reports and urgent alerts, from single farms to entire supplier portfolios.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="./contact.html">Request a farm plan →</a>
+      <a class="btn btn-ghost" href="./solutions.html">See what we detect</a>
+    </div>
+    <div class="micro-trust">
+      <span>Independent, multi-source satellite</span>
+      <span>Findings verified, then dispatched</span>
+      <span>Free-EO baseline</span>
+    </div>
+    <div class="screenshot-slot" data-screenshot="hero-dashboard">
+      <video autoplay muted loop playsinline preload="metadata" poster="/media/hero-dashboard.jpg"
+             style="width:100%;height:100%;object-fit:cover;object-position:center;border-radius:var(--radius-lg);display:block;background:var(--accent-tint);">
+        <source src="/media/hero-dashboard.webm" type="video/webm">
+        <source src="/media/hero-dashboard.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     2. STAT STRIP — real, cited industry statistics
+     ============================================================ -->
+<section class="stat-strip reveal">
+  <div class="container">
+    <div class="head">
+      <div class="eyebrow">The cost of waiting for failure</div>
+      <h2>Underground failures are a quarter-trillion-dollar blind spot.</h2>
+      <p>Crop stress, water shortfalls, disease and disrupted sourcing are already unfolding across the land you depend on — out of sight, between farm visits, and usually confirmed far too late to act. These are the numbers that define the risk you own.</p>
+    </div>
+    <div class="grid">
+      <div class="stat">
+        <div class="v">up to 40%</div>
+        <div class="l">Of global crop production lost every year to pests and plant diseases.</div>
+        <div class="src">Source: FAO, 2021</div>
+      </div>
+      <div class="stat">
+        <div class="v">~$123B / yr</div>
+        <div class="l">Average annual crop and livestock losses from disasters and extreme weather.</div>
+        <div class="src">Source: FAO, "The Impact of Disasters on Agriculture," 2023</div>
+      </div>
+      <div class="stat">
+        <div class="v">every ~5 days</div>
+        <div class="l">Free Sentinel-2 revisit over most farmland — enough to catch change as it starts, not after harvest.</div>
+        <div class="src">Source: ESA Copernicus Sentinel-2 mission specs</div>
+      </div>
+      <div class="stat">
+        <div class="v">~70%</div>
+        <div class="l">Of global freshwater withdrawals go to agriculture — where irrigation anomalies hide real cost.</div>
+        <div class="src">Source: FAO AQUASTAT</div>
+      </div>
+      <div class="stat">
+        <div class="v">weeks → days</div>
+        <div class="l">The window autonomous monitoring compresses between a problem starting and someone knowing.</div>
+        <div class="src">Report.Farm operating thesis</div>
+      </div>
+      <div class="stat">
+        <div class="v">1 → many</div>
+        <div class="l">From a single field to an entire supplier portfolio, watched on one intelligence layer.</div>
+        <div class="src">Report.Farm supply-chain wedge</div>
+      </div>
+    </div>
+    <p class="strip-note">Report.Farm exists to close this gap: to move the moment of discovery from <em>the next site visit</em> to <em>the moment the land changes</em>.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     3. AUDIENCE ROUTER — who we serve
+     ============================================================ -->
+<section class="industries reveal">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Who we serve</div>
+      <h2>Built for the people who own the outcome of the land.</h2>
+      <p>If crop health, water, yield or a disrupted harvest lands on your P&amp;L — start here. We speak the language of growers, agronomists, land managers, and the buyers whose supply depends on thousands of fields they never set foot on.</p>
+    </div>
+    <div class="ind-grid">
+
+      <a class="ind-card" href="./industries.html#growers">
+        <div class="tag">Farmers &amp; Growers</div>
+        <h3>Row crops, orchards &amp; vineyards</h3>
+        <p>See crop stress, irrigation anomalies and disease pressure across every field as they emerge — with scheduled reports and urgent alerts that explain what changed, why, and what it costs before the season is decided.</p>
+        <span class="more">Explore for growers</span>
+      </a>
+
+      <a class="ind-card" href="./industries.html#buyers">
+        <div class="tag">Supply-Chain Buyers</div>
+        <h3>Processors, traders, brands &amp; co-ops</h3>
+        <p>Monitor a whole portfolio of suppliers and sourcing regions from one console. Get yield-at-risk, revenue-at-risk and disruption alerts early enough to re-source, hedge or intervene — before a bad season becomes a broken contract.</p>
+        <span class="more">Explore for buyers</span>
+      </a>
+
+      <a class="ind-card" href="./industries.html#landowners">
+        <div class="tag">Landowners &amp; Land Managers</div>
+        <h3>Estates, funds &amp; agricultural asset managers</h3>
+        <p>Track land use, water, infrastructure and vegetation change across every parcel you hold — with an auditable, evidence-backed record for valuation, lease compliance and stewardship decisions.</p>
+        <span class="more">Explore for landowners</span>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     4. MISSION LINES — outcomes, not mechanism
+     ============================================================ -->
+<section class="mission-lines">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">What you get</div>
+      <h2>Three outcomes. One continuous loop.</h2>
+      <p>We surface where assets are likely to fail before they do — then turn each finding into a triaged, accountable action. Every resolved case sharpens the next.</p>
+    </div>
+
+    <div class="mission-row reveal">
+      <div class="text">
+        <div class="tag">Outcome · Loss Prevention</div>
+        <h3>Catch losses before the season decides them</h3>
+        <p>Crop stress you can't see is yield, revenue and contract risk draining away. Report.Farm flags the fields and zones most likely to be under stress — with a clear confidence indicator and satellite evidence — so agronomists and crews go to the right acre first, not after the damage is done.</p>
+        <ul>
+          <li>Priority list of where to look, ranked by likelihood of loss</li>
+          <li>A confidence indicator and satellite evidence with every finding</li>
+          <li>One-tap promotion of a finding into a tracked action</li>
+          <li>Resolved outcomes feed back so the picture keeps sharpening</li>
+        </ul>
+        <a class="btn btn-ghost" href="./solutions.html#leak-detection">See crop health monitoring →</a>
+      </div>
+      <div class="visual" data-screenshot="mission-crop">
+        <video autoplay muted loop playsinline preload="metadata" poster="/media/mission-crop.jpg"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:var(--accent-tint);">
+          <source src="/media/mission-crop.webm" type="video/webm">
+          <source src="/media/mission-crop.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <div class="mission-row alt reveal">
+      <div class="text">
+        <div class="tag">Outcome · Water &amp; Land Change</div>
+        <h3>See water and land change before the season turns</h3>
+        <p>Irrigation gaps, waterlogging, erosion and unauthorized land-use change quietly cost yield and value across ground too large to walk. Report.Farm surfaces where soil moisture, standing water and land cover are shifting on each field — with radar that sees through cloud and night — in time to plan rather than react.</p>
+        <ul>
+          <li>Early warning on irrigation anomalies and waterlogged zones</li>
+          <li>Independent, dated evidence of field and land-cover change</li>
+          <li>Exposure mapping across fields, farms and sourcing regions</li>
+          <li>Evidence packets with imagery, timestamps and geometry</li>
+        </ul>
+        <a class="btn btn-ghost" href="./solutions.html#infra-risk">See water &amp; land intelligence →</a>
+      </div>
+      <div class="visual" data-screenshot="mission-risk">
+        <video autoplay muted loop playsinline preload="metadata" poster="/media/mission-risk.jpg"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:var(--accent-tint);">
+          <source src="/media/mission-risk.webm" type="video/webm">
+          <source src="/media/mission-risk.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+    <div class="mission-row reveal">
+      <div class="text">
+        <div class="tag">Outcome · Mission Operations</div>
+        <h3>From detection to dispatch, on one desk</h3>
+        <p>An alert nobody acts on is worthless. Every finding lands on a role-gated Command Center with a case board, SLA timers, crew packets and a full audit trail — so a satellite signal becomes a work order, a resolved case, and a defensible record of what was done and when.</p>
+        <ul>
+          <li>24/7 operations desk with live case board</li>
+          <li>Crew packets and dispatch straight from a finding</li>
+          <li>SLA timers and status visible to every stakeholder</li>
+          <li>Audit log on every change — built for accountability</li>
+        </ul>
+        <a class="btn btn-ghost" href="./platform.html">See the Command Center →</a>
+      </div>
+      <div class="visual" data-screenshot="mission-recovery">
+        <video autoplay muted loop playsinline preload="metadata" poster="/media/mission-recovery.jpg"
+               style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:var(--accent-tint);">
+          <source src="/media/mission-recovery.webm" type="video/webm">
+          <source src="/media/mission-recovery.mp4" type="video/mp4">
+        </video>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     5. HOW IT FEELS TO WORK WITH US — value, not method
+     ============================================================ -->
+<section class="stack">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">How it works for you</div>
+      <h2>You don't operate satellites. You get answers.</h2>
+      <p>We handle the imagery, the analysis and the AI. You get a prioritized, verified picture of where to act — and a workflow that turns it into results.</p>
+    </div>
+    <div class="layers">
+      <div class="layer">
+        <div class="idx">01</div>
+        <div>
+          <div class="name">We watch your area of interest</div>
+          <div class="desc">Independent, multi-source satellite radar and imagery cover your network or property — no sensors to install, no crews in the field to start.</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="idx">02</div>
+        <div>
+          <div class="name">AI surfaces likely failures</div>
+          <div class="desc">Our analysis flags where assets are most likely to be failing or trending toward failure — ranked by priority, with a confidence indicator and evidence you can review.</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="idx">03</div>
+        <div>
+          <div class="name">Findings are verified</div>
+          <div class="desc">Results are checked before they become action, and field outcomes feed back so accuracy keeps improving over time. You act on signal, not noise.</div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="idx">04</div>
+        <div>
+          <div class="name">Your team acts on one desk</div>
+          <div class="desc">Each finding becomes a tracked case with crew packets, SLA timers and a full audit trail — from satellite signal to confirmed resolution on the ground.</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:40px;">
+      <a class="btn btn-ghost" href="./platform.html">Walk the full platform →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     6. CREDIBILITY BAND
+     ============================================================ -->
+<section class="cred reveal">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Why operators trust it</div>
+      <h2>Serious infrastructure deserves serious controls.</h2>
+      <p>Built for procurement, public accountability and regulated environments from day one — with an honest line on where we are today.</p>
+    </div>
+    <div class="cred-grid">
+      <div class="cred-card">
+        <div class="ico">🛰️</div>
+        <h4>Independent evidence</h4>
+        <p>Findings come from independent, multi-source satellite data — an objective second opinion that doesn't depend on your own meters or crews.</p>
+      </div>
+      <div class="cred-card">
+        <div class="ico">🔒</div>
+        <h4>Tenant isolation &amp; audit</h4>
+        <p>Every tenant's data is isolated at the schema level, every change is logged, and access is role-gated — built for sensitive, regulated operations.</p>
+      </div>
+      <div class="cred-card">
+        <div class="ico">📋</div>
+        <h4>Compliance — underway</h4>
+        <p>A SOC 2 program and GDPR/CCPA alignment are underway; the platform is built against these controls today (tenant isolation, audit logging, role-based access) and not yet independently audited.</p>
+      </div>
+      <div class="cred-card">
+        <div class="ico">🌐</div>
+        <h4>Flexible deployment</h4>
+        <p>Multi-tenant cloud by default, with co-located and self-hosted options for teams that need their farm data to stay on their own infrastructure.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     7. PILOT PROGRAMS — use cases, not fabricated customers
+     ============================================================ -->
+<section class="pilots">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Where it pays off</div>
+      <h2>Use cases the platform supports today.</h2>
+      <p>Report.Farm runs pilots against real fields and sourcing regions with measurable outcomes. Three patterns we stand up most often, across our core audiences.</p>
+    </div>
+    <div class="pilot-grid">
+      <div class="pilot-card">
+        <div class="tag">Landowner</div>
+        <h3>Protecting a large agricultural property</h3>
+        <p>Wide-area monitoring across thousands of acres to catch crop stress, irrigation gaps and land-cover change early — protecting yield, soil and long-term property value before damage becomes visible.</p>
+        <div class="outcome">Outcome · Protected property value</div>
+      </div>
+      <div class="pilot-card">
+        <div class="tag">Supply-Chain Buyer</div>
+        <h3>Monitoring a supplier portfolio</h3>
+        <p>Continuous watch across every sourcing region, with each new satellite pass triaged on the highest-risk suppliers — surfacing yield-at-risk and disruption early enough to re-source or intervene before it hits a contract.</p>
+        <div class="outcome">Outcome · Fewer sourcing surprises</div>
+      </div>
+      <div class="pilot-card">
+        <div class="tag">Co-op &amp; Market</div>
+        <h3>A shared view across the grower network</h3>
+        <p>Risk-ranked view of which fields across the membership need attention next, with an auditable record — so a co-op can target agronomy support, plan capacity and stand behind provenance claims.</p>
+        <div class="outcome">Outcome · Evidence-led coordination</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     8. PRICING TEASE — 3 tier (unchanged tiers)
+     ============================================================ -->
+<section class="pricing">
+  <div class="container" style="max-width:1180px;margin:0 auto;">
+    <div class="section-head">
+      <div class="eyebrow">Pricing</div>
+      <h2>Three ways to engage.</h2>
+      <p>Tenant isolation, audited changes and the full workflow surface ship with every tier. Pick the engagement that matches your mission — and start with a single area of interest.</p>
+    </div>
+    <div class="grid">
+      <div class="price-card">
+        <div class="tier">Starter</div>
+        <div class="price custom">Custom</div>
+        <p class="desc">For growers and landowners monitoring their first fields — from AOI to first report on a single farm.</p>
+        <ul>
+          <li>Up to 5 active users</li>
+          <li>Single tenant workspace</li>
+          <li>Field, signal &amp; report surfaces</li>
+          <li>Free-EO monitoring cadence</li>
+          <li>Email support</li>
+        </ul>
+        <a class="btn btn-ghost" href="./contact.html">Start a pilot →</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="tier">Growth</div>
+        <div class="price custom">Custom</div>
+        <p class="desc">For teams monitoring crop health and supplier risk across many fields and regions.</p>
+        <ul>
+          <li>Up to 25 active users</li>
+          <li>Multi-tenant control plane</li>
+          <li>All role surfaces + grower portal</li>
+          <li>Higher-cadence passes + live alerts</li>
+          <li>Portfolio rollups &amp; scheduled reports</li>
+          <li>Priority support · 4h response</li>
+        </ul>
+        <a class="btn btn-primary" href="./contact.html">Request a farm plan →</a>
+      </div>
+
+      <div class="price-card">
+        <div class="tier">Enterprise</div>
+        <div class="price custom">Custom</div>
+        <p class="desc">For large buyers, co-ops and land portfolios with custom integrations and dedicated support.</p>
+        <ul>
+          <li>Unlimited users &amp; tenants</li>
+          <li>Commercial imagery &amp; tasking on escalation</li>
+          <li>Dedicated onboarding &amp; agronomy support</li>
+          <li>FMIS / ERP / GIS &amp; weather integration</li>
+          <li>Co-located or self-hosted deployment</li>
+          <li>Named customer-success lead</li>
+        </ul>
+        <a class="btn btn-ghost" href="./contact.html">Talk to our team →</a>
+      </div>
+    </div>
+    <p class="footnote">Plans scope land under monitoring, pass cadence and commercial-imagery escalation up front. In scope: free-EO imagery, analysis, signals, analytics, role surfaces, audit log. Out of scope: on-farm scouting costs, third-party hardware, and customer-supplied data ingest beyond the standard adapter set.</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     9. FAQ
+     ============================================================ -->
+<section class="faq">
+  <div class="container">
+    <div class="section-head">
+      <div class="eyebrow">Frequently asked</div>
+      <h2>The questions we hear most.</h2>
+    </div>
+    <details>
+      <summary>How is Report.Farm priced?</summary>
+      <div class="answer">Pricing scales with the land under monitoring and the cadence you need. Routine monitoring runs on free open Earth observation (Sentinel-2, Landsat), so baseline coverage is inexpensive; commercial imagery and tasking are billed only when a farm profile or alert threshold calls for it. Start with a single field or supplier and grow to a full portfolio — contact us for a tailored plan.</div>
+    </details>
+    <details>
+      <summary>How do you see change before it's obvious?</summary>
+      <div class="answer">We fuse free satellite imagery, SAR radar that sees through cloud and night, weather and optional field sensors into a live digital twin of each farm, then run vegetation indices and change detection against each field's own baseline. Each finding arrives with a confidence level and dated satellite evidence, is verified before it becomes an action, and sharpens as outcomes are fed back. We sell the result — farm intelligence you can act on — not the underlying method.</div>
+    </details>
+    <details>
+      <summary>What is your compliance posture?</summary>
+      <div class="answer">Tenant isolation, per-mutation audit logging and role-based access are enforced at the schema level today. A SOC 2 program and GDPR/CCPA alignment are underway; the platform is built against these controls, with independent audit ahead of general availability. Not yet independently certified.</div>
+    </details>
+    <details>
+      <summary>How is Report.Farm deployed?</summary>
+      <div class="answer">Default deployment is multi-tenant cloud. The heavy geospatial and ML work is delegated to an independent geospatial core, so the farm layer stays lightweight; co-located and self-hosted options are available for teams that need data to stay on their own infrastructure.</div>
+    </details>
+    <details>
+      <summary>Where does our data live?</summary>
+      <div class="answer">Tenants choose a primary data residency region at provisioning time. Every business table carries a tenant_id enforced at the schema level, with a check that blocks any new table from shipping without it — so no buyer ever sees another's suppliers.</div>
+    </details>
+    <details>
+      <summary>How do we start?</summary>
+      <div class="answer">Request a farm plan from the contact page. We scope your fields or supplier network, confirm satellite coverage over your area of interest, and stand up a tenant with a baseline — from a single field to an entire portfolio, with your first report in short order.</div>
+    </details>
+  </div>
+</section>
+
+<!-- ============================================================
+     10. FINAL CTA
+     ============================================================ -->
+<section class="final-cta reveal">
+  <div class="container">
+    <h2>See the change before it costs you a season.</h2>
+    <p>Scope your fields or supplier network, confirm satellite coverage over your area of interest, and watch the first findings land on your tenant inside an early baseline.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="./contact.html">Request a farm plan →</a>
+      <a class="btn btn-ghost" href="./solutions.html">Explore solutions</a>
+    </div>
+    <div class="reassure">No sensors to install · No long-term lock-in to pilot</div>
+  </div>
+</section>
+
+<!-- ============================================================
+     11. FOOTER
+     ============================================================ -->
+<footer class="home-footer">
+  <div class="container">
+    <div class="marks">
+      <span class="mark"><span class="dot"></span>Tenant Isolation</span>
+      <span class="mark"><span class="dot"></span>Encrypted at Rest</span>
+      <span class="mark"><span class="dot"></span>Audited Changes</span>
+      <span class="mark"><span class="dot"></span>Compliance · Targeted</span>
+    </div>
+    <div class="legal">© 2026 Report.Farm · <a href="mailto:ops@report.farm">ops@report.farm</a> · <a href="https://report.farm">report.farm</a></div>
+  </div>
+</footer>
+
+<script type="module" src="./marketing/site.js" defer></script>
+<script type="module" src="./marketing/reveal.js"></script>
+</body>
+</html>

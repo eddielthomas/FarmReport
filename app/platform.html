@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="en" data-surface="light">
+<head>
+<meta charset="utf-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Platform — How Report.Farm turns satellites, weather and field signals into farm intelligence · Report.Farm</title>
+<meta name="description" content="A standards-first, multi-tenant platform that fuses satellite imagery, SAR, weather and field signals into a live digital twin of every farm — detects what changed, estimates the financial impact, and ships scheduled reports plus urgent alerts. Deploys as managed SaaS, in your own cloud, or self-managed." />
+<meta name="keywords" content="farm intelligence platform, autonomous farm operating layer, satellite crop monitoring, Sentinel-2, Sentinel-1 SAR, Landsat, NDVI, change detection, farm digital twin, scheduled farm reports, crop alerts, STAC, OGC, COG, standards-first, agriculture SaaS, supply-chain sourcing intelligence" />
+<meta name="theme-color" content="#FBFCFE" />
+<meta name="author" content="Report.Farm" />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<meta name="color-scheme" content="light" />
+<link rel="canonical" href="https://report.farm/platform.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Report.Farm" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:title" content="Platform — The autonomous farm operating layer · Report.Farm" />
+<meta property="og:description" content="Report.Farm fuses satellite imagery, SAR, weather and field signals into a live digital twin of every farm — detects change, estimates the financial impact, and delivers scheduled reports plus urgent alerts. Standards-first. Managed, in your cloud, or self-managed." />
+<meta property="og:url" content="https://report.farm/platform.html" />
+<meta property="og:image" content="https://report.farm/og/platform.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Report.Farm platform — satellites, weather and field signals fused into farm intelligence, reports and alerts" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@ReportFarm" />
+<meta name="twitter:title" content="Platform — The autonomous farm operating layer · Report.Farm" />
+<meta name="twitter:description" content="Satellite + SAR + weather + field signals, fused into a farm digital twin that explains change and ships reports and alerts. Managed SaaS, your cloud, or self-managed." />
+<meta name="twitter:image" content="https://report.farm/og/platform.png" />
+<meta name="twitter:image:alt" content="Report.Farm platform — satellites, weather and field signals fused into farm intelligence, reports and alerts" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="./marketing/site.css">
+<link rel="stylesheet" href="./marketing/premium.css">
+<link rel="stylesheet" href="/src/marketing-tokens.css">
+
+<style>
+  /* Page-local — premium LIGHT system. Color from canonical tokens only. */
+
+  /* Outcome stat band */
+  .stat-band{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-card)}
+  .stat-band .cell{background:var(--surface);padding:28px 26px}
+  .stat-band .cell .n{font-family:var(--font-display);font-size:34px;font-weight:800;letter-spacing:var(--tracking-tight);color:var(--accent-deep);line-height:1.05}
+  .stat-band .cell .k{font-family:var(--font-sans);font-size:13.5px;color:var(--text-muted);line-height:1.55;margin-top:8px}
+  .stat-band .cell .src{font-family:var(--font-mono);font-size:9.5px;letter-spacing:var(--tracking-wider);text-transform:uppercase;color:var(--text-faint);margin-top:10px}
+
+  /* Capability split bullets */
+  .cap-bullets{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:18px}
+  .cap-bullets li{display:flex;align-items:flex-start;gap:14px}
+  .cap-bullets li .b{flex:0 0 32px;height:32px;border-radius:9px;background:var(--accent-soft);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--accent-deep);font-size:14px;font-family:var(--font-mono)}
+  .cap-bullets li .t{font-size:13.5px;color:var(--text);line-height:1.55}
+  .cap-bullets li .t b{display:block;font-weight:700;margin-bottom:3px;color:var(--text)}
+  .cap-bullets li .t span{color:var(--text-muted);font-size:12.5px}
+  .cap-bullets li .t code{font-family:var(--font-mono);font-size:11.5px;color:var(--accent-deep);background:var(--accent-tint);padding:1px 5px;border-radius:5px}
+
+  /* Trust pillars */
+  .trust-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+  .trust-card{position:relative;padding:28px 26px;border-radius:var(--radius-lg);background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-card);transition:transform .3s,box-shadow .3s,border-color .3s;overflow:hidden}
+  .trust-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--border-strong)}
+  .trust-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);opacity:0;transition:opacity .3s}
+  .trust-card:hover::before{opacity:1}
+  .trust-card .ico{width:42px;height:42px;border-radius:11px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;color:var(--accent-deep);font-size:18px;font-family:var(--font-mono);margin-bottom:16px}
+  .trust-card h3{font-family:var(--font-display);font-size:18px;font-weight:700;color:var(--text);margin-bottom:8px;letter-spacing:var(--tracking-tight)}
+  .trust-card p{font-size:13px;color:var(--text-muted);line-height:1.65}
+
+  /* Audience cards */
+  .aud-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+  .aud-card{position:relative;padding:32px 28px;border-radius:var(--radius-lg);background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-card);transition:transform .3s,box-shadow .3s;overflow:hidden;display:flex;flex-direction:column}
+  .aud-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift)}
+  .aud-card .tag{font-family:var(--font-mono);font-size:9.5px;font-weight:700;color:var(--accent-deep);letter-spacing:var(--tracking-widest);text-transform:uppercase;margin-bottom:14px}
+  .aud-card h3{font-family:var(--font-display);font-size:21px;font-weight:700;color:var(--text);margin-bottom:10px;letter-spacing:var(--tracking-tight)}
+  .aud-card .who{font-family:var(--font-mono);font-size:10.5px;color:var(--text-subtle);letter-spacing:.04em;margin-bottom:14px;line-height:1.6}
+  .aud-card p{font-size:13.5px;color:var(--text-muted);line-height:1.7;margin-bottom:16px}
+  .aud-card ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin-top:auto}
+  .aud-card ul li{font-size:12.5px;color:var(--text-muted);padding-left:20px;position:relative;line-height:1.5}
+  .aud-card ul li::before{content:'▸';position:absolute;left:0;color:var(--accent-deep);font-size:11px;top:1px}
+
+  /* Deployment cards */
+  .deploy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+  .deploy-card{position:relative;padding:30px 26px;border-radius:var(--radius-lg);background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-card);transition:transform .3s,box-shadow .3s,border-color .3s;overflow:hidden}
+  .deploy-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lift);border-color:var(--border-strong)}
+  .deploy-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);opacity:.7}
+  .deploy-card .tag{font-family:var(--font-mono);font-size:9.5px;font-weight:700;color:var(--accent-deep);letter-spacing:var(--tracking-widest);text-transform:uppercase;margin-bottom:12px}
+  .deploy-card h3{font-family:var(--font-display);font-size:20px;font-weight:700;color:var(--text);margin-bottom:10px;letter-spacing:var(--tracking-tight)}
+  .deploy-card p{font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:14px}
+  .deploy-card ul{list-style:none;display:flex;flex-direction:column;gap:6px}
+  .deploy-card ul li{font-size:12px;color:var(--text-muted);padding-left:18px;position:relative}
+  .deploy-card ul li::before{content:'▸';position:absolute;left:0;color:var(--accent-deep);font-size:10px;top:2px}
+
+  /* Webhook event list */
+  .events{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin-top:16px}
+  .events .ev{display:flex;align-items:center;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);font-family:var(--font-mono);font-size:11.5px;box-shadow:var(--shadow-soft)}
+  .events .ev .d{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-soft);flex:0 0 auto}
+  .events .ev code{color:var(--accent-deep);font-weight:600}
+  .events .ev .desc{color:var(--text-subtle);font-size:10.5px;margin-left:auto}
+
+  /* Inverted code block — the single legitimately-dark surface */
+  .code-card{position:relative;border-radius:var(--radius-lg);border:1px solid var(--border-strong);background:var(--surface-inverted);overflow:hidden;font-family:var(--font-mono);font-size:12.5px;line-height:1.65;box-shadow:var(--shadow-pop)}
+  .code-card .bar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.08);font-family:var(--font-mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#9aa6c4}
+  .code-card .bar .dot{width:9px;height:9px;border-radius:50%}
+  .code-card .bar .dot.r{background:#fb7185}.code-card .bar .dot.y{background:#f59e0b}.code-card .bar .dot.g{background:#34d399}
+  .code-card pre{margin:0;padding:18px 20px;color:#e8edf8;overflow-x:auto;white-space:pre}
+  .code-card pre .kw{color:#a78bfa}
+  .code-card pre .str{color:#34d399}
+  .code-card pre .com{color:#7388a8;font-style:italic}
+  .code-card pre .fn{color:#6bc0ff}
+  .code-card pre .num{color:#fbbf24}
+
+  /* Compliance callout */
+  .compliance-note{padding:18px 22px;border-radius:var(--radius-md);background:var(--accent-tint);border:1px solid var(--border);font-size:12.5px;color:var(--text-muted);line-height:1.7;margin-top:18px}
+  .compliance-note b{color:var(--amber);font-weight:700;letter-spacing:.02em}
+  .compliance-note a{color:var(--accent-deep);text-decoration:underline}
+
+  /* Flow steps — value-level "what you get", not the method */
+  .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:8px}
+  .flow .node{position:relative;padding:24px 22px;border-radius:var(--radius-lg);background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-card)}
+  .flow .node .step{font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:var(--tracking-wider);text-transform:uppercase;color:var(--accent-deep);margin-bottom:10px}
+  .flow .node h4{font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--text);margin-bottom:7px;letter-spacing:var(--tracking-tight)}
+  .flow .node p{font-size:12.5px;color:var(--text-muted);line-height:1.6}
+
+  /* Capability matrix (value-level surfaces) */
+  .matrix{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px;border:1px solid var(--border);border-radius:var(--radius-md);overflow:hidden;background:var(--surface)}
+  .matrix th,.matrix td{padding:12px 14px;text-align:left;border-bottom:1px solid var(--border)}
+  .matrix thead th{font-family:var(--font-mono);font-size:9.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent-deep);background:var(--accent-tint)}
+  .matrix tbody tr:last-child td{border-bottom:0}
+  .matrix tbody tr:hover{background:var(--accent-tint)}
+  .matrix td.name{font-family:var(--font-display);color:var(--text);font-weight:600}
+  .matrix td.role{font-family:var(--font-mono);font-size:11px;color:var(--text-muted)}
+  @media (max-width:520px){
+    .split .visual:has(> .matrix){overflow-x:auto;aspect-ratio:auto;-webkit-overflow-scrolling:touch}
+    .matrix{min-width:460px}
+  }
+
+  /* Visual panel content */
+  .vpanel{position:absolute;inset:0;background:linear-gradient(165deg,var(--accent-tint),var(--surface));border-radius:var(--radius-lg);border:1px solid var(--border);display:flex;align-items:center;justify-content:center}
+  .vpanel .inner{text-align:center;padding:24px}
+  .vpanel .badge{font-family:var(--font-mono);font-size:10px;letter-spacing:var(--tracking-wider);text-transform:uppercase;color:var(--accent-deep);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-full);padding:6px 14px;display:inline-block;box-shadow:var(--shadow-soft)}
+  .vpanel .lines{margin-top:18px;font-family:var(--font-mono);font-size:11px;color:var(--text-subtle);letter-spacing:.04em;line-height:2.1}
+  .vpanel .lines .hi{color:var(--accent-deep);font-weight:700}
+</style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://report.farm/#org",
+      "name": "Report.Farm",
+      "url": "https://report.farm/",
+      "email": "ops@report.farm",
+      "sameAs": ["https://report.farm/"]
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://report.farm/platform.html#webpage",
+      "url": "https://report.farm/platform.html",
+      "name": "Platform — How Report.Farm turns satellites, weather and field signals into farm intelligence",
+      "isPartOf": { "@id": "https://report.farm/#org" },
+      "primaryImageOfPage": "https://report.farm/og/platform.png",
+      "about": "Standards-first, multi-tenant platform that turns satellite, SAR, weather and field data into a live farm digital twin, scheduled reports and urgent alerts",
+      "specialty": "Autonomous farm intelligence from Earth observation, weather and field signals",
+      "audience": {
+        "@type": "Audience",
+        "audienceType": "Farmers and growers, landowners and estates, and agribusiness and supply-chain buyers"
+      }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Report.Farm Platform",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web, Linux (self-managed / on-prem), customer cloud (AWS / Azure / GCP)",
+      "description": "Standards-first, multi-tenant platform that fuses satellite imagery, SAR, weather and field signals into a live digital twin of every farm — detects meaningful change, estimates the financial impact, and delivers scheduled reports plus urgent alerts. Available as managed SaaS, single-tenant in your own cloud, or self-managed.",
+      "featureList": [
+        "Autonomous monitoring — continuously ingests satellite, weather and optional sensor and machinery data and detects change without manual polling",
+        "Standards-first Earth observation (Sentinel-2, Sentinel-1 SAR and Landsat) that sees through cloud, canopy and darkness",
+        "Vegetation indices and change detection (NDVI, EVI and multi-date differencing) tuned to each zone's intent",
+        "Farm digital twin — parcels, zones, assets, observations, events and historical states as the system of record",
+        "Scheduled reports plus scarce, financially meaningful alerts with confidence and data-quality notes",
+        "Multi-tenant with strict per-tenant data isolation",
+        "Role-based access and an audit trail on every action",
+        "Open standards first: STAC, OGC APIs, COG, GeoParquet, ISOBUS/ISOXML, MQTT",
+        "API and webhook event stream for integration with FMIS, GIS and ERP systems",
+        "Managed SaaS, single-tenant customer cloud, or self-managed deployment"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home",     "item": "https://report.farm/" },
+        { "@type": "ListItem", "position": 2, "name": "Platform", "item": "https://report.farm/platform.html" }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div class="grid-bg"></div>
+<div class="glow-orb a"></div>
+<div class="glow-orb b"></div>
+
+<nav class="nav">
+  <a class="nav-logo" href="./"><span class="logo-mark"></span><span><span class="nav-logo-text">Report.Farm</span><span class="nav-logo-sub">Autonomous farm intelligence</span></span></a>
+  <div class="nav-links">
+    <div class="nav-item"><a class="nav-trigger" href="./solutions.html">Solutions</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./industries.html">Industries</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./platform.html">Platform</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./company.html">Company</a></div>
+  </div>
+  <div class="nav-cta">
+    <a class="btn btn-ghost btn-sm" href="./contact.html">Contact</a>
+    <a class="btn btn-primary btn-sm" href="./access.html">Open Report.Farm →</a>
+    <button class="nav-burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<aside class="mobile-drawer">
+  <h4>Pages</h4><a href="./">Home</a><a href="./solutions.html">Solutions</a><a href="./industries.html">Industries</a><a href="./platform.html">Platform</a><a href="./company.html">Company</a><a href="./contact.html">Contact</a><a href="./access.html">Open Report.Farm →</a>
+</aside>
+
+<header class="page-hero">
+  <div class="crumbs"><a href="./">Report.Farm</a><span>/</span><span>Platform</span></div>
+  <div class="hero-eyebrow"><span class="dot pulse"></span>The autonomous farm operating layer</div>
+  <h1>Know what changed on your land <span class="grad">before it costs you the season</span>.</h1>
+  <p class="reveal">Report.Farm fuses satellite imagery, radar, weather and field signals into a live digital twin of every farm — then watches it continuously, explains what changed and what it's likely to cost, and delivers scheduled reports plus urgent alerts. Built standards-first, so it plugs into the tools you already run.</p>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px">
+    <a class="btn btn-primary btn-lg" href="./contact.html">Request a Farm Plan</a>
+    <a class="btn btn-outline btn-lg" href="./dashboard.html">See the Command Center</a>
+  </div>
+</header>
+
+<!-- ── WHY IT MATTERS — cited stat band ─────────────────────────── -->
+<section class="tight" id="why">
+  <div class="container">
+    <div class="section-eyebrow reveal">THE STAKES</div>
+    <h2 class="section-title reveal">The most expensive change on a farm is the one nobody sees in time.</h2>
+    <p class="section-sub reveal">Crop stress, water problems, disease and land change build for weeks before anyone walks the field. The platform exists to close that window — with continuous eyes overhead and a report in your inbox.</p>
+
+    <div class="stat-band reveal">
+      <div class="cell">
+        <div class="n">~40%</div>
+        <div class="k">Of global crop production lost every year to pests and diseases — much of it detectable early as stress.</div>
+        <div class="src">Source: FAO, 2021</div>
+      </div>
+      <div class="cell">
+        <div class="n">~70%</div>
+        <div class="k">Of the world's freshwater withdrawals go to agriculture — making water anomalies costly and worth catching fast.</div>
+        <div class="src">Source: FAO / UN-Water</div>
+      </div>
+      <div class="cell">
+        <div class="n">5 days</div>
+        <div class="k">Sentinel-2 revisit at the equator with two satellites — the free, high-frequency baseline the platform runs on.</div>
+        <div class="src">Source: Copernicus / ESA</div>
+      </div>
+      <div class="cell">
+        <div class="n">50+ yrs</div>
+        <div class="k">Open Landsat Earth-observation record since 1972 — decades of baseline to measure this season against.</div>
+        <div class="src">Source: USGS / NASA</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WHAT THE PLATFORM DOES — value-level flow, no method ──────── -->
+<section id="how" class="reveal">
+  <div class="container">
+    <div class="section-eyebrow">WHAT YOU GET</div>
+    <h2 class="section-title">Signals in. A clear decision out. On a schedule you set.</h2>
+    <p class="section-sub">A clean line from open satellite observation to a report your team can act on — with the confidence, the likely cost, and the recommended next step attached.</p>
+
+    <div class="flow">
+      <div class="node">
+        <div class="step">01 · Ingest</div>
+        <h4>Continuous eyes overhead</h4>
+        <p>Satellite imagery, radar, weather and optional field sensors flow in automatically on every revisit — no one has to remember to pull data or check the field.</p>
+      </div>
+      <div class="node">
+        <div class="step">02 · Detect</div>
+        <h4>What changed, and where</h4>
+        <p>Indices and change detection surface emerging crop stress, water anomalies, disease clusters and land change across each zone — ranked so you work the highest-impact issue first.</p>
+      </div>
+      <div class="node">
+        <div class="step">03 · Explain</div>
+        <h4>Why, and what it's worth</h4>
+        <p>Each finding comes with a likely cause, a confidence score, and an estimate of the revenue or cost at stake — so it's a decision, not a raw pixel.</p>
+      </div>
+      <div class="node">
+        <div class="step">04 · Report &amp; alert</div>
+        <h4>Delivered on your terms</h4>
+        <p>Scheduled reports land on your cadence; urgent alerts fire only when confidence and business impact clear your thresholds — with every finding recorded and reproducible.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PRE-FAILURE INTELLIGENCE (value split) ───────────────────── -->
+<section id="intelligence">
+  <div class="container">
+    <div class="split reveal">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">FARM INTELLIGENCE</div>
+        <h2>See the change before it costs you the yield.</h2>
+        <p>Most farm software shows you a dashboard of what you already knew. Report.Farm is built to tell you what changed since last week and what it's likely to mean — so the work moves from reacting after harvest to acting mid-season, while there's still time to protect the crop.</p>
+        <ul class="cap-bullets">
+          <li><span class="b">◉</span><span class="t"><b>Standards-first Earth observation</b><span>Runs on open <b>Sentinel-2</b> and <b>Landsat</b> optical imagery for a low-cost, high-frequency baseline — escalating to commercial imagery only when a finding warrants it.</span></span></li>
+          <li><span class="b">◎</span><span class="t"><b>Sees through cloud and night</b><span><b>Sentinel-1</b> C-band radar isn't stopped by cloud or darkness, so water and structure signals stay consistent across seasons and weather.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Indices, change &amp; a digital twin</b><span>NDVI, EVI and multi-date change detection feed a living twin of your parcels, zones and assets — every finding ranked by likely business impact, not by whichever pixel moved most.</span></span></li>
+          <li><span class="b">⚞</span><span class="t"><b>Your fields, your zone intent</b><span>Draw the ground you care about — a block, an orchard, a ranch, a sourcing region — and tell each zone its intent, so a barn that should never hold water alerts differently than a wetland.</span></span></li>
+        </ul>
+      </div>
+      <div class="visual">
+        <div class="vpanel">
+          <div class="inner">
+            <span class="badge">Farm intelligence</span>
+            <div class="lines">
+              <div>INGEST&nbsp;&nbsp;<span class="hi">optical · SAR · weather</span></div>
+              <div>DETECT&nbsp;&nbsp;<span class="hi">change, ranked by impact</span></div>
+              <div>DELIVER&nbsp;<span class="hi">reports + urgent alerts</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── TRUST & GOVERNANCE — the platform's credibility ──────────── -->
+<section id="trust" class="reveal" style="background:linear-gradient(180deg,transparent,var(--accent-tint),transparent)">
+  <div class="container">
+    <div class="section-eyebrow">TRUST BY DESIGN</div>
+    <h2 class="section-title">Built for the people who carry the yield and the budget.</h2>
+    <p class="section-sub">Growers, farm managers and sourcing teams don't just need a pretty map — they need findings they can act on and defend, backed by evidence and a record of how confident the system was. Governance and provenance are first-class parts of the platform, not an afterthought.</p>
+
+    <div class="trust-grid">
+      <div class="trust-card">
+        <div class="ico">⬚</div>
+        <h3>Multi-tenant isolation</h3>
+        <p>Every operation's fields, findings and history are strictly isolated from every other tenant — enforced at the data layer, so one customer can never see another's farms.</p>
+      </div>
+      <div class="trust-card">
+        <div class="ico">⊞</div>
+        <h3>Role-based access</h3>
+        <p>Surfaces are governed by role. Owners, agronomists, farm managers and outside partners each get a scoped view — see exactly what the job needs, nothing more.</p>
+      </div>
+      <div class="trust-card">
+        <div class="ico">▤</div>
+        <h3>Audit trail</h3>
+        <p>Every observation, query and action is recorded to a durable audit trail — so what the platform saw, when, and who acted on it is never in question.</p>
+      </div>
+      <div class="trust-card">
+        <div class="ico">⎙</div>
+        <h3>Evidence-grade reports</h3>
+        <p>Reports export as defensible packages — before/after imagery, indices, confidence and provenance — the kind of record you can put in front of a lender, an insurer or a buyer.</p>
+      </div>
+      <div class="trust-card">
+        <div class="ico">◷</div>
+        <h3>Standards-first integration</h3>
+        <p>Open standards come first — STAC, OGC APIs, COG and GeoParquet for geospatial; ISOBUS/ISOXML and MQTT for machinery and sensors — so findings flow into the tools you already run.</p>
+      </div>
+      <div class="trust-card">
+        <div class="ico">⟳</div>
+        <h3>Continuously learning</h3>
+        <p>Your field feedback and real outcomes feed back in, so the intelligence sharpens over time against the ground you actually farm — highest-value labels first.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── BUILT FOR YOUR MANDATE — audience targeting ──────────────── -->
+<section id="audiences">
+  <div class="container">
+    <div class="section-eyebrow reveal">BUILT FOR YOUR MANDATE</div>
+    <h2 class="section-title reveal">One platform. Three kinds of grower.</h2>
+    <p class="section-sub reveal">Different mandates, the same need: see change coming, understand what it's worth, and act before the season is lost.</p>
+
+    <div class="aud-grid reveal">
+      <div class="aud-card">
+        <div class="tag">Farmers &amp; growers</div>
+        <h3>Protect the crop and the season.</h3>
+        <div class="who">Row crops · orchards · vineyards · livestock &amp; mixed operations</div>
+        <p>Crop stress, water problems and disease start small and spread fast. Watch every zone for emerging stress, irrigation anomalies and change across the whole operation — without wiring sensors across thousands of acres.</p>
+        <ul>
+          <li>Whole-farm coverage from above, no field hardware required</li>
+          <li>Early warning on crop stress, water anomalies and disease clusters</li>
+          <li>Reports and alerts scoped to each zone's intent and your cadence</li>
+        </ul>
+        <p style="margin-top:18px;margin-bottom:0;font-family:var(--font-mono);font-size:10.5px;color:var(--text-subtle)">~40% — global crop production lost each year to pests and disease. <span style="color:var(--text-faint)">FAO, 2021</span></p>
+      </div>
+
+      <div class="aud-card">
+        <div class="tag">Landowners &amp; estates</div>
+        <h3>Protect the ground itself.</h3>
+        <div class="who">Ranches · agribusiness · plantations · large estates</div>
+        <p>On land too large to walk, water loss, seepage and land change quietly erode value and yield. Keep a continuous, evidence-grade view of the whole property line — and a record you can put in front of a lender, insurer or buyer.</p>
+        <ul>
+          <li>Whole-property coverage across land too large to inspect</li>
+          <li>Early warning on water loss, seepage and land movement</li>
+          <li>Evidence-grade records to protect land and asset value</li>
+        </ul>
+        <p style="margin-top:18px;margin-bottom:0;font-family:var(--font-mono);font-size:10.5px;color:var(--text-subtle)">~70% — of global freshwater withdrawals used by agriculture. <span style="color:var(--text-faint)">FAO / UN-Water</span></p>
+      </div>
+
+      <div class="aud-card">
+        <div class="tag">Agribusiness &amp; buyers</div>
+        <h3>De-risk the supply.</h3>
+        <div class="who">Major buyers · food &amp; beverage · traders · lenders &amp; insurers</div>
+        <p>Your risk lives on land you don't own. Monitor a portfolio of suppliers and sourcing regions from one place — get early warning on drought, flood and yield shortfall before it reaches your contracts.</p>
+        <ul>
+          <li>Portfolio view across suppliers and sourcing regions</li>
+          <li>API and webhooks to wire findings into ERP and sourcing systems</li>
+          <li>Independent condition data for underwriting and lending</li>
+        </ul>
+        <p style="margin-top:18px;margin-bottom:0;font-family:var(--font-mono);font-size:10.5px;color:var(--text-subtle)">5-day — Sentinel-2 revisit gives every region a fresh, free baseline. <span style="color:var(--text-faint)">Copernicus / ESA</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── COMMAND CENTER — surfaces, value-level ───────────────────── -->
+<section id="command-center">
+  <div class="container">
+    <div class="split reveal" data-screenshot="platform-command-center">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">THE COMMAND CENTER</div>
+        <h2>From region to single field, in one context.</h2>
+        <p>Move from a whole-portfolio map down to a single zone without changing tools. Every surface is role-based, every action is logged, and the map, the findings and the timeline always agree — so an observation becomes a decision becomes a work order, on one screen.</p>
+        <ul class="cap-bullets">
+          <li><span class="b">◉</span><span class="t"><b>One shared map</b><span>A single, up-to-date operating picture from portfolio overview to individual zone — imagery, indices and overlays all sharing one state.</span></span></li>
+          <li><span class="b">◔</span><span class="t"><b>Reports &amp; alerts, built in</b><span>Scheduled reports, watchlists, thresholds and work orders live alongside the findings — not bolted on in a separate tool.</span></span></li>
+          <li><span class="b">⊞</span><span class="t"><b>Role-based surfaces</b><span>Owners, agronomists, farm managers and outside partners each get a scoped surface governed by role-based access.</span></span></li>
+          <li><span class="b">⚞</span><span class="t"><b>Logged by default</b><span>Every query, decision and action is appended to a per-tenant audit trail — evidence-grade without anyone having to remember to record it.</span></span></li>
+        </ul>
+        <a class="btn btn-primary" href="./dashboard.html">See it in the Command Center →</a>
+      </div>
+      <div class="visual">
+        <div class="vpanel">
+          <div class="inner">
+            <span class="badge">One operating picture</span>
+            <div class="lines">
+              <div>MAP&nbsp;&nbsp;&nbsp;&nbsp;<span class="hi">portfolio → zone</span></div>
+              <div>REPORTS&nbsp;<span class="hi">scheduled + on-demand</span></div>
+              <div>ALERTS&nbsp;&nbsp;<span class="hi">scarce · impact-ranked</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ROLE-GATED SURFACES (value matrix) ───────────────────────── -->
+<section id="surfaces">
+  <div class="container">
+    <div class="split flip reveal">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">ROLE-BASED SURFACES</div>
+        <h2>Everyone sees exactly their job.</h2>
+        <p>Access isn't a setting people forget — it's how the platform is built. Each role gets a purpose-built surface, scoped by role-based access, so an operation's fields and data stay with the people who own them.</p>
+        <ul class="cap-bullets">
+          <li><span class="b">⊞</span><span class="t"><b>Scoped per role</b><span>A farm manager, an agronomist, an owner and an outside partner each see a different, appropriate slice of the same system.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Scoped per tenant</b><span>Every surface respects strict tenant isolation — one customer's team can never reach another customer's farms.</span></span></li>
+          <li><span class="b">◔</span><span class="t"><b>Logged per action</b><span>Whatever a role does on its surface is recorded to the audit trail automatically.</span></span></li>
+        </ul>
+      </div>
+      <div class="visual" style="padding:24px">
+        <table class="matrix">
+          <thead>
+            <tr><th>Surface</th><th>Who it's for</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="name">Command</td><td class="role">Owners &amp; GMs</td></tr>
+            <tr><td class="name">Map</td><td class="role">Agronomists &amp; field teams</td></tr>
+            <tr><td class="name">Reports</td><td class="role">Farm managers</td></tr>
+            <tr><td class="name">Findings</td><td class="role">Agronomists</td></tr>
+            <tr><td class="name">Analytics</td><td class="role">Owners &amp; planners</td></tr>
+            <tr><td class="name">Portal</td><td class="role">Buyers &amp; partners</td></tr>
+            <tr><td class="name">Audit</td><td class="role">Lenders &amp; insurers</td></tr>
+            <tr><td class="name">Admin</td><td class="role">Tenant administrators</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── API + INTEGRATION ────────────────────────────────────────── -->
+<section id="api-integration">
+  <div class="container">
+    <div class="split flip reveal">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">API · WEBHOOKS</div>
+        <h2>Wire Report.Farm into your stack.</h2>
+        <p>The platform is API-first and standards-first. Findings, reports and audit records are reachable through a versioned REST surface secured with token auth and per-tenant scopes, with geospatial payloads served as GeoJSON. Events emit as webhooks so your downstream systems — FMIS, GIS, ERP — react in real time.</p>
+        <ul class="cap-bullets">
+          <li><span class="b">⊞</span><span class="t"><b>Versioned REST API</b><span>A stable <code>/api/v1</code> surface so integrations don't break under you.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Scoped, tenant-aware auth</b><span>Tokens are tenant-scoped with explicit grants per integration — least privilege by default.</span></span></li>
+          <li><span class="b">◎</span><span class="t"><b>Signed webhook events</b><span>Reliable, signed event delivery with retries, so nothing silently goes missing.</span></span></li>
+        </ul>
+        <div class="events">
+          <div class="ev"><span class="d"></span><code>observation.ingested</code><span class="desc">new scene</span></div>
+          <div class="ev"><span class="d"></span><code>change.detected</code><span class="desc">zone change</span></div>
+          <div class="ev"><span class="d"></span><code>alert.raised</code><span class="desc">threshold hit</span></div>
+          <div class="ev"><span class="d"></span><code>report.ready</code><span class="desc">scheduled</span></div>
+          <div class="ev"><span class="d"></span><code>recommendation.created</code><span class="desc">next action</span></div>
+          <div class="ev"><span class="d"></span><code>report.export.ready</code><span class="desc">evidence pack</span></div>
+        </div>
+      </div>
+      <div class="visual" style="padding:24px;aspect-ratio:auto">
+        <div class="code-card">
+          <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span style="margin-left:auto">GET · /api/v1/findings</span></div>
+<pre><span class="com">// Pull confirmed findings for a farm's fields</span>
+<span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(
+  <span class="str">'https://api.report.farm/api/v1/findings'</span> +
+  <span class="str">'?farm=north-valley&amp;status=confirmed&amp;since=7d'</span>,
+  {
+    headers: {
+      <span class="str">'Authorization'</span>: <span class="str">`Bearer ${</span>TOKEN<span class="str">}`</span>,
+      <span class="str">'X-Tenant-Id'</span>: <span class="str">'your-org'</span>,
+      <span class="str">'Accept'</span>:        <span class="str">'application/geo+json'</span>
+    }
+  }
+);
+
+<span class="kw">const</span> { features } = <span class="kw">await</span> res.<span class="fn">json</span>();
+
+<span class="com">// Each finding carries priority + an evidence link</span>
+features.<span class="fn">forEach</span>(f =&gt; {
+  console.<span class="fn">log</span>(
+    f.id,
+    f.properties.priority,
+    f.properties.evidence_url
+  );
+});</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── SECURITY & COMPLIANCE ────────────────────────────────────── -->
+<section id="security-compliance">
+  <div class="container">
+    <div class="split reveal">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">SECURITY · COMPLIANCE</div>
+        <h2>Designed for data you'd route through legal.</h2>
+        <p>Report.Farm handles field boundaries, yields and sourcing data that customers treat as commercially sensitive. Tenancy, access control, audit and key management are first-class — not bolted on — and every export is built to stand up to outside review.</p>
+        <ul class="cap-bullets">
+          <li><span class="b">⚞</span><span class="t"><b>Strict tenant isolation</b><span>Each operation's data is isolated at the data layer — not just hidden in the interface.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Token auth + RBAC</b><span>Short-lived, scoped credentials with explicit grants. Integrations and service accounts get their own profile, never a shared key.</span></span></li>
+          <li><span class="b">◔</span><span class="t"><b>Durable audit trail</b><span>Signed and queryable by finding or user. Evidence-grade exports for lender, insurer and buyer review.</span></span></li>
+          <li><span class="b">⌬</span><span class="t"><b>You own your data</b><span>Clear data ownership and export. Deploy in your own cloud or self-managed when residency matters.</span></span></li>
+        </ul>
+        <div class="compliance-note">
+          <b>Compliance posture.</b> A security &amp; compliance program — SOC 2, GDPR/CCPA-aligned data handling, SSO and RBAC — is <b>underway and not yet independently audited.</b> A diligence pack (control matrix, SBOM, data-processing terms) is available under NDA. Request it via <a href="./contact.html">/contact</a>.
+        </div>
+      </div>
+      <div class="visual">
+        <div class="vpanel">
+          <div class="inner">
+            <span class="badge">Security program</span>
+            <div class="lines">
+              <div>TENANT ISOLATION</div>
+              <div>SSO · RBAC</div>
+              <div>SOC 2 (IN PROGRESS)</div>
+              <div>GDPR / CCPA ALIGNED</div>
+              <div style="margin-top:10px;color:var(--amber);font-weight:700;font-size:9.5px">PROGRAM UNDERWAY · NOT YET AUDITED</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DEPLOYMENT OPTIONS ───────────────────────────────────────── -->
+<section id="deployment">
+  <div class="container">
+    <div class="section-eyebrow reveal">DEPLOYMENT</div>
+    <h2 class="section-title reveal">Run it the way your team has already approved.</h2>
+    <p class="section-sub reveal">Same platform, three operating models. We adapt to your data-residency and security requirements — not the other way around.</p>
+
+    <div class="deploy-grid reveal">
+      <div class="deploy-card">
+        <div class="tag">OPTION 01 · MANAGED SAAS</div>
+        <h3>Fastest to value.</h3>
+        <p>Our managed, multi-tenant deployment with strict per-tenant isolation, the quickest onboarding, and a fully managed upgrade cadence.</p>
+        <ul>
+          <li>Strict per-tenant data isolation</li>
+          <li>Onboard a farm from map to monitoring fast</li>
+          <li>Managed upgrades, monitoring and on-call</li>
+          <li>Best for growers, landowners and pilots</li>
+        </ul>
+      </div>
+      <div class="deploy-card">
+        <div class="tag">OPTION 02 · YOUR CLOUD</div>
+        <h3>Single-tenant in your cloud.</h3>
+        <p>Report.Farm deployed into your own AWS, Azure or GCP account. Your network, your keys, your identity, your data — operated by us under a managed-service agreement.</p>
+        <ul>
+          <li>Dedicated environment + customer-managed keys</li>
+          <li>Runs in your cloud of record</li>
+          <li>Data never leaves your tenancy</li>
+          <li>Best for agribusiness and enterprise buyers</li>
+        </ul>
+      </div>
+      <div class="deploy-card">
+        <div class="tag">OPTION 03 · SELF-MANAGED</div>
+        <h3>Your infrastructure, your control.</h3>
+        <p>Self-managed deployment for teams with strict data-residency or sovereignty requirements. Deployment guide and runbooks shared under NDA.</p>
+        <ul>
+          <li>On-prem or private-VPC install bundle</li>
+          <li>Bring your own identity and key management</li>
+          <li>Customer-operated with Report.Farm support</li>
+          <li>Best for data-residency and sovereignty mandates</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── FINAL CTA ────────────────────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2>Tell us about the ground you farm.</h2>
+      <p>Share your fields, your crops, or a sourcing region. We'll come back with what the platform would watch, which signals it would run on, and a path to your first report.</p>
+      <div class="a">
+        <a class="btn btn-primary btn-lg" href="./contact.html">Request a Farm Plan</a>
+        <a class="btn btn-outline btn-lg" href="./dashboard.html">See the Command Center</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand"><a class="nav-logo" href="./"><span class="logo-mark"></span><span><span class="nav-logo-text">Report.Farm</span><span class="nav-logo-sub">Autonomous farm intelligence</span></span></a><p>Satellite, radar, weather and field signals fused into a live digital twin of every farm — explaining what changed, what it's worth, and what to do next through scheduled reports and urgent alerts. Managed, in your cloud, or self-managed.</p></div>
+    <div><h5>Solutions</h5><a href="./solutions.html#leak-detection">Crop &amp; Water</a><a href="./solutions.html#asset-recovery">Change Detection</a><a href="./solutions.html#infra-risk">Yield &amp; Risk</a><a href="./solutions.html#physical-ai">Farm Digital Twin</a><a href="./solutions.html#operations">Reports &amp; Alerts</a></div>
+    <div><h5>Industries</h5><a href="./industries.html#growers">Row Crops</a><a href="./industries.html#buyers">Orchards &amp; Vineyards</a><a href="./industries.html#brands">Livestock &amp; Mixed</a><a href="./industries.html#advisors">Agribusiness &amp; Buyers</a><a href="./industries.html#insurers">Ag Insurance</a></div>
+    <div><h5>Platform</h5><a href="#why">The Stakes</a><a href="#how">What You Get</a><a href="#intelligence">Farm Intelligence</a><a href="#trust">Trust by Design</a><a href="#command-center">Command Center</a><a href="#api-integration">API &amp; Webhooks</a><a href="#deployment">Deployment</a></div>
+    <div><h5>Company</h5><a href="./company.html">About</a><a href="./company.html#careers">Careers</a><a href="./contact.html">Contact</a><a href="./access.html">Open Report.Farm</a></div>
+  </div>
+  <div class="foot-bar"><div>© <span data-year>2026</span> Report.Farm · Pilot v0.9</div><div class="l"><a href="./company.html#privacy">Privacy</a><a href="./company.html#security">Security</a><a href="./company.html#terms">Terms</a></div></div>
+</footer>
+
+<script type="module" src="./marketing/site.js" defer></script>
+<script type="module" src="./marketing/reveal.js"></script>
+<script src="./marketing-videos.js" defer></script>
+</body>
+</html>

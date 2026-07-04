@@ -1,0 +1,280 @@
+/* =============================================================================
+   Report.Farm — Design Tokens  (Lane C · wave-1 deliverable)
+   -----------------------------------------------------------------------------
+   Drop-in replacement layer for the cloned RWR CRM token stack
+   (`app/src/crm/theme/tokens.css`). It keeps the EXACT token taxonomy and
+   variable NAMES the existing shell already consumes — `--bg`, `--surface`,
+   `--fg`, `--accent`, `--radius-*`, `--duration-*`, `--shadow-*`, the shadcn
+   aliases, everything — so `styles/tailwind.css` `@theme` block and every
+   component keep resolving without edits. Only the VALUES change, re-skinning
+   RWR's lime/black identity to Report.Farm's warm-neutral + cobalt-indigo
+   "mission-control for the food supply chain" identity, and it ADDS a semantic
+   vegetation/risk ramp + a validated data-viz palette the farm surfaces need.
+
+   Wave-2 wiring (see IMPLEMENTATION_PLAN.md):
+     1. Replace the body of `app/src/crm/theme/tokens.css` with this file.
+     2. Add the new tokens to the `@theme` block in `styles/tailwind.css`
+        (risk-*, viz-*, seq-*, font-display swap) so Tailwind emits utilities.
+     3. Mirror the light/dark canvas blocks into `dashboard-tokens.css`.
+
+   Scope contract (unchanged from RWR): every color token is defined under the
+   `.crm` wrapper, switched by `data-surface='light'|'dark'` on <html>.
+
+   Palette provenance: brand accent, risk ramp text colors, and the categorical
+   viz palette were validated with the dataviz `validate_palette.js` six-checks
+   against the warm surfaces below, and key text pairs verified ≥ WCAG AA 4.5:1.
+   Do not hand-tune a value without re-running the validator.
+============================================================================= */
+
+
+/* ===========================================================================
+   LIGHT  —  "Field Ops daylight"
+   Warm-neutral canvas (soil undertone, not cold gray), cobalt-indigo accent.
+   --------------------------------------------------------------------------- */
+.crm,
+.crm[data-surface='light'],
+:root[data-surface='light'] .crm {
+  /* ---- COLOR · canvas / surface --------------------------------------- */
+  --bg:                    #F2F0EB;   /* page canvas — warm off-white       */
+  --bg-elevated:           #FBFAF7;   /* lifted band                        */
+  --surface:               #FFFFFF;   /* card / popover                     */
+  --surface-elevated:      #FFFFFF;   /* overlay / dialog                   */
+  --surface-sunken:        #E9E6DE;   /* inset, code blocks, track          */
+  --surface-inverted:      #141311;   /* dark island on light               */
+
+  /* ---- COLOR · text ---------------------------------------------------- */
+  --fg:                    #171512;   /* primary body  (17.5:1 on canvas)   */
+  --fg-muted:              #5C574F;   /* secondary copy (6.9:1)             */
+  --fg-subtle:             #8A857B;   /* placeholders / axis labels        */
+  --fg-inverted:           #FBFAF7;   /* on dark island                     */
+  --fg-on-accent:          #FFFFFF;   /* WHITE on cobalt (5.46:1) — NOT blk */
+
+  /* ---- COLOR · accents  (brand = cobalt-indigo "Orbital") ------------- */
+  --accent:                #2B5FE3;   /* signature interactive/brand        */
+  --accent-strong:         #1E49C4;   /* hover / active / link-on-white 7:1 */
+  --accent-soft:           color-mix(in oklch, #2B5FE3 14%, white);
+  --accent-glow:           color-mix(in oklch, #2B5FE3 22%, transparent);
+  --cyan:                  #0E9BB5;   /* secondary "live telemetry" accent  */
+  --cyan-soft:             color-mix(in oklch, #0E9BB5 18%, white);
+
+  /* ---- COLOR · status  (re-pointed to validated, farm-semantic values) - */
+  --red:                   #C42B22;   /* critical / destructive (5.4:1)     */
+  --red-soft:              color-mix(in oklch, #C42B22 14%, white);
+  --orange:                #C25A12;   /* high / warm warning                */
+  --yellow:                #B26A00;   /* stress / medium (text-safe amber)  */
+  --green:                 #0E7A3F;   /* healthy / success (5.2:1)          */
+  --blue:                  #2B5FE3;   /* info == brand                      */
+
+  /* ---- SEMANTIC RISK RAMP  (vegetation-index → stress, ORDERED) -------
+     Five stops, low→high risk. Two variants per stop:
+       --risk-N       text/stroke-safe (on light surface, ≥4.5:1)
+       --risk-N-fill  saturated map/chip fill (pair with a LABEL, never alone)
+     Usage rule (baked into DESIGN_SYSTEM.md): a risk color NEVER carries
+     meaning alone — always ship it with a text label or icon. */
+  --risk-healthy:          #0E7A3F;   --risk-healthy-fill: #1F9D55;
+  --risk-watch:            #6E7A16;   --risk-watch-fill:   #8DB63C;
+  --risk-stress:           #B26A00;   --risk-stress-fill:  #F5A623;
+  --risk-high:             #C25A12;   --risk-high-fill:    #EA7B1B;
+  --risk-critical:         #C42B22;   --risk-critical-fill:#D6382F;
+
+  /* ---- DATA-VIZ · categorical (entity identity: supplier/region/crop) --
+     Validated set (worst adjacent CVD ΔE 24.2). Assign in FIXED order,
+     never cycled; a 9th series folds into "Other". Slots 2/3/7 are sub-3:1
+     on light — the "relief rule" applies (visible direct labels or table). */
+  --viz-1: #2B5FE3;  --viz-2: #1BAF7A;  --viz-3: #EDA100;  --viz-4: #008300;
+  --viz-5: #4A3AA7;  --viz-6: #E34948;  --viz-7: #E87BA4;  --viz-8: #EB6834;
+
+  /* ---- DATA-VIZ · sequential (magnitude — heatmaps/choropleth) --------
+     Single-hue brand-blue ramp, light→dark = low→high. NDVI raster uses its
+     own brown→green map defined in DESIGN_SYSTEM.md (raster, not a token). */
+  --seq-100: #D6E3FB; --seq-300: #86B0EF; --seq-500: #2B5FE3;
+  --seq-700: #16337C;
+  --viz-diverge-low:  #2B5FE3;  --viz-diverge-mid: #ECEAE3;  --viz-diverge-high: #C42B22;
+
+  /* ---- COLOR · structural --------------------------------------------- */
+  --border:                rgba(20, 19, 17, 0.10);
+  --border-strong:         rgba(20, 19, 17, 0.20);
+  --border-inverted:       rgba(255, 255, 255, 0.14);
+  --ring:                  #2B5FE3;                 /* focus outline (brand) */
+  --ring-accent:           color-mix(in oklch, #2B5FE3 55%, transparent);
+  --overlay:               rgba(20, 19, 17, 0.34);  /* modal scrim (34%)     */
+
+  /* ---- MAP surfaces (over-imagery glass reads on a dark canvas always) - */
+  --map-canvas:            #0B0C0F;
+  --panel-glass:           rgba(255, 255, 255, 0.74);
+  --panel-glass-strong:    rgba(255, 255, 255, 0.90);
+
+  /* ---- SHADOW  (warm-tinted, low-spread — premium, not heavy) ---------- */
+  --shadow-soft:    0 1px 2px rgba(20, 19, 17, 0.05), 0 1px 1px rgba(20, 19, 17, 0.03);
+  --shadow-card:    0 6px 18px -8px rgba(20, 19, 17, 0.12), 0 2px 6px -2px rgba(20, 19, 17, 0.07);
+  --shadow-popover: 0 12px 32px -8px rgba(20, 19, 17, 0.20), 0 4px 10px -2px rgba(20, 19, 17, 0.10);
+  --shadow-overlay: 0 24px 64px -12px rgba(20, 19, 17, 0.30), 0 8px 20px -6px rgba(20, 19, 17, 0.15);
+  --shadow-accent:  0 12px 32px -8px color-mix(in oklch, #2B5FE3 34%, transparent);
+
+  color-scheme: light;
+}
+
+
+/* ===========================================================================
+   DARK  —  "Mission Control"  (default posture of the product)
+   Warm near-black canvas, brightened cobalt + brightened risk fills.
+   --------------------------------------------------------------------------- */
+.crm[data-surface='dark'],
+:root[data-surface='dark'] .crm {
+  /* ---- COLOR · canvas / surface --------------------------------------- */
+  --bg:                    #0B0A08;
+  --bg-elevated:           #141311;
+  --surface:               #1A1815;
+  --surface-elevated:      #221F1B;
+  --surface-sunken:        #100E0C;
+  --surface-inverted:      #FBFAF7;
+
+  /* ---- COLOR · text ---------------------------------------------------- */
+  --fg:                    #F5F3EE;   /* primary (16.7:1 on canvas)         */
+  --fg-muted:              #A8A39A;   /* secondary (7.4:1)                 */
+  --fg-subtle:             #756F65;   /* axis / placeholder                 */
+  --fg-inverted:           #141311;
+  --fg-on-accent:          #FFFFFF;   /* white on cobalt fill               */
+
+  /* ---- COLOR · accents ------------------------------------------------- */
+  --accent:                #4C7EFF;   /* brightened for dark (7.4:1 text)   */
+  --accent-strong:         #6E97FF;   /* hover                              */
+  --accent-soft:           color-mix(in oklch, #4C7EFF 24%, #1A1815);
+  --accent-glow:           color-mix(in oklch, #4C7EFF 30%, transparent);
+  --cyan:                  #35C6DC;
+  --cyan-soft:             color-mix(in oklch, #35C6DC 20%, #1A1815);
+
+  /* ---- COLOR · status (dark-calibrated) ------------------------------- */
+  --red:                   #F0524A;
+  --red-soft:              color-mix(in oklch, #F0524A 22%, #1A1815);
+  --orange:                #FF8A3D;
+  --yellow:                #FFB93E;
+  --green:                 #2FBE6B;
+  --blue:                  #4C7EFF;
+
+  /* ---- SEMANTIC RISK RAMP (dark: fills brightened, text = bright step) - */
+  --risk-healthy:          #2FBE6B;   --risk-healthy-fill: #2FBE6B;
+  --risk-watch:            #A9D24A;   --risk-watch-fill:   #A9D24A;
+  --risk-stress:           #FFB93E;   --risk-stress-fill:  #FFB93E;
+  --risk-high:             #FF8A3D;   --risk-high-fill:    #FF8A3D;
+  --risk-critical:         #F0524A;   --risk-critical-fill:#F0524A;
+
+  /* ---- DATA-VIZ · categorical (dark steps — validated as a set) -------- */
+  --viz-1: #4C7EFF;  --viz-2: #199E70;  --viz-3: #C98500;  --viz-4: #0E9E4E;
+  --viz-5: #9085E9;  --viz-6: #E66767;  --viz-7: #D55181;  --viz-8: #D95926;
+
+  /* ---- DATA-VIZ · sequential + diverging (dark) ----------------------- */
+  --seq-100: #16337C; --seq-300: #2456BF; --seq-500: #4C7EFF;
+  --seq-700: #A9C2FF;
+  --viz-diverge-low:  #4C7EFF;  --viz-diverge-mid: #383530;  --viz-diverge-high: #F0524A;
+
+  /* ---- COLOR · structural --------------------------------------------- */
+  --border:                rgba(245, 243, 238, 0.10);
+  --border-strong:         rgba(245, 243, 238, 0.20);
+  --border-inverted:       rgba(20, 19, 17, 0.16);
+  --ring:                  #4C7EFF;
+  --ring-accent:           color-mix(in oklch, #4C7EFF 60%, transparent);
+  --overlay:               rgba(0, 0, 0, 0.64);
+
+  --map-canvas:            #000000;
+  --panel-glass:           rgba(20, 19, 17, 0.66);
+  --panel-glass-strong:    rgba(20, 19, 17, 0.90);
+
+  /* ---- SHADOW ---------------------------------------------------------- */
+  --shadow-soft:    0 1px 2px rgba(0, 0, 0, 0.55), 0 1px 1px rgba(0, 0, 0, 0.35);
+  --shadow-card:    0 8px 24px -8px rgba(0, 0, 0, 0.70), 0 2px 6px -2px rgba(0, 0, 0, 0.45);
+  --shadow-popover: 0 16px 36px -8px rgba(0, 0, 0, 0.78), 0 6px 14px -4px rgba(0, 0, 0, 0.55);
+  --shadow-overlay: 0 28px 72px -12px rgba(0, 0, 0, 0.85), 0 10px 24px -8px rgba(0, 0, 0, 0.60);
+  --shadow-accent:  0 16px 40px -10px color-mix(in oklch, #4C7EFF 42%, transparent);
+
+  color-scheme: dark;
+}
+
+
+/* ===========================================================================
+   MODE-INDEPENDENT TOKENS  (typography, spacing, radii, motion, z-index)
+   --------------------------------------------------------------------------- */
+.crm {
+  /* ---- TYPOGRAPHY -----------------------------------------------------
+     Display swaps Urbanist → Geist (a precise grotesk that reads
+     "instrument-grade"); Inter stays for text; JetBrains Mono for
+     telemetry/data. Urbanist kept as a fallback so nothing breaks before
+     the fonts are self-hosted in wave-2. */
+  --font-sans:    'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Geist', 'Urbanist', 'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+  --font-weight-300: 300; --font-weight-400: 400; --font-weight-500: 500;
+  --font-weight-600: 600; --font-weight-700: 700; --font-weight-800: 800;
+
+  --font-size-2xs:  11px;  --font-size-xs:   12px;  --font-size-sm:   13px;
+  --font-size-base: 15px;  --font-size-md:   16px;  --font-size-lg:   18px;
+  --font-size-xl:   20px;  --font-size-2xl:  24px;  --font-size-3xl:  28px;
+  --font-size-4xl:  34px;  --font-size-5xl:  44px;  --font-size-6xl:  56px;
+  --font-size-7xl:  72px;  --font-size-8xl:  90px;  --font-size-9xl:  112px;
+
+  --line-height-tight:   1.05;  --line-height-snug:    1.2;
+  --line-height-normal:  1.45;  --line-height-relaxed: 1.6;
+
+  --tracking-tight:  -0.02em;  --tracking-normal: 0;      --tracking-wide: 0.04em;
+  --tracking-wider:  0.08em;   --tracking-widest: 0.16em;
+
+  /* Data figures: apply `font-variant-numeric: tabular-nums` on every column,
+     KPI value, axis tick, and timer. Provided as a helper var for authors. */
+  --numeric-tabular: tabular-nums;
+
+  /* ---- SPACING (4px base) --------------------------------------------- */
+  --space-0: 0px;   --space-1: 4px;   --space-2: 8px;   --space-3: 12px;
+  --space-4: 16px;  --space-5: 20px;  --space-6: 24px;  --space-7: 28px;
+  --space-8: 32px;  --space-9: 36px;  --space-10: 40px; --space-12: 48px;
+  --space-14: 56px; --space-16: 64px; --space-20: 80px; --space-24: 96px;
+
+  /* ---- RADII  (slightly tightened vs RWR for a more engineered feel) --- */
+  --radius-none: 0px;  --radius-sm: 6px;  --radius-md: 10px;  --radius-lg: 14px;
+  --radius-xl: 18px;   --radius-2xl: 24px; --radius-3xl: 34px; --radius-full: 9999px;
+
+  /* ---- MOTION  (restrained 150–250ms; spring reserved for map camera) -- */
+  --duration-instant: 80ms;   --duration-fast: 160ms;   --duration-normal: 220ms;
+  --duration-slow:    360ms;   --duration-slower: 560ms;
+
+  --easing-standard: cubic-bezier(0.2, 0.0, 0.0, 1.0);
+  --easing-emphasis: cubic-bezier(0.2, 0.0, 0.0, 1.2);
+  --easing-enter:    cubic-bezier(0.0, 0.0, 0.2, 1.0);
+  --easing-exit:     cubic-bezier(0.4, 0.0, 1.0, 1.0);
+  --easing-linear:   linear;
+  /* Spring for map fly-to / panel spatial transitions (deck.gl/MapLibre).   */
+  --easing-spring:   cubic-bezier(0.34, 1.35, 0.42, 1.0);
+
+  /* ---- Z-INDEX --------------------------------------------------------- */
+  --z-base: 0; --z-raised: 1; --z-sticky: 100; --z-dropdown: 1000;
+  --z-overlay: 1100; --z-modal: 1200; --z-toast: 1300; --z-tooltip: 1400;
+
+  /* ---- shadcn semantic aliases (unchanged names; re-pointed values) ---- */
+  --background:            var(--bg);
+  --foreground:            var(--fg);
+  --card:                  var(--surface);
+  --card-foreground:       var(--fg);
+  --popover:               var(--surface-elevated);
+  --popover-foreground:    var(--fg);
+  --primary:               var(--accent);
+  --primary-foreground:    var(--fg-on-accent);
+  --secondary:             var(--surface-sunken);
+  --secondary-foreground:  var(--fg);
+  --muted:                 var(--surface-sunken);
+  --muted-foreground:      var(--fg-muted);
+  --destructive:           var(--red);
+  --destructive-foreground: #FFFFFF;
+  --input:                 var(--border);
+}
+
+
+/* ===========================================================================
+   REDUCED MOTION — collapse durations so any `--duration-*` consumer is safe.
+   ============================================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .crm {
+    --duration-instant: 0ms; --duration-fast: 0ms; --duration-normal: 0ms;
+    --duration-slow: 0ms;    --duration-slower: 0ms;
+    --easing-spring: var(--easing-standard);
+  }
+}

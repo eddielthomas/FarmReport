@@ -1,0 +1,140 @@
+/* =================================================================
+ * RWR Sentinel — Premium polish layer (LIGHT)
+ * Loaded after site.css. Subtle, premium motion only.
+ *   - reveal-in cooperation with reveal.js
+ *   - scroll-progress bar (accent blue)
+ *   - gentle cursor glow for hero (very subtle on light)
+ *   - hover-lift on cards / splits
+ *   - canonical accent-text helper (replaces dark gradient-text)
+ *   - reduced-motion overrides
+ * ================================================================= */
+
+/* ── REVEAL (cooperates with reveal.js) ─────────────────────────── */
+.reveal-in {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  transition: opacity .8s cubic-bezier(.2,.7,.2,1),
+              transform .8s cubic-bezier(.2,.7,.2,1);
+}
+
+/* ── SCROLL PROGRESS BAR ────────────────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  z-index: 2000;
+  background: linear-gradient(90deg, var(--accent) 0%, var(--accent-deep) 100%);
+  box-shadow: 0 0 10px var(--accent-glow);
+  pointer-events: none;
+  will-change: width;
+}
+
+/* ── CURSOR GLOW ON HERO AREAS (very subtle on light) ───────────── */
+.hero-cursor-glow { position: relative; }
+.hero-cursor-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    520px circle at var(--cx,50%) var(--cy,50%),
+    rgba(29,78,216,0.06),
+    rgba(29,78,216,0.03) 38%,
+    transparent 66%
+  );
+  opacity: 0;
+  transition: opacity .6s ease;
+}
+.hero-cursor-glow:hover::after { opacity: 1; }
+
+/* keep hero content above the glow */
+.home-hero > *,
+.page-hero > * { position: relative; z-index: 1; }
+
+/* ── HOVER LIFT on cards + split blocks ─────────────────────────── */
+.card,
+.split,
+.ind-card,
+.pilot-card,
+.price-card,
+.deploy-card,
+.res {
+  transition:
+    transform .3s cubic-bezier(.2,.7,.2,1),
+    box-shadow .3s ease,
+    border-color .3s ease;
+}
+.card:hover,
+.ind-card:hover,
+.pilot-card:hover,
+.price-card:hover,
+.deploy-card:hover,
+.res:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lift);
+  border-color: var(--border-strong);
+}
+.split:hover {
+  box-shadow: var(--shadow-card);
+}
+
+/* ── CANONICAL ACCENT TEXT (was dark neon gradient) ─────────────── */
+.gradient-text,
+.grad-text {
+  color: var(--accent-deep);
+  display: inline-block;
+}
+
+/* ── SCREENSHOT PLACEHOLDER TREATMENT ───────────────────────────── */
+[data-screenshot] { position: relative; }
+
+.screenshot-placeholder {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 16px;
+  border: 1px dashed var(--border-strong);
+  background:
+    linear-gradient(160deg, var(--accent-tint), var(--surface)),
+    radial-gradient(ellipse at 50% 0%, var(--accent-soft), transparent 70%);
+  overflow: hidden;
+  margin: 24px 0 0;
+}
+.screenshot-placeholder::after {
+  content: 'Screenshot: ' attr(data-screenshot);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono, 'JetBrains Mono','SF Mono',Menlo,monospace);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-subtle);
+  pointer-events: none;
+}
+
+/* ── REDUCED MOTION ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  .reveal-in { transition: none !important; }
+  .hero-cursor-glow::after { display: none !important; }
+  .scroll-progress { display: none !important; }
+  .card, .split, .ind-card, .pilot-card,
+  .price-card, .deploy-card, .res {
+    transition: none !important;
+  }
+  .card:hover, .split:hover, .ind-card:hover, .pilot-card:hover,
+  .price-card:hover, .deploy-card:hover, .res:hover {
+    transform: none !important;
+  }
+}

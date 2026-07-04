@@ -1,0 +1,114 @@
+# =============================================================================
+# pipeline.example.yaml — Pipeline-Integrity vertical (DEMO pack).
+# -----------------------------------------------------------------------------
+# Proof that a second vertical is stood up by writing ONE YAML pack — no code
+# fork. This is a MINIMAL demonstration pack, not a finished product: it shows
+# different vocabulary (anomaly/segment/ROW), a SUBSET of basemaps, and
+# pipeline-specific roles, while reusing the entire OperationsOS substrate.
+# Validates against solution-pack.schema.json exactly like rwr.yaml. See ADR-0023.
+# =============================================================================
+id: pipeline
+name: Pipeline
+displayName: Pipeline Integrity
+version: 0.1.0
+extends: rwr
+
+# --- Lever 1: Roles — pipeline-specific roles over the platform base ---------
+roles:
+  - { key: "platform:admin",  tier: platform, label: "Platform Admin" }
+  - { key: "ops:manage",      tier: ops,       label: "Integrity Ops Manager" }
+  - { key: "analytics:view",  tier: analytics, label: "Analytics Viewer" }
+  - { key: "customer:view",   tier: customer,  label: "Operator (customer)" }
+  - { key: "vendor:view",     tier: vendor,    label: "Inspection Vendor" }
+  - { key: "field.technician", tier: field,    label: "Inline Inspection Tech" }
+  - { key: "pipeline:integrity_engineer", tier: vertical, label: "Integrity Engineer" }
+
+# --- Lever 2: Surfaces + allow-list — a leaner surface set -------------------
+surfaces:
+  - { id: tenants.html,    label: "Tenants" }
+  - { id: analytics.html,  label: "Integrity Analytics" }
+  - { id: operations.html, label: "Operations" }
+  - { id: customer.html,   label: "Operator Portal" }
+  - { id: vendor.html,     label: "Inspection Vendor" }
+  - { id: field.html,      label: "Field PWA" }
+  - { id: login.html,      label: "Login" }
+
+roleSurfaceAllowList:
+  "*admin": [tenants.html, analytics.html, operations.html, customer.html, vendor.html, field.html, login.html]
+  "vendor:*": [vendor.html]
+  "field.technician": [field.html]
+  "ops:manage": [operations.html, analytics.html]
+  "pipeline:integrity_engineer": [operations.html, analytics.html]
+  "analytics:view": [analytics.html]
+  "customer:view": [customer.html]
+
+primarySurfaceByRole:
+  "platform:admin": tenants.html
+  "vendor:*": vendor.html
+  "field.technician": field.html
+  "ops:manage": operations.html
+  "pipeline:integrity_engineer": operations.html
+  "analytics:view": analytics.html
+  "customer:view": customer.html
+
+# --- Lever 3: Basemaps — a SUBSET of the S13 catalogue -----------------------
+basemaps:
+  - { id: satellite,    name: "Satellite",    use: "True-color baseline" }
+  - { id: coherencemap, name: "CoherenceMap", use: "InSAR ground motion over the right-of-way — subsidence/heave near the line" }
+  - { id: thermsight,   name: "ThermSight",   use: "Thermal — leak/seep warmth along buried segments" }
+  - { id: deepgrid,     name: "DeepGrid",     use: "Minimal-clutter streets — ROW and route planning" }
+defaultBasemap: satellite
+
+# --- Lever 4: Vocabulary — pipeline nouns ------------------------------------
+vocabulary:
+  entities:
+    detection: "anomaly"
+    detectionPlural: "anomalies"
+    areaOfInterest: "segment"
+    pointOfInterest: "tie-in"
+    asset: "pipeline"
+    rightOfWay: "ROW"
+  kpis:
+    detections: "Anomalies flagged"
+    aoiCount: "Segments inspected"
+    responseTime: "Mean dig-up time"
+
+# --- Lever 5: Brand tokens ---------------------------------------------------
+brandTokens:
+  brandName: "PipelineGuard"
+  accentColor: "#f5a524"
+
+# --- Investigation types -----------------------------------------------------
+investigationTypes:
+  - { key: corrosion,     label: "Corrosion",     description: "External/internal metal loss" }
+  - { key: ground_motion, label: "Ground motion", description: "InSAR-detected ROW displacement" }
+  - { key: encroachment,  label: "Encroachment",  description: "Third-party activity in the ROW" }
+
+# --- Lever 6: Seed scenes ----------------------------------------------------
+seedScenes:
+  - title: "ROW Overview"
+    description: "Default — anomalies along the segment on satellite"
+    isDefault: true
+    ordinal: 0
+    centerLat: 31.9686
+    centerLon: -99.9018
+    zoom: 11.0
+    pitch: 0.0
+    bearing: 0.0
+    basemapId: satellite
+    sarOverlay: false
+    sarOpacity: 60
+    activeLayers: [anomalies, row, tieins]
+  - title: "Subsidence watch"
+    description: "CoherenceMap — InSAR ground motion near the line"
+    isDefault: false
+    ordinal: 1
+    centerLat: 31.9686
+    centerLon: -99.9018
+    zoom: 14.0
+    pitch: 0.0
+    bearing: 0.0
+    basemapId: coherencemap
+    sarOverlay: false
+    sarOpacity: 60
+    activeLayers: [anomalies, row]

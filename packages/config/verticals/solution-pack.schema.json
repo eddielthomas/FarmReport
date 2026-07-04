@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://operationsos.alphageo.dev/schemas/solution-pack.schema.json",
+  "title": "OperationsOS SolutionPack",
+  "description": "A vertical-as-config descriptor. A SolutionPack declares the six config levers (roles, surfaces+allow-list, basemaps, vocabulary, brand tokens, seed scenes) that stand up one OperationsOS vertical with no code fork. RWR (water recon) is the reference pack; behaviour for RWR users is unchanged. See ADR-0023.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "displayName", "version", "roles", "surfaces", "roleSurfaceAllowList", "primarySurfaceByRole", "basemaps", "defaultBasemap"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Stable machine id, lowercase slug. Selected by RWR_VERTICAL / OPERATIONSOS_VERTICAL.",
+      "pattern": "^[a-z][a-z0-9-]{1,31}$"
+    },
+    "name": {
+      "type": "string",
+      "description": "Internal short name.",
+      "minLength": 1
+    },
+    "displayName": {
+      "type": "string",
+      "description": "Human-facing product name for this vertical.",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "description": "Pack semver. Bumping is the contract-change signal.",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "extends": {
+      "type": ["string", "null"],
+      "description": "Optional id of a base pack this pack layers over (reserved for A2+; not consumed in A1)."
+    },
+    "roles": {
+      "type": "array",
+      "description": "Vertical-specific roles layered OVER the platform-base roles. The merged set becomes KNOWN_ROLES. RWR lists its exact current role set so KNOWN_ROLES is unchanged in practice.",
+      "items": { "$ref": "#/$defs/role" }
+    },
+    "surfaces": {
+      "type": "array",
+      "description": "The HTML entry surfaces this vertical exposes.",
+      "items": { "$ref": "#/$defs/surface" }
+    },
+    "roleSurfaceAllowList": {
+      "type": "object",
+      "description": "Role -> allowed HTML surfaces. Mirrors auth-store.ts allowedSurfacesForRoles. The special key '*admin' marks the super-user role that sees every surface; the special key 'vendor:*' matches any vendor:* role.",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\.html$" }
+      }
+    },
+    "primarySurfaceByRole": {
+      "type": "object",
+      "description": "Ordered (object insertion order) role -> primary landing surface. First matching role wins, matching the if-ladder in primarySurfaceForRoles. 'vendor:*' matches any vendor:* role.",
+      "additionalProperties": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\.html$" }
+    },
+    "basemaps": {
+      "type": "array",
+      "description": "Branded analytic basemaps (subset of the S13 catalogue) this vertical surfaces.",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/basemap" }
+    },
+    "defaultBasemap": {
+      "type": "string",
+      "description": "id of the default basemap; MUST appear in basemaps[].",
+      "minLength": 1
+    },
+    "vocabulary": {
+      "type": "object",
+      "description": "Entity nouns + KPI labels. Drives UI labels without code changes.",
+      "additionalProperties": false,
+      "properties": {
+        "entities": {
+          "type": "object",
+          "description": "Canonical entity-noun map (e.g. detection -> 'leak' for RWR, 'anomaly' for pipeline).",
+          "additionalProperties": { "type": "string" }
+        },
+        "kpis": {
+          "type": "object",
+          "description": "KPI key -> display label.",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "brandTokens": {
+      "type": "object",
+      "description": "Design-kit token overrides per vertical (extends the S7A token system + brand.js). String values only; merged onto the platform defaults.",
+      "additionalProperties": { "type": "string" }
+    },
+    "investigationTypes": {
+      "type": "array",
+      "description": "Investigation-type catalogue for this vertical.",
+      "items": { "$ref": "#/$defs/investigationType" }
+    },
+    "seedScenes": {
+      "type": "array",
+      "description": "Default saved map scenes (crm.project_scene shape, S14A) seeded per vertical.",
+      "items": { "$ref": "#/$defs/seedScene" }
+    }
+  },
+  "$defs": {
+    "role": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key"],
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Role key as used by iam (e.g. 'sales:manage', 'ops.coordinator').",
+          "minLength": 1
+        },
+        "label": { "type": "string" },
+        "description": { "type": "string" },
+        "tier": {
+          "type": "string",
+          "enum": ["platform", "vertical", "vendor", "field", "customer", "ops", "sales", "analytics"]
+        }
+      }
+    },
+    "surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z][a-z0-9-]*\\.html$" },
+        "label": { "type": "string" }
+      }
+    },
+    "basemap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string" },
+        "use": { "type": "string" }
+      }
+    },
+    "investigationType": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["key"],
+      "properties": {
+        "key": { "type": "string", "minLength": 1 },
+        "label": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "seedScene": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "centerLat", "centerLon", "basemapId"],
+      "properties": {
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" },
+        "isDefault": { "type": "boolean" },
+        "ordinal": { "type": "integer", "minimum": 0 },
+        "centerLat": { "type": "number", "minimum": -90, "maximum": 90 },
+        "centerLon": { "type": "number", "minimum": -180, "maximum": 180 },
+        "zoom": { "type": "number", "minimum": 0, "maximum": 24 },
+        "pitch": { "type": "number", "minimum": 0, "maximum": 85 },
+        "bearing": { "type": "number", "minimum": -360, "maximum": 360 },
+        "basemapId": { "type": "string", "minLength": 1 },
+        "sarOverlay": { "type": "boolean" },
+        "sarOpacity": { "type": "number", "minimum": 0, "maximum": 100 },
+        "activeLayers": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

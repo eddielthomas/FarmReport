@@ -1,0 +1,108 @@
+/* =============================================================================
+   Tailwind v4 entry — RWR CRM (S7A)
+   ---------------------------------------------------------------------------
+   1. Pull the Tailwind base sheet.
+   2. Import the shadcn ↔ token bridge (which itself imports `theme/tokens.css`).
+   3. Expose every token to Tailwind utilities via the `@theme` block so authors
+      can write `bg-surface`, `text-fg-muted`, `rounded-2xl`, `shadow-card`,
+      `duration-fast`, etc.
+   The whole stack is scoped to the `.crm` wrapper so marketing pages
+   (`index.html`, `dashboard.html`, …) remain on the cinematic theme.
+============================================================================= */
+
+@import "tailwindcss";
+
+/* Brings in design-system tokens + shadcn mappings + legacy aliases. */
+@import "../theme.css";
+
+
+/* ---------------------------------------------------------------------------
+   Tailwind v4 @theme — map tokens onto Tailwind's color / radius / font /
+   spacing / shadow / duration scales so `bg-accent`, `text-fg-muted`, etc.
+   resolve at build time.
+   --------------------------------------------------------------------------- */
+@theme {
+  /* COLOR — surface / canvas */
+  --color-bg:                 var(--bg);
+  --color-bg-elevated:        var(--bg-elevated);
+  --color-surface:            var(--surface);
+  --color-surface-elevated:   var(--surface-elevated);
+  --color-surface-sunken:     var(--surface-sunken);
+  --color-surface-inverted:   var(--surface-inverted);
+
+  /* COLOR — text */
+  --color-fg:                 var(--fg);
+  --color-fg-muted:           var(--fg-muted);
+  --color-fg-subtle:          var(--fg-subtle);
+  --color-fg-inverted:        var(--fg-inverted);
+  --color-fg-on-accent:       var(--fg-on-accent);
+
+  /* COLOR — accents */
+  --color-accent:             var(--accent);
+  --color-accent-strong:      var(--accent-strong);
+  --color-accent-soft:        var(--accent-soft);
+  --color-cyan:               var(--cyan);
+  --color-cyan-soft:          var(--cyan-soft);
+
+  /* COLOR — status */
+  --color-red:                var(--red);
+  --color-red-soft:           var(--red-soft);
+  --color-orange:             var(--orange);
+  --color-yellow:             var(--yellow);
+  --color-green:              var(--green);
+  --color-blue:               var(--blue);
+
+  /* COLOR — structural / shadcn semantic aliases */
+  --color-background:         var(--background);
+  --color-foreground:         var(--foreground);
+  --color-card:               var(--card);
+  --color-card-foreground:    var(--card-foreground);
+  --color-popover:            var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary:            var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary:          var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted:              var(--muted);
+  --color-muted-foreground:   var(--muted-foreground);
+  --color-destructive:        var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border:             var(--border);
+  --color-input:              var(--input);
+  --color-ring:               var(--ring);
+
+  /* RADIUS */
+  --radius-none:              var(--radius-none);
+  --radius-sm:                var(--radius-sm);
+  --radius-md:                var(--radius-md);
+  --radius-lg:                var(--radius-lg);
+  --radius-xl:                var(--radius-xl);
+  --radius-2xl:               var(--radius-2xl);
+  --radius-3xl:               var(--radius-3xl);
+  --radius-full:              var(--radius-full);
+
+  /* FONT */
+  --font-sans:                var(--font-sans);
+  --font-mono:                var(--font-mono);
+  --font-display:             var(--font-display);
+
+  /* SHADOW */
+  --shadow-soft:              var(--shadow-soft);
+  --shadow-card:              var(--shadow-card);
+  --shadow-popover:           var(--shadow-popover);
+  --shadow-overlay:           var(--shadow-overlay);
+  --shadow-accent:            var(--shadow-accent);
+
+  /* MOTION */
+  --duration-instant:         var(--duration-instant);
+  --duration-fast:            var(--duration-fast);
+  --duration-normal:          var(--duration-normal);
+  --duration-slow:            var(--duration-slow);
+  --duration-slower:          var(--duration-slower);
+
+  /* Ease — Tailwind v4 maps these onto `ease-*` utilities. */
+  --ease-standard:            var(--easing-standard);
+  --ease-emphasis:            var(--easing-emphasis);
+  --ease-enter:               var(--easing-enter);
+  --ease-exit:                var(--easing-exit);
+}

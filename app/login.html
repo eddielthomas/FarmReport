@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Report.Farm · Sign in</title>
+    <!-- P4 — Keycloak OIDC hand-off. The /auth/oidc/callback redirects here
+         with ?oidc_token=…&tenant_id=…&tenant_slug=…; persist the session into
+         the rwr.auth / rwr.tenant zustand envelopes BEFORE the role gate runs,
+         then strip the token from the URL and reload so the gate routes the
+         user to their primary surface. No-op when the params are absent. -->
+    <script>
+    (function () {
+      try {
+        var p = new URLSearchParams(window.location.search);
+        var tok = p.get('oidc_token');
+        if (!tok) return;
+        var tenantId = p.get('tenant_id');
+        var tenantSlug = p.get('tenant_slug');
+        var claims = {};
+        try { claims = JSON.parse(atob(tok.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); } catch (e) {}
+        window.localStorage.setItem('rwr.auth', JSON.stringify({
+          state: { token: tok, user: {
+            id: claims.sub || null, email: claims.email || null,
+            tenant_id: tenantId || claims.tenant_id || null,
+            tenant_slug: tenantSlug || claims.tenant_slug || null,
+            roles: Array.isArray(claims.roles) ? claims.roles : [],
+            org: claims.org || null,
+          } }, version: 0,
+        }));
+        if (tenantId) {
+          window.localStorage.setItem('rwr.tenant', JSON.stringify({
+            state: { currentTenantId: tenantId, currentTenantSlug: tenantSlug || null, currentTenantName: tenantSlug || null },
+            version: 0,
+          }));
+        }
+        window.history.replaceState({}, '', '/login.html');
+        window.location.reload();
+      } catch (e) { /* fall through to normal login */ }
+    })();
+    </script>
+
+    <!-- Sprint 12 role gate — if user already has a token, redirect to their
+         primary surface. Otherwise let the login UI render. -->
+    <script src="/role-gate-pack.js"></script>
+    <script src="/role-gate.js" data-surface="login.html"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      (function () {
+        try {
+          var raw = window.localStorage.getItem('rwr.surface-mode');
+          var parsed = raw ? JSON.parse(raw) : null;
+          var mode = parsed && parsed.state && parsed.state.mode === 'dark' ? 'dark' : 'light';
+          document.documentElement.setAttribute('data-surface', mode);
+        } catch (e) {
+          document.documentElement.setAttribute('data-surface', 'light');
+        }
+      })();
+    </script>
+    <style>
+      html, body, #root { height: 100%; margin: 0; padding: 0; background: #F0F1F3; color: #0A0A0A; }
+      :root[data-surface='dark'] html, :root[data-surface='dark'] body, :root[data-surface='dark'] #root { background: #000; color: #fff; }
+      body { font-family: 'Urbanist', 'Inter', sans-serif; }
+    </style>
+  </head>
+  <body>
+    <div id="root" class="crm"></div>
+    <script type="module" src="/src/crm/main-login.tsx"></script>
+  </body>
+</html>

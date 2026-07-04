@@ -1,0 +1,76 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard.html
+Disallow: /dashboard-react.html
+Disallow: /sales.html
+Disallow: /pm.html
+Disallow: /analytics.html
+Disallow: /operations.html
+Disallow: /customer.html
+Disallow: /staff.html
+Disallow: /tenants.html
+Disallow: /access.html
+Disallow: /login.html
+
+# AI training: marketing surfaces only
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /api/
+Disallow: /dashboard.html
+Disallow: /dashboard-react.html
+Disallow: /sales.html
+Disallow: /pm.html
+Disallow: /analytics.html
+Disallow: /operations.html
+Disallow: /customer.html
+Disallow: /staff.html
+Disallow: /tenants.html
+Disallow: /access.html
+Disallow: /login.html
+
+User-agent: ClaudeBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /api/
+Disallow: /dashboard.html
+Disallow: /dashboard-react.html
+Disallow: /sales.html
+Disallow: /pm.html
+Disallow: /analytics.html
+Disallow: /operations.html
+Disallow: /customer.html
+Disallow: /staff.html
+Disallow: /tenants.html
+Disallow: /access.html
+Disallow: /login.html
+
+User-agent: Google-Extended
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /api/
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /api/
+
+User-agent: CCBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /api/
+
+User-agent: OAI-SearchBot
+Allow: /
+Allow: /llms.txt
+Allow: /llms-full.txt
+Disallow: /api/
+
+Sitemap: https://report.farm/sitemap.xml
+Sitemap: https://report.farm/sitemap-images.xml

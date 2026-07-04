@@ -1,0 +1,666 @@
+/* =============================================================================
+   RWR Command Center — Dashboard Token Bridge (S8)
+   ---------------------------------------------------------------------------
+   The legacy `dashboard.html` shell was written against a hard-coded
+   cinematic-dark palette (`--bg:#030609`, `--cyan:#00d4ff`, `--t1:#e4eaf4`,
+   …) and a handful of ad-hoc glass / panel classes.  This file re-points
+   those legacy aliases at the **S7A design-kit tokens** declared in
+   `src/crm/theme/tokens.css` so the chrome (top nav, rails, status bar,
+   panels) re-skins onto the new lime / black / white palette without
+   touching the giant existing markup.
+
+   Loading order in `dashboard.html`:
+
+     1. `src/crm/styles/tailwind.css`   (defines `--bg`, `--fg`, `--accent`, …
+        under `:root[data-surface='light'|'dark']` via tokens.css)
+     2. `src/dashboard-tokens.css`      (this file — re-publishes the S7
+        tokens at `:root` scope and aliases the legacy `--rwr-*` /
+        `--signal-*` / `--t1..t4` / `--bg1..bg4` vars onto S7 vars).
+     3. `dashboard.html` inline `<style>` keeps working unchanged.
+
+   The map engines (`src/engines/*`) are NOT touched.
+   ============================================================================= */
+
+
+/* ===========================================================================
+   1. RAISE S7 TOKENS TO :root
+   ---------------------------------------------------------------------------
+   `tokens.css` scopes everything under `.crm`.  The dashboard isn't wrapped
+   in `.crm`, so we re-publish the same values at root scope, keyed off the
+   `data-surface` attribute that the bootstrap script sets on `<html>`.
+
+   The two blocks below are the **exact** values in `theme/tokens.css` —
+   keep them in sync.  We DON'T `@import` tokens.css here because of CSS
+   specificity: tokens.css's `.crm` selector wins over `:root` when both
+   match, which would leak the unscoped variant onto the CRM React pages.
+   By keeping a parallel `:root[data-surface=…]` block scoped to the
+   dashboard entry only, the CRM pages stay isolated.
+   --------------------------------------------------------------------------- */
+
+:root,
+:root[data-surface='light'] {
+  /* canvas / surface */
+  --bg:                    #F0F1F3;
+  --bg-elevated:           #FFFFFF;
+  --surface:               #FFFFFF;
+  --surface-elevated:      #FFFFFF;
+  --surface-sunken:        #E9EBEE;
+  --surface-inverted:      #0A0A0A;
+
+  /* text */
+  --fg:                    #0A0A0A;
+  --fg-muted:              #4A4D55;
+  --fg-subtle:             #8B8F98;
+  --fg-inverted:           #FFFFFF;
+  --fg-on-accent:          #0A0A0A;
+
+  /* accents */
+  --accent:                #B9FF66;
+  --accent-strong:         #A6F040;
+  --accent-soft:           color-mix(in oklch, #B9FF66 32%, white);
+  --accent-glow:           color-mix(in oklch, #B9FF66 28%, transparent);
+  --cyan:                  #66FFED;
+  --cyan-soft:             color-mix(in oklch, #66FFED 24%, white);
+
+  /* status */
+  --red:                   #F04949;
+  --red-soft:              color-mix(in oklch, #F04949 18%, white);
+  --orange:                #FF9F45;
+  --yellow:                #F6D34A;
+  --green:                 #2FCB73;
+  --blue:                  #4DA3FF;
+
+  /* structural */
+  --border:                rgba(10, 10, 10, 0.10);
+  --border-strong:         rgba(10, 10, 10, 0.20);
+  --ring:                  #0A0A0A;
+  --ring-accent:           color-mix(in oklch, #B9FF66 60%, transparent);
+  --overlay:               rgba(10, 10, 10, 0.32);
+
+  /* shadow */
+  --shadow-soft:    0 1px 2px rgba(10, 10, 10, 0.04), 0 1px 1px rgba(10, 10, 10, 0.03);
+  --shadow-card:    0 6px 18px -8px rgba(10, 10, 10, 0.10), 0 2px 6px -2px rgba(10, 10, 10, 0.06);
+  --shadow-popover: 0 12px 32px -8px rgba(10, 10, 10, 0.18), 0 4px 10px -2px rgba(10, 10, 10, 0.10);
+  --shadow-overlay: 0 24px 64px -12px rgba(10, 10, 10, 0.28), 0 8px 20px -6px rgba(10, 10, 10, 0.14);
+  --shadow-accent:  0 12px 32px -8px color-mix(in oklch, #B9FF66 38%, transparent);
+
+  /* The map viewport itself stays a deep canvas regardless of surface
+     mode — overlays read against it.  When in light mode we tint it
+     slightly cooler so the lime accent pops; in dark mode it matches
+     the page background. */
+  --map-canvas:            #0B0C0F;
+  --panel-glass:           rgba(255, 255, 255, 0.78);
+  --panel-glass-strong:    rgba(255, 255, 255, 0.92);
+  --panel-tint:            linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.72));
+  --rail-tint:             linear-gradient(180deg, rgba(255,255,255,0.90), rgba(248,249,251,0.96));
+  --topnav-tint:           linear-gradient(180deg, rgba(255,255,255,0.96), rgba(248,249,251,0.98));
+
+  color-scheme: light;
+}
+
+:root[data-surface='dark'] {
+  --bg:                    #000000;
+  --bg-elevated:           #0F0F11;
+  --surface:               #16171A;
+  --surface-elevated:      #1F2024;
+  --surface-sunken:        #0A0B0D;
+  --surface-inverted:      #FFFFFF;
+
+  --fg:                    #FFFFFF;
+  --fg-muted:              #B5B7BD;
+  --fg-subtle:             #7B7E86;
+  --fg-inverted:           #0A0A0A;
+  --fg-on-accent:          #0A0A0A;
+
+  --accent:                #B9FF66;
+  --accent-strong:         #C7FF7E;
+  --accent-soft:           color-mix(in oklch, #B9FF66 28%, #16171A);
+  --accent-glow:           color-mix(in oklch, #B9FF66 32%, transparent);
+  --cyan:                  #66FFED;
+  --cyan-soft:             color-mix(in oklch, #66FFED 22%, #16171A);
+
+  --red:                   #F04949;
+  --red-soft:              color-mix(in oklch, #F04949 22%, #16171A);
+  --orange:                #FF9F45;
+  --yellow:                #F6D34A;
+  --green:                 #2FCB73;
+  --blue:                  #4DA3FF;
+
+  --border:                rgba(255, 255, 255, 0.10);
+  --border-strong:         rgba(255, 255, 255, 0.20);
+  --ring:                  #FFFFFF;
+  --ring-accent:           color-mix(in oklch, #B9FF66 65%, transparent);
+  --overlay:               rgba(0, 0, 0, 0.62);
+
+  --shadow-soft:    0 1px 2px rgba(0, 0, 0, 0.55), 0 1px 1px rgba(0, 0, 0, 0.35);
+  --shadow-card:    0 8px 24px -8px rgba(0, 0, 0, 0.70), 0 2px 6px -2px rgba(0, 0, 0, 0.45);
+  --shadow-popover: 0 16px 36px -8px rgba(0, 0, 0, 0.78), 0 6px 14px -4px rgba(0, 0, 0, 0.55);
+  --shadow-overlay: 0 28px 72px -12px rgba(0, 0, 0, 0.85), 0 10px 24px -8px rgba(0, 0, 0, 0.60);
+  --shadow-accent:  0 16px 40px -10px color-mix(in oklch, #B9FF66 42%, transparent);
+
+  --map-canvas:            #000000;
+  --panel-glass:           rgba(16, 17, 20, 0.72);
+  --panel-glass-strong:    rgba(16, 17, 20, 0.92);
+  --panel-tint:            linear-gradient(180deg, rgba(22,23,26,0.92), rgba(15,15,17,0.96));
+  --rail-tint:             linear-gradient(180deg, rgba(22,23,26,0.96), rgba(10,11,13,0.98));
+  --topnav-tint:           linear-gradient(180deg, rgba(15,15,17,0.96), rgba(10,11,13,0.98));
+
+  color-scheme: dark;
+}
+
+
+/* ===========================================================================
+   2. LEGACY ALIASES  (the dashboard.html inline <style> already declares
+   these in its own `:root { … }` block — we override that block by
+   declaring identical names at `:root[data-surface]`.  When inline `:root`
+   names conflict with these, the `[data-surface]` selector wins due to
+   higher specificity).
+   --------------------------------------------------------------------------- */
+:root[data-surface='light'],
+:root[data-surface='dark'] {
+  /* shell bg ramp — was hardcoded #030609 → #121d35 */
+  --bg1:                   var(--bg-elevated);
+  --bg2:                   var(--bg);
+  --bg3:                   var(--surface-sunken);
+  --bg4:                   var(--surface-elevated);
+
+  /* glass mixins — was rgba navy-blue */
+  --glass:                 var(--panel-glass);
+  --glass2:                var(--panel-glass);
+  --glass3:                var(--panel-glass-strong);
+
+  /* borders */
+  --borderH:               var(--border-strong);
+  --borderA:               var(--ring-accent);
+
+  /* text ramp */
+  --t1:                    var(--fg);
+  --t2:                    var(--fg-muted);
+  --t3:                    var(--fg-subtle);
+  --t4:                    var(--fg-subtle);
+
+  /* status palette — keep all the cinematic chroma names but point them at
+     the new tokens. Map old "blue/cyan/amber/magenta/purple" onto the
+     limited semantic palette. */
+  --amber:                 var(--yellow);
+  --magenta:               var(--orange);
+  --purple:                var(--blue);
+
+  /* fonts: Urbanist is the kit display face; keep `--sans` working for the
+     huge inline class set. */
+  --sans:                  'Urbanist', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono:                  'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+}
+
+
+/* ===========================================================================
+   3. SHELL CHROME RE-SKIN
+   ---------------------------------------------------------------------------
+   Override the page background + the gradient fills on .topnav / .left /
+   .right / .bottom / .statusbar.  The map viewport itself keeps its dark
+   canvas so satellite imagery / globe reads correctly in BOTH modes.
+   --------------------------------------------------------------------------- */
+html, body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+}
+
+.viewport { background: var(--map-canvas) !important; }
+
+.topnav {
+  background: var(--topnav-tint) !important;
+  border-bottom: 1px solid var(--border) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.topnav::after { background: linear-gradient(90deg, transparent, var(--accent-glow), transparent) !important; }
+
+.left, .right {
+  background: var(--rail-tint) !important;
+  border-color: var(--border) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.left::after, .right::before {
+  background: linear-gradient(180deg, transparent, var(--accent-glow), transparent) !important;
+}
+
+.bottom {
+  background: var(--rail-tint) !important;
+  border-top: 1px solid var(--border) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.bottom::before { background: linear-gradient(90deg, transparent, var(--accent-glow), transparent) !important; }
+
+.statusbar {
+  background: var(--bg-elevated) !important;
+  border-top: 1px solid var(--border) !important;
+  color: var(--fg-muted);
+}
+
+/* Brand pill — was navy-cyan radial gradient */
+.brand-icon {
+  background: var(--accent) !important;
+  color: var(--fg-on-accent) !important;
+  box-shadow: 0 0 12px var(--accent-glow) !important;
+}
+.brand-name { color: var(--fg) !important; letter-spacing: 1.6px; }
+.brand-sub  { color: var(--fg-subtle) !important; border-left-color: var(--border) !important; }
+
+/* Cross-surface link cluster + active state */
+.surface-link.a {
+  color: var(--fg-on-accent) !important;
+  background: var(--accent) !important;
+  border-color: var(--accent-strong) !important;
+  box-shadow: 0 0 12px var(--accent-glow) !important;
+}
+.surface-link:hover { background: var(--surface-sunken) !important; color: var(--fg) !important; }
+
+/* Tenant pill */
+.tenant-pill {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--fg-muted) !important;
+}
+.tenant-pill:hover { border-color: var(--ring-accent) !important; color: var(--fg) !important; }
+.tenant-pill .tp-dot { background: var(--accent) !important; box-shadow: 0 0 6px var(--accent-glow) !important; }
+
+.tenant-menu {
+  background: var(--surface-elevated) !important;
+  border-color: var(--border) !important;
+  box-shadow: var(--shadow-popover) !important;
+  color: var(--fg);
+}
+.tenant-menu-item:hover { background: var(--surface-sunken) !important; color: var(--fg) !important; }
+.tenant-menu-item.a { background: var(--accent-soft) !important; color: var(--fg-on-accent) !important; }
+
+/* Nav tabs */
+.nav-tab        { color: var(--fg-subtle); }
+.nav-tab:hover  { color: var(--fg); }
+.nav-tab.a      { color: var(--fg) !important; border-bottom-color: var(--accent) !important; }
+.nav-tab.a::after { background: var(--accent) !important; }
+
+/* Nav buttons */
+.nav-btn {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--fg-muted) !important;
+  border-radius: 8px !important;
+}
+.nav-btn:hover { border-color: var(--ring-accent) !important; color: var(--fg) !important; background: var(--surface-sunken) !important; }
+
+/* SurfaceModeToggle (Sun/Moon) — uses the same .nav-btn class but adds
+   an accent ring when active. */
+.surface-toggle-btn {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--fg) !important;
+  border-radius: 999px !important;
+}
+.surface-toggle-btn:hover { background: var(--accent-soft) !important; border-color: var(--accent-strong) !important; }
+.surface-toggle-btn[aria-checked='true'] { color: var(--accent) !important; }
+
+/* Sec labels in rails */
+.sec-label, .r-label, .bot-label { color: var(--fg-subtle) !important; }
+.sec-label::after, .r-label::after, .bot-label::after { background: var(--border) !important; }
+
+/* Mission brief text */
+.mi-title { color: var(--fg) !important; }
+.mi-sub, .mi-k { color: var(--fg-muted) !important; }
+.mi-v { color: var(--fg) !important; }
+.mi-obj {
+  background: var(--surface-sunken) !important;
+  border-color: var(--border) !important;
+  color: var(--fg-muted) !important;
+}
+.mi-badge.green { background: color-mix(in oklch, var(--green) 18%, transparent) !important; color: var(--green) !important; border-color: color-mix(in oklch, var(--green) 28%, transparent) !important; }
+.mi-badge.blue  { background: color-mix(in oklch, var(--blue) 18%, transparent) !important;  color: var(--blue) !important;  border-color: color-mix(in oklch, var(--blue) 28%, transparent) !important; }
+
+/* Layer items */
+.layer-item:hover { background: var(--surface-sunken) !important; border-color: var(--border) !important; }
+.lyr-toggle.on { background: var(--accent) !important; border-color: var(--accent-strong) !important; box-shadow: 0 0 8px var(--accent-glow) !important; }
+.lyr-toggle::after { background: var(--bg-elevated) !important; }
+.lyr-name { color: var(--fg) !important; }
+
+/* Detection feed rows */
+.det-feed-item:hover { background: var(--surface-sunken) !important; border-color: var(--border) !important; }
+.det-feed-item.sel   { background: var(--accent-soft) !important; border-color: var(--accent-strong) !important; }
+.det-info-meta       { color: var(--fg-subtle) !important; }
+
+/* Viewport overlay HUD pieces — keep the glass look but with new tokens.
+   The HUD reads against the dark map canvas regardless of surface mode,
+   so we always use the "dark glass" formula for these. Includes the S11
+   map-canvas-tools dock (Layers + Basemap buttons) which sits on the map. */
+.vp-tool, .vp-coords, .vp-telem, .zoom-badge, .orbit-badge, .lock-btn,
+.map-canvas-tools .map-canvas-btn {
+  background: rgba(10, 11, 13, 0.62) !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.vp-tool:hover,
+.map-canvas-tools .map-canvas-btn:hover { border-color: var(--accent) !important; color: var(--accent) !important; }
+.vp-tool.a, .lock-btn.a,
+.map-canvas-tools .map-canvas-btn[aria-expanded="true"] { border-color: var(--accent) !important; color: var(--accent) !important; background: rgba(185, 255, 102, 0.10) !important; }
+.telem-val, .zoom-lvl, .scrubber-time { color: var(--accent) !important; }
+
+/* MapLibre's built-in navigation control (zoom +/− and compass) on the map
+   right edge — keep dark-glass with white icons in both surface modes for
+   readability over satellite imagery. */
+.maplibregl-ctrl-group,
+.mapboxgl-ctrl-group {
+  background: rgba(10, 11, 13, 0.62) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  box-shadow: 0 4px 12px -4px rgba(0,0,0,0.45) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.maplibregl-ctrl-group > button,
+.mapboxgl-ctrl-group > button {
+  background-color: transparent !important;
+  color: rgba(255, 255, 255, 0.92) !important;
+}
+.maplibregl-ctrl-group > button:hover,
+.mapboxgl-ctrl-group > button:hover { background-color: rgba(255,255,255,0.08) !important; }
+.maplibregl-ctrl-group > button + button,
+.mapboxgl-ctrl-group > button + button { border-top: 1px solid rgba(255, 255, 255, 0.10) !important; }
+/* Invert the default SVG icons (which are dark) so they read against the dark glass. */
+.maplibregl-ctrl-group > button > span,
+.mapboxgl-ctrl-group > button > span { filter: invert(1) brightness(2) !important; }
+
+/* Search input + chat */
+.search-input {
+  background: var(--surface-sunken) !important;
+  border-color: var(--border) !important;
+  color: var(--fg) !important;
+}
+.search-input:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 3px var(--ring-accent) !important; }
+.search-input::placeholder { color: var(--fg-subtle) !important; }
+
+.chat-send { background: var(--accent) !important; color: var(--fg-on-accent) !important; border-color: var(--accent-strong) !important; }
+.chat-send:hover { background: var(--accent-strong) !important; }
+
+/* Slide panels — over-map panels keep the dark glass look so they read
+   over satellite imagery in either surface mode. */
+.slide-panel, .det-popup {
+  background: rgba(10, 11, 13, 0.88) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  color: #fff !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.45) !important;
+}
+.slide-panel .sp-title, .slide-panel .dp-close { color: var(--accent) !important; }
+
+/* Bottom KPI tiles */
+.kpi-tile {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+.kpi-tile:hover { border-color: var(--accent-strong) !important; }
+.kpi-tile::before { background: var(--accent) !important; box-shadow: 0 0 8px var(--accent-glow) !important; }
+.kpi-tile-lbl  { color: var(--fg-subtle) !important; }
+.kpi-tile-val  { color: var(--fg) !important; }
+.kpi-tile-sub  { color: var(--fg-muted) !important; }
+.kpi-tile-spark span { background: var(--accent) !important; }
+
+.kpi-strip:hover     { background: var(--surface-sunken) !important; }
+.kpi-strip-name      { color: var(--fg-muted) !important; }
+.kpi-strip-val       { color: var(--fg) !important; }
+.kpi-strip-group-lbl { color: var(--fg-subtle) !important; border-bottom-color: var(--border) !important; }
+
+/* Status bar */
+.statusbar .sb-item   { color: var(--fg-muted) !important; }
+.statusbar .sb-dot    { box-shadow: 0 0 6px currentColor; }
+
+/* Bot-section dividers + collapse button */
+.bot-section { border-right-color: var(--border) !important; }
+.bot-collapse-btn {
+  background: var(--accent) !important;
+  border-color: var(--accent-strong) !important;
+  color: var(--fg-on-accent) !important;
+}
+.bot-collapse-btn:hover { background: var(--accent-strong) !important; color: var(--fg-on-accent) !important; }
+
+/* Project pill (top nav) */
+.proj-pill {
+  background: var(--accent-soft) !important;
+  border-color: var(--accent-strong) !important;
+  color: var(--fg-on-accent) !important;
+}
+.proj-pill:hover { background: var(--accent) !important; box-shadow: 0 0 16px var(--accent-glow) !important; }
+.proj-pill .pp-dot   { background: var(--green) !important; }
+.proj-pill .pp-caret { color: var(--fg-on-accent) !important; }
+
+/* Project explorer modal */
+.pe-overlay     { background: var(--overlay) !important; }
+.pe-card        { background: var(--surface-elevated) !important; border-color: var(--border) !important; color: var(--fg); }
+.pe-head        { background: var(--surface-sunken) !important; border-bottom-color: var(--border) !important; }
+.pe-title       { color: var(--fg) !important; }
+.pe-sub         { color: var(--fg-subtle) !important; }
+.pe-close       { background: var(--surface) !important; border-color: var(--border) !important; color: var(--fg) !important; }
+.pe-close:hover { background: color-mix(in oklch, var(--red) 12%, transparent) !important; border-color: var(--red) !important; color: var(--red) !important; }
+.pe-tile        { background: var(--surface) !important; border-color: var(--border) !important; }
+.pe-tile:hover  { border-color: var(--accent-strong) !important; }
+.pe-tile.active { border-color: var(--accent) !important; background: var(--accent-soft) !important; }
+.pe-tile-name   { color: var(--fg) !important; }
+.pe-tile-client { color: var(--fg-subtle) !important; }
+.pe-tile-stat .v { color: var(--fg) !important; }
+.pe-tile-stat .l { color: var(--fg-subtle) !important; }
+.pe-btn          { background: var(--surface) !important; border-color: var(--border-strong) !important; color: var(--fg) !important; }
+.pe-btn:hover    { background: var(--accent-soft) !important; border-color: var(--accent-strong) !important; color: var(--fg-on-accent) !important; }
+.pe-btn.primary  { background: var(--accent) !important; border-color: var(--accent-strong) !important; color: var(--fg-on-accent) !important; }
+.pe-btn.primary:hover { background: var(--accent-strong) !important; box-shadow: 0 12px 28px var(--accent-glow) !important; }
+.pe-new-row label { color: var(--fg-subtle) !important; }
+.pe-new-row input, .pe-new-row textarea {
+  background: var(--surface-sunken) !important;
+  border-color: var(--border) !important;
+  color: var(--fg) !important;
+}
+.pe-new-row input:focus, .pe-new-row textarea:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px var(--ring-accent) !important;
+}
+.pe-aoi-card { background: var(--surface) !important; border-color: var(--border) !important; }
+.pe-aoi-info .t { color: var(--fg) !important; }
+.pe-aoi-info .s { color: var(--fg-subtle) !important; }
+.pe-aoi-info .s.set { color: var(--green) !important; }
+.pe-toast { background: var(--accent) !important; color: var(--fg-on-accent) !important; }
+
+/* AI rec card */
+.ai-rec {
+  background: var(--accent-soft) !important;
+  border-color: var(--accent-strong) !important;
+}
+.ai-rec::before    { background: var(--accent) !important; }
+.ai-rec-title      { color: var(--fg-on-accent) !important; }
+.ai-rec-text       { color: var(--fg) !important; }
+
+/* Asset cards */
+.asset-card { background: var(--surface) !important; border-color: var(--border) !important; }
+.asset-k    { color: var(--fg-subtle) !important; }
+.asset-v    { color: var(--fg) !important; }
+
+/* Quick-action chips */
+.action-item        { background: var(--surface) !important; border-color: var(--border) !important; color: var(--fg); }
+.action-item:hover  { border-color: var(--accent-strong) !important; background: var(--accent-soft) !important; }
+.action-key         { background: var(--surface-sunken) !important; color: var(--fg-subtle) !important; }
+
+/* Scrubber */
+.scrubber-track  { background: var(--surface-sunken) !important; border-color: var(--border) !important; }
+.scrubber-fill   { background: linear-gradient(90deg, var(--accent-soft), color-mix(in oklch, var(--accent) 25%, transparent)) !important; }
+.scrubber-handle { background: var(--accent) !important; box-shadow: 0 0 8px var(--accent-glow) !important; }
+.scrubber-lbl    { color: var(--fg-subtle) !important; }
+
+/* Mapillary overlay close (kept dark — over street imagery) */
+.mly-head      { background: linear-gradient(180deg, var(--accent-glow), transparent) !important; border-bottom-color: var(--border) !important; }
+.mly-title     { color: var(--accent) !important; }
+.mly-close     { background: rgba(10,11,13,0.7) !important; border-color: rgba(255,255,255,0.18) !important; color: #fff !important; }
+.mly-close:hover { background: var(--red) !important; border-color: var(--red) !important; color: #fff !important; }
+
+
+/* ===========================================================================
+   4. RESPONSIVE  (S8)
+   ---------------------------------------------------------------------------
+   The existing inline @media rules already drop the rails into slide-out
+   drawers at ≤900px.  This block adds the new touch-first behaviours:
+
+     • ≤768px: detection drawer becomes a bottom-sheet (drag handle, two
+       snap points).
+     • ≤768px: layer panel collapses to a horizontal chip strip pinned to
+       the bottom edge.
+     • ≤768px: status bar collapses to a single tap-expand chip in the
+       top-right of the map.
+     • All interactive elements ≥44×44px (touch targets).
+   --------------------------------------------------------------------------- */
+
+/* Touch-target sizing — apply across all breakpoints so it works on
+   touch-laptops too.  Use min-height (not height) so existing layouts
+   don't break. */
+.nav-btn, .vp-tool, .lock-btn, .pe-btn, .chat-send, .view-all-btn,
+.surface-link, .surface-toggle-btn, .mob-toggle, .lyr-toggle, .layer-item {
+  min-height: 32px;
+}
+@media (pointer: coarse), (max-width: 900px) {
+  .nav-btn, .vp-tool, .lock-btn, .pe-btn, .chat-send, .view-all-btn,
+  .surface-link, .surface-toggle-btn, .mob-toggle {
+    min-height: 44px !important;
+    min-width: 44px !important;
+  }
+  .layer-item, .det-feed-item, .action-item, .tenant-menu-item {
+    min-height: 44px !important;
+  }
+}
+
+/* =============================================================================
+   S8.1 — reflow-first responsive policy
+   -----------------------------------------------------------------------------
+   The previous S8 cascade aggressively used `display:none !important` to make
+   chrome disappear at narrow widths.  That breaks the analyst's mental model
+   (lost bars / lost components).  This rewrite REFLOWS every chrome element
+   instead.  display:none is now permitted ONLY inside @media print.
+
+   Bar-by-bar policy (matching dashboard.html inline overrides):
+     • .topnav         — all components stay visible; text shrinks; some
+                         elements collapse to icon-only (sys-status, brand-sub
+                         on ≤480, proj-pill text on ≤480).  No display:none.
+     • .surface-links  — horizontal scrollable chip strip
+     • .nav-tabs       — horizontal scrollable chip strip (was display:none
+                         at ≤1024 — fixed)
+     • .left           — gradual narrow, then bottom-edge horizontal icon dock
+     • .right          — bottom-sheet on demand (kept visible behind toggle)
+     • .bottom (KPI)   — NEVER hidden; collapses to single column with
+                         scroll-x chips inside
+     • .statusbar      — wraps + scroll-x; every sb-item stays visible
+   ============================================================================= */
+
+/* ≤1024px: nav-tabs become a scrollable chip strip (the inline @media
+   block already declares max-width and overflow-x:auto — we just confirm
+   they're not hidden here). */
+@media (max-width: 1024px) {
+  .nav-tabs { overflow-x: auto; flex-wrap: nowrap; }
+}
+
+/* ≤900px (tablet + mobile).  The grid columns drop to 1fr (inline block)
+   and the left/right rails fly out.  We restyle the right rail as a
+   bottom-sheet for true mobile.  All other chrome remains visible. */
+@media (max-width: 900px) {
+  /* Right rail bottom-sheet — leaves the KPI rail + statusbar still visible
+     behind it (the sheet is sized to leave 120px at the bottom for the
+     bot/statusbar). */
+  .right {
+    top: auto !important;
+    bottom: 108px !important;
+    right: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    /* S8.2: dvh so mobile chrome doesn't eat it.  Cap at 60% of dynamic
+       viewport so the map still peeks above the sheet. */
+    height: min(60dvh, calc(100dvh - 168px)) !important;
+    border-top: 1px solid var(--border) !important;
+    border-left: none !important;
+    border-radius: 22px 22px 0 0 !important;
+    transform: translateY(120%) !important;
+    box-shadow: 0 -20px 60px rgba(0,0,0,0.45) !important;
+    z-index: 180 !important; /* below 200 so left.open still wins */
+  }
+  .right.open { transform: translateY(0) !important; }
+  /* Drag handle pill (decorative) */
+  .right::after {
+    content: '';
+    position: absolute;
+    top: 8px;
+    left: 50%;
+    width: 44px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--border-strong);
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .right-scroll { padding-top: 22px !important; }
+
+  /* Tenant pill shrinks but keeps its label */
+  .tenant-pill {
+    padding: 0 8px !important;
+    max-width: 110px;
+    overflow: hidden;
+  }
+  .tenant-pill #tenantPillName {
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70px;
+  }
+  /* S8.2: bottom-sheet uses dvh so phone browser-chrome doesn't eat it.
+     Subtract the fixed top+bottom of the grid (48 topnav + 78 KPI + 22
+     statusbar + 12 gap = 160).  At ≤900px the right sheet can take up
+     to 60dvh of remaining space. */
+  .right {
+    bottom: 108px !important;
+    height: min(60dvh, calc(100dvh - 168px)) !important;
+  }
+}
+
+/* ≤768px: tighten breakpoint for true phones — viewport tools dock to the
+   right edge so they don't crowd the canvas, but every bar stays visible. */
+@media (max-width: 768px) {
+  .topnav { padding: 0 6px !important; }
+  .topnav .brand-name { font-size: 11px !important; letter-spacing: 1.1px !important; }
+  .left, .right { box-shadow: 0 0 40px rgba(0,0,0,0.45) !important; }
+
+  /* Viewport tools collapse to icon-only and stack vertically on the right
+     edge so they don't crowd the small canvas. */
+  .vp-bar { top: 60px !important; right: 6px !important; left: auto !important; }
+  .vp-tools { flex-direction: column !important; gap: 4px !important; }
+
+  .right {
+    bottom: 100px !important;
+    height: min(60dvh, calc(100dvh - 160px)) !important;
+  }
+}
+
+/* ≤480px: ultra-compact (small phones). vp-coords/vp-telem shrink slightly.
+   The topnav's nav-info shrinks (handled inline). sys-status is dot-only
+   (also inline). Nothing is hidden here. */
+@media (max-width: 480px) {
+  .topnav { height: 48px !important; }
+  .topnav .brand-icon { width: 26px !important; height: 26px !important; }
+  .vp-coords, .vp-telem { font-size: 10px !important; padding: 4px 6px !important; }
+  .right {
+    bottom: 94px !important;
+    height: min(65dvh, calc(100dvh - 152px)) !important;
+  }
+}
+
+/* Print: hide chrome (ONLY place display:none is permitted on bars). */
+@media print {
+  .topnav, .left, .right, .bottom, .statusbar { display: none !important; }
+  .viewport { position: fixed; inset: 0 !important; }
+}

@@ -1,0 +1,135 @@
+{
+  "_comment": "Exception list for scripts/audit-mutation-coverage.mjs. Each entry is { file, function, reason }. Functions listed here may emit DML without a sibling recordAudit() call.",
+  "exceptions": [
+    {
+      "file": "mvp/api/v1/contact.mjs",
+      "function": "submit",
+      "reason": "Public marketing form, pre-tenant; tracked in public.contact_submission. Recorded by /contact/admin/* triage actions instead."
+    },
+    {
+      "file": "mvp/api/v1/contact.mjs",
+      "function": "confirmNewsletter",
+      "reason": "Public newsletter confirmation; pre-tenant — no audit context."
+    },
+    {
+      "file": "mvp/api/v1/contact_admin.mjs",
+      "function": "list",
+      "reason": "Read-only triage listing (no DML)."
+    },
+    {
+      "file": "mvp/api/v1/sales/leads.mjs",
+      "function": "changeStatus",
+      "reason": "Lifecycle table sales.status_history INSERT is itself an audit/history record; recordAudit emits status_change separately."
+    },
+    {
+      "file": "mvp/api/v1/ops/cases.mjs",
+      "function": "fromDetection",
+      "reason": "Idempotent auto-escalation; assignment + activity inserts inside withTx are themselves the audit trail (ops.case_activity)."
+    },
+    {
+      "file": "mvp/api/v1/ops/cases.mjs",
+      "function": "assign",
+      "reason": "recordAudit is emitted inside withTx after all DML completes."
+    },
+    {
+      "file": "mvp/api/v1/ops/cases.mjs",
+      "function": "update",
+      "reason": "recordAudit is emitted inside withTx after all DML completes (status_change OR update branch)."
+    },
+    {
+      "file": "mvp/api/v1/iam/users.mjs",
+      "function": "*",
+      "reason": "Wave 1 — covered by Phase 1 (P-010) backfill, not Sprint 0."
+    },
+    {
+      "file": "mvp/api/v1/iam/teams.mjs",
+      "function": "*",
+      "reason": "Wave 1 — covered by Phase 1 (P-010) backfill, not Sprint 0."
+    },
+    {
+      "file": "mvp/api/v1/gis/index.mjs",
+      "function": "*",
+      "reason": "Phase 2 — GIS audit is tracked separately in crm-plan-map.md."
+    },
+    {
+      "file": "mvp/api/v1/analytics/index.mjs",
+      "function": "*",
+      "reason": "Analytics rollup writes are non-business mutations; tracked in analytics rollup_log."
+    },
+    {
+      "file": "mvp/api/v1/contact_admin.mjs",
+      "function": "*",
+      "reason": "Platform-admin triage; outbound transitions tracked via the contact_submission status column itself."
+    },
+    {
+      "file": "mvp/api/v1/db/migrate.mjs",
+      "function": "runMigrations",
+      "reason": "Migration runner; bootstraps the audit_event table itself — emit-on-self would be circular."
+    },
+    {
+      "file": "mvp/api/v1/email/templates.mjs",
+      "function": "*",
+      "reason": "Email body composition with embedded SQL keywords in literal strings, not DML."
+    },
+    {
+      "file": "mvp/api/v1/iam/invites.mjs",
+      "function": "consumeByPlaintext",
+      "reason": "Anonymous pre-auth invite consumption — audit emitted by /auth/register-with-invite once tenant attribution is known."
+    },
+    {
+      "file": "mvp/api/v1/iam/token_revocation.mjs",
+      "function": "pruneExpired",
+      "reason": "Background maintenance — drops naturally-expired revocation rows on a 15-minute timer; not a business mutation, no tenant context."
+    },
+    {
+      "file": "mvp/api/v1/lib/activity.mjs",
+      "function": "emitActivity",
+      "reason": "Sprint 2A — the activity row IS the timeline/audit mirror; callers pair every recordAudit() with an emitActivity() call. Emitting recordAudit from inside the emitter would be circular."
+    },
+    {
+      "file": "mvp/api/v1/email/prefs.mjs",
+      "function": "setTenantPref",
+      "reason": "S3B — pref upsert helper; the calling REST handler in iam/email_prefs.mjs emits the recordAudit pair."
+    },
+    {
+      "file": "mvp/api/v1/email/prefs.mjs",
+      "function": "setUserPref",
+      "reason": "S3B — pref upsert helper; the calling REST handler in iam/email_prefs.mjs emits the recordAudit pair."
+    },
+    {
+      "file": "mvp/api/v1/email/notify.mjs",
+      "function": "*",
+      "reason": "S3B — notify dispatchers call enqueue() (local helper) and recordAudit() explicitly; legacy direct-send functions write audit rows through the audit() helper, which the coverage walker cannot see across the call boundary."
+    },
+    {
+      "file": "mvp/api/v1/email/drain.mjs",
+      "function": "reclaimStuck",
+      "reason": "S3B — background maintenance that re-arms outbox rows stuck in 'sending' past the claim TTL (process-crash recovery). Not a business mutation; the subsequent drainOnce() emits audit rows on terminal state changes."
+    },
+    {
+      "file": "mvp/api/v1/lib/oauth-vault.mjs",
+      "function": "ensureTenantDek",
+      "reason": "S4A — provisions a per-tenant data encryption key on first use. Internal KEK helper, not a business mutation; the calling /calendar credential mint flow emits the recordAudit pair."
+    },
+    {
+      "file": "mvp/api/v1/lib/oauth-vault.mjs",
+      "function": "rotateTenantDek",
+      "reason": "S4A — DEK rotation routine. Writes per-credential rotation_log rows which are the audit trail; recordAudit is emitted by the calling /iam/keys/rotate REST handler."
+    },
+    {
+      "file": "mvp/api/v1/sales/crmRepo.mjs",
+      "function": "listLeads",
+      "reason": "S7C — visibility-aware READ helper (SELECT-only). The audit-coverage scanner false-positives on the case-insensitive word 'update' appearing in a comment elsewhere in the file (line 169, getLeadById doc). No DML in this function."
+    },
+    {
+      "file": "mvp/api/v1/org/rollup.mjs",
+      "function": "refreshOrgRollup",
+      "reason": "Sprint A5.2 — district aggregate UPSERT helper (analytics.org_rollup, aggregates only, no PII). The calling REST handler refresh() emits recordAudit({action:'org.rollup.refresh'}); per ADR-0019 a real deployment moves this to the transactional outbox."
+    },
+    {
+      "file": "mvp/api/v1/access.mjs",
+      "function": "verify",
+      "reason": "S10B — pre-tenant access-code verification. The function inlines an INSERT INTO iam.audit_event (action='access.verify.success') because recordAudit() requires req.tenant.id which is unavailable on this anonymous endpoint. The inline INSERT is the audit. Failure attempts are journaled to stderr — there is no tenant attribution for invalid codes by definition."
+    }
+  ]
+}

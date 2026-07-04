@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemaps-image/0.9">
+
+  <url>
+    <loc>https://report.farm/</loc>
+    <image:image>
+      <image:loc>https://report.farm/og/home.png</image:loc>
+      <image:title>Report.Farm — Mission-grade decisions from satellite</image:title>
+      <image:caption>Hero card for the Report.Farm platform — field signals on a tenant-isolated farm portfolio map.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://report.farm/solutions.html</loc>
+    <image:image>
+      <image:loc>https://report.farm/og/solutions.png</image:loc>
+      <image:title>Report.Farm — Solutions mapped to outcomes</image:title>
+      <image:caption>Six farm intelligence solutions on one operational stack: crop &amp; yield monitoring, supply-chain intelligence, land &amp; water risk, physical AI, integration, 24/7 ops.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://report.farm/industries.html</loc>
+    <image:image>
+      <image:loc>https://report.farm/og/industries.png</image:loc>
+      <image:title>Report.Farm — Industries served</image:title>
+      <image:caption>Verticals served by a unified farm intelligence stack: growers, agribusiness, food &amp; beverage buyers, commodity traders, ag lenders, crop insurers.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://report.farm/platform.html</loc>
+    <image:image>
+      <image:loc>https://report.farm/og/platform.png</image:loc>
+      <image:title>Report.Farm — The Report.Farm Stack</image:title>
+      <image:caption>Six-layer architecture diagram from satellite data sources to operator surfaces.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://report.farm/company.html</loc>
+    <image:image>
+      <image:loc>https://report.farm/og/company.png</image:loc>
+      <image:title>Report.Farm — Mission, team, careers</image:title>
+      <image:caption>Founder-led, operator-built farm & supply-chain intelligence.</image:caption>
+    </image:image>
+  </url>
+
+  <url>
+    <loc>https://report.farm/contact.html</loc>
+    <image:image>
+      <image:loc>https://report.farm/og/contact.png</image:loc>
+      <image:title>Report.Farm — Request a Farm Plan</image:title>
+      <image:caption>NDA-ready by default. Response within one business day.</image:caption>
+    </image:image>
+  </url>
+
+</urlset>

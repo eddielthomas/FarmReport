@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="en" data-surface="light">
+<head>
+<meta charset="utf-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Solutions — Crop Health, Irrigation, Disease Risk, Yield & Supplier Intelligence · Report.Farm</title>
+<meta name="description" content="Six outcome-led farm solution lines on one platform: crop health & NDVI, irrigation & water intelligence, disease & pest pressure, yield & revenue-at-risk, land-use change, and supplier-portfolio monitoring — for growers, landowners, and supply-chain buyers." />
+<meta name="keywords" content="satellite crop monitoring, NDVI crop health, irrigation intelligence, soil moisture SAR, disease and pest risk, yield forecast, revenue-at-risk, land-use change detection, supplier portfolio monitoring, farm intelligence, Sentinel-2 crop monitoring, agriculture EO, scheduled farm reports, urgent farm alerts" />
+<meta name="theme-color" content="#F0F1F3" />
+<meta name="author" content="Report.Farm" />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<meta name="color-scheme" content="light" />
+<link rel="canonical" href="https://report.farm/solutions.html" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Report.Farm" />
+<meta property="og:title" content="See what's changing in your fields before it costs you. — Report.Farm" />
+<meta property="og:description" content="An autonomous farm operating layer built on independent satellite intelligence and AI — crop health, irrigation, disease risk, yield, and supplier monitoring, delivered as scheduled reports plus urgent alerts." />
+<meta property="og:url" content="https://report.farm/solutions.html" />
+<meta property="og:image" content="https://report.farm/og/solutions.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Report.Farm solutions overview — six farm intelligence lines mapped to grower outcomes." />
+<meta property="og:locale" content="en_US" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@ReportFarm" />
+<meta name="twitter:title" content="Solutions — Report.Farm" />
+<meta name="twitter:description" content="Six outcome-led farm solution lines on one platform: crop health, irrigation, disease risk, yield, land-use change, supplier monitoring." />
+<meta name="twitter:image" content="https://report.farm/og/solutions.png" />
+<meta name="twitter:image:alt" content="Report.Farm solutions overview — six farm intelligence lines mapped to grower outcomes." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="./marketing/site.css">
+<link rel="stylesheet" href="./marketing/premium.css">
+<link rel="stylesheet" href="/src/marketing-tokens.css">
+
+<!-- Schema.org: Organization + SoftwareApplication + ItemList of 6 solution lines + 6 Service entries + BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://report.farm/#org",
+      "name": "Report.Farm",
+      "alternateName": "Report Farm",
+      "url": "https://report.farm/",
+      "logo": "https://report.farm/og/logo.png",
+      "contactPoint": { "@type": "ContactPoint", "email": "ops@report.farm", "url": "https://report.farm/contact.html", "contactType": "sales" },
+      "sameAs": []
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://report.farm/#app",
+      "name": "Report.Farm",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "description": "An autonomous farm operating layer for growers, landowners, and supply-chain buyers — watching land, crops, water, weather, and machinery, explaining what changed, and estimating the financial impact.",
+      "offers": [
+        { "@type": "Offer", "name": "Starter",    "priceSpecification": { "@type": "PriceSpecification", "price": "0", "priceCurrency": "USD", "description": "Custom" } },
+        { "@type": "Offer", "name": "Growth",     "priceSpecification": { "@type": "PriceSpecification", "price": "0", "priceCurrency": "USD", "description": "Custom" } },
+        { "@type": "Offer", "name": "Enterprise", "priceSpecification": { "@type": "PriceSpecification", "price": "0", "priceCurrency": "USD", "description": "Custom" } }
+      ]
+    },
+    {
+      "@type": "ItemList",
+      "name": "Report.Farm solution lines",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Crop Health & NDVI",              "url": "https://report.farm/solutions.html#leak-detection" },
+        { "@type": "ListItem", "position": 2, "name": "Yield & Revenue-at-Risk",          "url": "https://report.farm/solutions.html#asset-recovery" },
+        { "@type": "ListItem", "position": 3, "name": "Disease & Pest Pressure",          "url": "https://report.farm/solutions.html#infra-risk" },
+        { "@type": "ListItem", "position": 4, "name": "Supplier Portfolio Monitoring",   "url": "https://report.farm/solutions.html#physical-ai" },
+        { "@type": "ListItem", "position": 5, "name": "Irrigation & Water Intelligence",  "url": "https://report.farm/solutions.html#integration" },
+        { "@type": "ListItem", "position": 6, "name": "Land-Use & Infrastructure Change", "url": "https://report.farm/solutions.html#operations" }
+      ]
+    },
+    {
+      "@type": "Service",
+      "name": "Crop Health & NDVI",
+      "serviceType": "Satellite crop health and vigor monitoring",
+      "areaServed": "Global",
+      "description": "Independent, multi-source satellite imagery and AI that tracks NDVI, EVI, canopy trend, and crop-stage timeline against each field's own baseline, surfaces stress early, maps it to zones, and turns it into scouting tasks for growers.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/solutions.html#leak-detection"
+    },
+    {
+      "@type": "Service",
+      "name": "Yield & Revenue-at-Risk",
+      "serviceType": "Yield forecasting and financial-impact estimation",
+      "areaServed": "Global",
+      "description": "Yield forecasts and variance to baseline per field, revenue-at-risk quantified per zone, and action ROI — packaged into executive and field reports for growers, landowners, and their lenders.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/solutions.html#asset-recovery"
+    },
+    {
+      "@type": "Service",
+      "name": "Disease & Pest Pressure",
+      "serviceType": "Disease likelihood and pest-risk monitoring",
+      "areaServed": "Global",
+      "description": "Early stress clusters, disease likelihood scores, and pest scouting zones — ranked by field, coupled to weather, and delivered as event-driven alerts and field reports.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/solutions.html#infra-risk"
+    },
+    {
+      "@type": "Service",
+      "name": "Supplier Portfolio Monitoring",
+      "serviceType": "Supply-chain sourcing-region and supplier monitoring",
+      "areaServed": "Global",
+      "description": "Portfolio-of-suppliers monitoring for buyers, traders, and brands — every sourcing region on one map, with rollups across suppliers and origins. In active rollout with launch partners.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/solutions.html#physical-ai"
+    },
+    {
+      "@type": "Service",
+      "name": "Irrigation & Water Intelligence",
+      "serviceType": "Soil-moisture, irrigation-anomaly and water-body monitoring",
+      "areaServed": "Global",
+      "description": "SAR-based soil-moisture proxies, irrigation outage and waterlogging detection, and pond and canal monitoring — so water problems surface before they cost a season.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/solutions.html#integration"
+    },
+    {
+      "@type": "Service",
+      "name": "Land-Use & Infrastructure Change",
+      "serviceType": "Land-use and on-farm infrastructure change detection",
+      "areaServed": "Global",
+      "description": "Continuous change detection against each field's history — new structures, clearing, encroachment, and land-use shifts flagged and watched season-round across your holdings.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/solutions.html#operations"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home",      "item": "https://report.farm/" },
+        { "@type": "ListItem", "position": 2, "name": "Solutions", "item": "https://report.farm/solutions.html" }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div class="grid-bg"></div>
+<div class="glow-orb a"></div>
+<div class="glow-orb b"></div>
+
+<nav class="nav">
+  <a class="nav-logo" href="./"><span class="logo-mark"></span><span><span class="nav-logo-text">Report.Farm</span><span class="nav-logo-sub">Farm Intelligence</span></span></a>
+  <div class="nav-links">
+    <div class="nav-item"><a class="nav-trigger" href="./solutions.html">Solutions</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./industries.html">Industries</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./platform.html">Platform</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./company.html">Company</a></div>
+  </div>
+  <div class="nav-cta">
+    <a class="btn btn-ghost btn-sm" href="./contact.html">Contact</a>
+    <a class="btn btn-primary btn-sm" href="./access.html">Launch Report.Farm →</a>
+    <button class="nav-burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<aside class="mobile-drawer">
+  <h4>Pages</h4>
+  <a href="./">Home</a>
+  <a href="./solutions.html">Solutions</a>
+  <a href="./industries.html">Industries</a>
+  <a href="./platform.html">Platform</a>
+  <a href="./company.html">Company</a>
+  <a href="./contact.html">Contact</a>
+  <a href="./access.html">Launch Report.Farm →</a>
+</aside>
+
+<!-- Page hero -->
+<header class="page-hero">
+  <div class="crumbs"><a href="./">Report.Farm</a><span>/</span><span>Solutions</span></div>
+  <div class="hero-eyebrow eyebrow" style="margin:0 auto 22px"><span class="dot pulse"></span>FARM INTELLIGENCE · OUTCOMES YOU CAN ACT ON</div>
+  <h1>See what's changing<br/>in your fields <span class="grad">before it costs you.</span></h1>
+  <p class="lead reveal">Report.Farm is an autonomous farm operating layer: it watches your land, crops, water, weather and machinery from independent satellite intelligence and AI, explains what changed, estimates the financial impact, and delivers scheduled reports plus urgent alerts — straight into the way you already run the farm.</p>
+  <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+    <a class="btn btn-primary btn-lg" href="./contact.html">Request a Farm Report</a>
+    <a class="btn btn-outline btn-lg" href="./platform.html">See the platform</a>
+  </div>
+  <div class="hero-meta reveal" style="margin-top:34px;display:flex;gap:38px;justify-content:center;flex-wrap:wrap">
+    <div><span class="v" style="display:block;font-size:26px;font-weight:800;color:var(--accent-deep)">10 m</span><span class="l">Native resolution of the free Sentinel-2 optical baseline</span></div>
+    <div><span class="v" style="display:block;font-size:26px;font-weight:800;color:var(--accent-deep)">5-day</span><span class="l">Revisit cadence across the Sentinel-2 constellation</span></div>
+    <div><span class="v" style="display:block;font-size:26px;font-weight:800;color:var(--accent-deep)">$0</span><span class="l">Imagery license cost for the Sentinel-2 + Landsat baseline</span></div>
+  </div>
+  <p style="margin:14px auto 0;max-width:760px;font-family:var(--font-mono);font-size:11px;color:var(--text-faint);letter-spacing:0.04em">Imagery: ESA Copernicus Sentinel-2 (free) · USGS / NASA Landsat (free) · commercial SAR &amp; very-high-resolution tasking layered in on escalation.</p>
+  <div class="screenshot-placeholder reveal" data-screenshot="solutions-overview" aria-hidden="true" style="max-width:980px;margin:38px auto 0"></div>
+</header>
+
+<!-- Who we serve -->
+<section class="tight" style="background:var(--bg-soft)">
+  <div class="container">
+    <div class="section-eyebrow reveal">WHO OWNS THE OUTCOME</div>
+    <h2 class="section-title reveal">Built for the people who carry the season.</h2>
+    <p class="section-sub reveal">Growers, land managers, and sourcing teams don't buy imagery — they buy earlier warning, a defensible record, and a number they can plan against. Report.Farm is scoped to each.</p>
+    <div class="grid c3" style="margin-top:42px">
+      <div class="card reveal">
+        <div class="ico">▣</div>
+        <h3>Growers &amp; farm operators</h3>
+        <p>Row-crop, permanent-crop, and mixed operations that can't walk every acre every week. See crop stress, irrigation failures, and disease pressure across your fields early — before it shows up in the yield, or in the tank.</p>
+        <ul>
+          <li>Catch stress and irrigation outages before they cost a season</li>
+          <li>Turn NDVI and moisture change into ranked scouting tasks</li>
+          <li>Scheduled field reports, plus urgent alerts between them</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <div class="ico">▤</div>
+        <h3>Landowners &amp; land managers</h3>
+        <p>Estates, family holdings, and managed portfolios of leased ground. Watch land value, water assets, and land-use change across acreage you rarely stand on — with an independent record you can hand to lenders, insurers, and partners.</p>
+        <ul>
+          <li>Protect land and water value from unseen change</li>
+          <li>Verify how leased ground is actually being farmed</li>
+          <li>Evidence for leases, insurance, disputes, and lending</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <div class="ico">▥</div>
+        <h3>Supply-chain buyers</h3>
+        <p>Processors, traders, brands, and co-ops sourcing from many farms at once. Monitor a whole portfolio of suppliers and sourcing regions on one map — with early warning on the origins that feed your contracts.</p>
+        <ul>
+          <li>Watch every sourcing region and supplier from one place</li>
+          <li>Get ahead of yield shortfalls before they hit supply</li>
+          <li>Back sustainability and origin claims with an audit trail</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin:26px auto 0;max-width:820px;text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--text-faint);letter-spacing:0.04em">Baseline imagery is free Earth observation — ESA Copernicus Sentinel-2 and USGS/NASA Landsat — with commercial SAR and very-high-resolution tasking layered in only where resolution or revisit demands it.</p>
+  </div>
+</section>
+
+<!-- 6 solution-line cards -->
+<section>
+  <div class="container">
+    <div class="section-eyebrow reveal">SOLUTION LINES · 6</div>
+    <h2 class="section-title reveal">One platform. Six outcomes you can point to.</h2>
+    <p class="section-sub reveal">Each line is delivered as a finished result — not a data dump. From early signal to explained, field-mapped finding with a financial number attached, and addressable through the API, portal, reports, and alerts.</p>
+    <div class="grid c3">
+      <a class="card reveal" href="#leak-detection"><div class="ico">◈</div><h3>Crop Health &amp; NDVI</h3><p>Vigor and canopy change tracked against each field's own baseline — stress surfaced early, mapped to zones, and turned into scouting tasks.</p><span class="more">Solution line · 01</span></a>
+      <a class="card reveal" href="#asset-recovery"><div class="ico">◇</div><h3>Yield &amp; Revenue-at-Risk</h3><p>Yield forecasts and variance to baseline, with revenue-at-risk quantified per zone — packaged as executive and field reports.</p><span class="more">Solution line · 02</span></a>
+      <a class="card reveal" href="#infra-risk"><div class="ico">▲</div><h3>Disease &amp; Pest Pressure</h3><p>Where trouble is most likely to start — early stress clusters and pest zones ranked by field, coupled to weather, delivered as alerts.</p><span class="more">Solution line · 03</span></a>
+      <a class="card reveal" href="#physical-ai"><div class="ico">⬢</div><h3>Supplier Portfolio Monitoring</h3><p>Every sourcing region and supplier on one map, with rollups across origins — for buyers, traders, and brands. In active rollout.</p><span class="more">Solution line · 04</span></a>
+      <a class="card reveal" href="#integration"><div class="ico">⌂</div><h3>Irrigation &amp; Water Intelligence</h3><p>Soil-moisture proxies, irrigation-outage and waterlogging flags, and pond and canal monitoring — water problems caught early.</p><span class="more">Solution line · 05</span></a>
+      <a class="card reveal" href="#operations"><div class="ico">◐</div><h3>Land-Use &amp; Infrastructure Change</h3><p>New structures, clearing, and encroachment flagged against your history — watched season-round across every parcel.</p><span class="more">Solution line · 06</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- Deep-dive · 01 Crop Health & NDVI -->
+<section id="leak-detection">
+  <div class="container">
+    <div class="split reveal" data-screenshot="solutions-leak-detection">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">SOLUTION LINE · 01</div>
+        <h2>Crop health &amp; NDVI.</h2>
+        <p>Crop stress shows up from orbit before it shows up on a windshield tour. Report.Farm tracks NDVI, EVI, canopy trend, and the crop-stage timeline against each field's own history, separates real stress from cloud and seasonal noise, maps it to management zones, and turns it into scouting tasks your agronomist can act on. You see ranked, explained findings — not raw imagery.</p>
+        <ul>
+          <li><span class="b">◔</span><span class="t"><b>Mapped to management zones</b><span>Stress located precisely enough to send a scout to the right corner of the right field — with a confidence ranking, not a guess.</span></span></li>
+          <li><span class="b">≋</span><span class="t"><b>Real stress, not cloud</b><span>True canopy decline separated from cloud, haze, and seasonal green-up, so you chase agronomy — not artifacts.</span></span></li>
+          <li><span class="b">⊞</span><span class="t"><b>Scouting tasks you can route</b><span>Findings become prioritized field tasks in the portal, the reports, or your farm-management system.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Judged against your own normal</b><span>A multi-season baseline per field means anomalies are measured against how that field actually behaves.</span></span></li>
+        </ul>
+        <div class="metrics-band" style="margin-top:24px;padding:28px 22px">
+          <div class="m"><div class="v">10 m</div><div class="l">Resolution of the free Sentinel-2 baseline</div></div>
+          <div class="m"><div class="v">5-day</div><div class="l">Revisit across the Sentinel-2 constellation</div></div>
+          <div class="m"><div class="v">NDVI · EVI</div><div class="l">Vigor indices tracked vs baseline</div></div>
+        </div>
+        <p style="margin:12px 0 0;font-family:var(--font-mono);font-size:11px;color:var(--text-faint);letter-spacing:0.04em">Imagery: ESA Copernicus Sentinel-2 (free) · USGS/NASA Landsat (free) · commercial VHR on escalation.</p>
+        <div style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-primary" href="./contact.html">Request a Farm Report →</a>
+          <a class="btn btn-outline" href="./platform.html#detection-ai">Learn how →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:14px;border-radius:14px;background:linear-gradient(135deg,var(--accent-tint),var(--surface));border:1px solid var(--border)"></div>
+        <div style="position:absolute;inset:14px;background:repeating-linear-gradient(45deg,var(--accent-soft) 0 2px,transparent 2px 14px);border-radius:14px;opacity:0.7"></div>
+        <div style="position:absolute;left:24%;top:32%;width:14px;height:14px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 5px rgba(192,51,78,0.14)"></div>
+        <div style="position:absolute;left:54%;top:48%;width:12px;height:12px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 5px rgba(192,51,78,0.14)"></div>
+        <div style="position:absolute;left:38%;top:65%;width:10px;height:10px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 5px rgba(180,83,9,0.14)"></div>
+        <div style="position:absolute;left:70%;top:30%;width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-soft)"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Deep-dive · 02 Yield & Revenue-at-Risk -->
+<section id="asset-recovery">
+  <div class="container">
+    <div class="split flip reveal" data-screenshot="solutions-asset-recovery">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">SOLUTION LINE · 02</div>
+        <h2>Yield &amp; revenue-at-risk, quantified.</h2>
+        <p>A stress map only matters when you can put a number on it. Report.Farm forecasts yield and variance to baseline per field, converts the risks it finds into revenue-at-risk and action ROI, and packages it as executive and field reports your owners, managers, and lenders can plan against — independent, time-stamped, and cited.</p>
+        <ul>
+          <li><span class="b">◇</span><span class="t"><b>Yield forecast per field</b><span>Zone-level forecasts and variance to baseline, updated as the season and the imagery move.</span></span></li>
+          <li><span class="b">⊿</span><span class="t"><b>Revenue-at-risk, in dollars</b><span>Each active risk translated into a financial exposure so you triage by impact, not by acreage.</span></span></li>
+          <li><span class="b">◉</span><span class="t"><b>Action ROI</b><span>The estimated payoff of acting now versus waiting, so the top recommendation is the profitable one.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Executive &amp; field reports</b><span>Owner-ready and manager-ready exports with provenance for lenders, insurers, and partners.</span></span></li>
+        </ul>
+        <div class="metrics-band" style="margin-top:24px;padding:28px 22px">
+          <div class="m"><div class="v">Per field</div><div class="l">Yield forecast &amp; variance to baseline</div></div>
+          <div class="m"><div class="v">$ at risk</div><div class="l">Revenue-at-risk quantified per zone</div></div>
+          <div class="m"><div class="v">Weekly</div><div class="l">Reports, plus urgent alerts between</div></div>
+        </div>
+        <p style="margin:12px 0 0;font-family:var(--font-mono);font-size:11px;color:var(--text-faint);letter-spacing:0.04em">Estimates are modeled from the crop, weather, and price signals in your Farm Intelligence Profile — shown with confidence levels, not as guarantees.</p>
+        <div style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-primary" href="./contact.html">See a sample report →</a>
+          <a class="btn btn-outline" href="./platform.html#detection-ai">Learn how →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:0;background:linear-gradient(165deg,var(--accent-tint),var(--surface));border:1px solid var(--border);border-radius:18px"></div>
+        <div style="position:absolute;left:50%;top:50%;width:64%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);border:1px dashed var(--border-strong)"></div>
+        <div style="position:absolute;left:50%;top:50%;width:36%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);border:1px dashed var(--accent)"></div>
+        <div style="position:absolute;left:50%;top:50%;width:14px;height:14px;border-radius:50%;transform:translate(-50%,-50%);background:var(--accent);box-shadow:0 0 0 6px var(--accent-glow)"></div>
+        <div style="position:absolute;left:78%;top:38%;width:10px;height:10px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 5px rgba(192,51,78,0.14)"></div>
+        <div style="position:absolute;left:18%;top:62%;width:10px;height:10px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 5px rgba(14,124,134,0.14)"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Deep-dive · 03 Disease & Pest Pressure -->
+<section id="infra-risk">
+  <div class="container">
+    <div class="split reveal" data-screenshot="solutions-infra-risk">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">SOLUTION LINE · 03</div>
+        <h2>Disease &amp; pest pressure you can get ahead of.</h2>
+        <p>Outbreaks start small and spread on the weather. Report.Farm watches your fields continuously, surfaces early stress clusters and the zones most likely to be under disease or pest pressure, ranks them by field, factors in the forecast, and pushes alerts into the tools you already watch. You scout the few zones that matter before they become the whole field.</p>
+        <ul>
+          <li><span class="b">▲</span><span class="t"><b>Early stress clusters</b><span>Anomalous canopy and moisture patterns mapped to field zones and watched over time.</span></span></li>
+          <li><span class="b">⌬</span><span class="t"><b>Ranked by likelihood</b><span>Disease and pest likelihood scored per zone so scouting hours go to the highest-risk ground first.</span></span></li>
+          <li><span class="b">◐</span><span class="t"><b>Risk that moves with the weather</b><span>Temperature, moisture, and seasonal pressure factored in, so scores rise and fall with real conditions.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Event-driven alerts</b><span>Per-field, per-zone thresholds with webhook, email, and SMS delivery into the tools your team already uses.</span></span></li>
+        </ul>
+        <div class="metrics-band" style="margin-top:24px;padding:28px 22px">
+          <div class="m"><div class="v">Zone-level</div><div class="l">Early stress clusters &amp; scouting zones</div></div>
+          <div class="m"><div class="v">Risk score</div><div class="l">Disease likelihood ranked by field</div></div>
+          <div class="m"><div class="v">Alerts</div><div class="l">Event-driven, into your tools</div></div>
+        </div>
+        <p style="margin:12px 0 0;font-family:var(--font-mono);font-size:11px;color:var(--text-faint);letter-spacing:0.04em">Disease and pest models are crop- and region-dependent and improve with labeled field feedback; findings ship with confidence levels.</p>
+        <div style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-primary" href="./contact.html">Request a Farm Report →</a>
+          <a class="btn btn-outline" href="./platform.html#detection-ai">Learn how →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:0;background:linear-gradient(165deg,var(--accent-tint),var(--surface));border:1px solid var(--border);border-radius:18px"></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)">
+          <path d="M5 80 Q 25 70 40 65 T 75 50 T 95 30" stroke="var(--accent)" stroke-width="1.2" fill="none"/>
+          <path d="M5 85 Q 25 75 40 72 T 75 60 T 95 42" stroke="var(--border-strong)" stroke-width="1" fill="none" stroke-dasharray="2 2"/>
+          <circle cx="40" cy="65" r="2" fill="var(--rose)"/>
+          <circle cx="62" cy="56" r="2" fill="var(--amber)"/>
+          <circle cx="80" cy="45" r="2" fill="var(--green)"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Deep-dive · 04 Supplier Portfolio Monitoring -->
+<section id="physical-ai">
+  <div class="container">
+    <div class="split flip reveal" data-screenshot="solutions-physical-ai">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">SOLUTION LINE · 04 · EXPANDING</div>
+        <h2>Supplier portfolio monitoring — the whole supply base on one map.</h2>
+        <p>A buyer's risk isn't one field — it's hundreds of them, across dozens of suppliers and sourcing regions. The supplier-portfolio line — in active rollout with launch partners — puts every origin that feeds your contracts on one map, rolls crop-health, water, and yield signals up to the supplier and region level, and warns you which origins are trending toward a shortfall before it reaches your supply.</p>
+        <ul>
+          <li><span class="b">⊿</span><span class="t"><b>Every origin on one map</b><span>Suppliers, sourcing regions, and contracted acreage monitored from a single portfolio view.</span></span></li>
+          <li><span class="b">◔</span><span class="t"><b>Rolled up to supplier &amp; region</b><span>Field-level crop, water, and yield signals aggregated into supplier and region-level risk.</span></span></li>
+          <li><span class="b">⬣</span><span class="t"><b>One clear read per supplier</b><span>Many fields and many revisits resolve into a single, trustworthy view of each supplier's outlook.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Origin &amp; sustainability evidence</b><span>An independent record to back sourcing decisions, origin claims, and sustainability reporting.</span></span></li>
+        </ul>
+        <div class="metrics-band" style="margin-top:24px;padding:28px 22px">
+          <div class="m"><div class="v">Portfolio</div><div class="l">Every sourcing region on one map</div></div>
+          <div class="m"><div class="v">Region-level</div><div class="l">Rollups across suppliers &amp; origins</div></div>
+          <div class="m"><div class="v">Expanding</div><div class="l">In active rollout with launch partners</div></div>
+        </div>
+        <div style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-primary" href="./contact.html">Talk to our team →</a>
+          <a class="btn btn-outline" href="./platform.html#detection-ai">Learn how →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:0;background:linear-gradient(165deg,var(--accent-tint),var(--surface));border:1px solid var(--border);border-radius:18px"></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)">
+          <polygon points="50,15 85,40 70,80 30,80 15,40" fill="none" stroke="var(--border-strong)" stroke-width="1"/>
+          <polygon points="50,30 72,45 64,70 36,70 28,45" fill="none" stroke="var(--accent)" stroke-width="1"/>
+          <circle cx="50" cy="50" r="3" fill="var(--accent)"/>
+        </svg>
+        <div style="position:absolute;left:50%;bottom:18px;transform:translateX(-50%);font-family:var(--font-mono);font-size:9.5px;font-weight:700;color:var(--accent-deep);letter-spacing:2.4px;text-transform:uppercase">Expanding · in active rollout</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Deep-dive · 05 Irrigation & Water Intelligence -->
+<section id="integration">
+  <div class="container">
+    <div class="split reveal" data-screenshot="solutions-integration">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">SOLUTION LINE · 05</div>
+        <h2>Irrigation &amp; water intelligence.</h2>
+        <p>Water is where a good season is won or lost — and where the most expensive surprises hide. Report.Farm reads soil-moisture proxies from radar, detects irrigation outages and waterlogging, and watches the ponds and canals your operation depends on, so a stuck pivot or a failing line surfaces in a report or an alert instead of a stunted strip of crop.</p>
+        <ul>
+          <li><span class="b">⊞</span><span class="t"><b>Soil-moisture proxies</b><span>SAR-based moisture signals, field by field, that see through cloud and read the ground, not just the canopy.</span></span></li>
+          <li><span class="b">≋</span><span class="t"><b>Irrigation anomaly detection</b><span>Missed passes, stuck pivots, and dry strips flagged against the pattern each field usually shows.</span></span></li>
+          <li><span class="b">⌂</span><span class="t"><b>Waterlogging &amp; flood flags</b><span>Standing water and saturation mapped early, so you act before roots and yield pay for it.</span></span></li>
+          <li><span class="b">◉</span><span class="t"><b>Pond &amp; canal monitoring</b><span>Water-body levels and canal integrity watched over time, with change surfaced against baseline.</span></span></li>
+        </ul>
+        <div class="metrics-band" style="margin-top:24px;padding:28px 22px">
+          <div class="m"><div class="v">Soil moisture</div><div class="l">SAR-based proxies, field by field</div></div>
+          <div class="m"><div class="v">Anomaly</div><div class="l">Irrigation outage &amp; waterlogging flags</div></div>
+          <div class="m"><div class="v">Ponds · canals</div><div class="l">Standing-water &amp; water-body watch</div></div>
+        </div>
+        <div style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-primary" href="./contact.html">Connect your fields →</a>
+          <a class="btn btn-outline" href="./platform.html#detection-ai">Learn how →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:0;background:linear-gradient(165deg,var(--accent-tint),var(--surface));border:1px solid var(--border);border-radius:18px"></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)">
+          <circle cx="50" cy="50" r="6" fill="var(--accent)"/>
+          <g stroke="var(--border-strong)" stroke-width="0.6" fill="none">
+            <line x1="50" y1="50" x2="18" y2="22"/>
+            <line x1="50" y1="50" x2="82" y2="22"/>
+            <line x1="50" y1="50" x2="14" y2="68"/>
+            <line x1="50" y1="50" x2="86" y2="78"/>
+            <line x1="50" y1="50" x2="50" y2="14"/>
+            <line x1="50" y1="50" x2="50" y2="88"/>
+          </g>
+          <g fill="var(--accent-deep)">
+            <circle cx="18" cy="22" r="2.4"/><circle cx="82" cy="22" r="2.4"/>
+            <circle cx="14" cy="68" r="2.4"/><circle cx="86" cy="78" r="2.4"/>
+            <circle cx="50" cy="14" r="2.4"/><circle cx="50" cy="88" r="2.4"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Deep-dive · 06 Land-Use & Infrastructure Change -->
+<section id="operations">
+  <div class="container">
+    <div class="split flip reveal" data-screenshot="solutions-operations">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">SOLUTION LINE · 06</div>
+        <h2>Land-use &amp; infrastructure change, watched season-round.</h2>
+        <p>Ground changes even when no one is looking — new structures, clearing, boundary encroachment, roads, and land-use shifts that touch value, leases, and compliance. Report.Farm measures what changed against each parcel's own history and surfaces it as a defensible record, so you find out from a report, not from a neighbor.</p>
+        <ul>
+          <li><span class="b">◐</span><span class="t"><b>Change against your history</b><span>Every parcel compared to its own multi-season baseline, so real change stands out from seasonal noise.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Structures &amp; clearing flagged</b><span>New buildings, cleared ground, and earthworks surfaced and located across your holdings.</span></span></li>
+          <li><span class="b">⊞</span><span class="t"><b>Encroachment &amp; boundaries</b><span>Activity crossing your lines flagged early, with time-stamped evidence for disputes and leases.</span></span></li>
+          <li><span class="b">◉</span><span class="t"><b>Season-round coverage</b><span>Watched every revisit, all year — quality independent of who is on the ground that week.</span></span></li>
+        </ul>
+        <div class="metrics-band" style="margin-top:24px;padding:28px 22px">
+          <div class="m"><div class="v">Parcel-level</div><div class="l">Change against each field's history</div></div>
+          <div class="m"><div class="v">Structures</div><div class="l">New builds, clearing &amp; encroachment</div></div>
+          <div class="m"><div class="v">Season-round</div><div class="l">Watched every revisit, all year</div></div>
+        </div>
+        <div style="margin-top:22px;display:flex;gap:12px;flex-wrap:wrap">
+          <a class="btn btn-primary" href="./contact.html">Start monitoring →</a>
+          <a class="btn btn-outline" href="./platform.html#detection-ai">Learn how →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:0;background:linear-gradient(165deg,var(--accent-tint),var(--surface));border:1px solid var(--border);border-radius:18px"></div>
+        <div style="position:absolute;left:50%;top:50%;width:70%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);border:1px solid var(--accent);opacity:0.55"></div>
+        <div style="position:absolute;left:50%;top:50%;width:46%;aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%);border:1px solid var(--border-strong)"></div>
+        <div style="position:absolute;left:50%;top:50%;font-family:var(--font-mono);font-size:11px;font-weight:700;color:var(--accent-deep);letter-spacing:3px;transform:translate(-50%,-50%);background:var(--surface);padding:12px 18px;border-radius:8px;border:1px solid var(--border);box-shadow:var(--shadow-card)">SEASON-ROUND WATCH</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- The case for finding it early -->
+<section style="background:var(--bg-soft)">
+  <div class="container narrow">
+    <div class="section-eyebrow reveal">THE COST OF NOTICING LATE</div>
+    <h2 class="section-title reveal">Reacting is the expensive option.</h2>
+    <p class="section-sub reveal">A stress event you catch in a report costs a scouting pass. The same event caught at harvest costs a slice of the season. Report.Farm exists to move you to the left of that trade-off — early signal, explained, with a number attached.</p>
+    <div class="metrics-band reveal" style="margin-top:42px;padding:38px 28px">
+      <div class="m"><div class="v">A season</div><div class="l">What a missed irrigation or disease event can cost in yield</div></div>
+      <div class="m"><div class="v">10 m</div><div class="l">Resolution we watch every field at</div></div>
+      <div class="m"><div class="v">5-day</div><div class="l">Revisit cadence of the free-EO baseline</div></div>
+      <div class="m"><div class="v">Weekly</div><div class="l">Scheduled reports — plus urgent alerts between them</div></div>
+    </div>
+    <p style="margin:18px auto 0;max-width:820px;text-align:center;font-family:var(--font-mono);font-size:11px;color:var(--text-faint);letter-spacing:0.04em">Baseline imagery: ESA Copernicus Sentinel-2 (free) · USGS/NASA Landsat (free) · commercial SAR &amp; VHR tasking on escalation.</p>
+  </div>
+</section>
+
+<!-- Integration matrix -->
+<section>
+  <div class="container">
+    <div class="section-eyebrow reveal">INTEGRATION MATRIX</div>
+    <h2 class="section-title reveal">Connects to the stack you already run.</h2>
+    <p class="section-sub reveal">Standards-first: open geospatial and IoT standards over vendor lock-in. Compliance posture: SOC 2 Type II and data-residency options — targeted for production go-live, not yet audited. We state where we stand honestly.</p>
+    <div class="grid c4">
+      <div class="card reveal"><div class="ico">⊞</div><h3>Geospatial standards</h3><p>STAC, COG, GeoParquet, Zarr, OGC APIs; export to Esri, QGIS, PostGIS, Mapbox, MapLibre.</p></div>
+      <div class="card reveal"><div class="ico">⊕</div><h3>Farm &amp; machinery data</h3><p>ISOBUS / ISOXML and ADAPT for machinery; read/write into your farm-management software.</p></div>
+      <div class="card reveal"><div class="ico">⌂</div><h3>Sensors &amp; telemetry</h3><p>OGC SensorThings, MQTT, LoRaWAN, and Modbus for soil, weather, and irrigation sensors.</p></div>
+      <div class="card reveal"><div class="ico">◔</div><h3>APIs &amp; events</h3><p>REST + OpenAPI, HMAC-signed webhooks, an event stream, and CSV / GeoPackage batch exports.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA band -->
+<section>
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2>Stop paying for change you could have seen coming.</h2>
+      <p>Tell us your fields, your crop, or your sourcing region. We come back with a Report.Farm plan, a reporting cadence, and an alert model — scoped to growers, landowners, or supply-chain buyers.</p>
+      <div class="a">
+        <a class="btn btn-primary btn-lg" href="./contact.html">Request a Farm Report</a>
+        <a class="btn btn-outline btn-lg" href="./platform.html">See the platform</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="nav-logo" href="./"><span class="logo-mark"></span><span><span class="nav-logo-text">Report.Farm</span><span class="nav-logo-sub">Farm Intelligence</span></span></a>
+      <p>An autonomous farm operating layer — six outcome-led solution lines on one platform.</p>
+    </div>
+    <div><h5>Solutions</h5><a href="./solutions.html#leak-detection">Crop Health &amp; NDVI</a><a href="./solutions.html#asset-recovery">Yield &amp; Revenue-at-Risk</a><a href="./solutions.html#infra-risk">Disease &amp; Pest</a><a href="./solutions.html#physical-ai">Supplier Portfolio</a><a href="./solutions.html#integration">Irrigation &amp; Water</a><a href="./solutions.html#operations">Land-Use Change</a></div>
+    <div><h5>Industries</h5><a href="./industries.html#growers">Growers</a><a href="./industries.html#landowners">Landowners</a><a href="./industries.html#buyers">Supply-Chain Buyers</a><a href="./industries.html#buyers">Co-ops &amp; Markets</a><a href="./industries.html#insurers">Crop Insurers</a></div>
+    <div><h5>Platform</h5><a href="./platform.html#data-sources">Data Layer</a><a href="./platform.html#detection-ai">AI Engine</a><a href="./platform.html#command-center">Reports &amp; Alerts</a><a href="./platform.html#api-integration">Integrations</a><a href="./platform.html#security-compliance">Security</a></div>
+    <div><h5>Company</h5><a href="./company.html">About</a><a href="./company.html#careers">Careers</a><a href="./contact.html">Contact</a><a href="./access.html">Launch Report.Farm</a></div>
+  </div>
+  <div class="foot-bar"><div>© <span data-year>2026</span> Report.Farm · ops@report.farm</div><div class="l"><a href="./company.html#privacy">Privacy</a><a href="./company.html#security">Security</a><a href="./company.html#terms">Terms</a></div></div>
+</footer>
+
+<script type="module" src="./marketing/site.js" defer></script>
+<script type="module" src="./marketing/reveal.js"></script>
+<script src="./marketing-videos.js" defer></script>
+</body>
+</html>

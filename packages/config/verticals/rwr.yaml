@@ -1,0 +1,187 @@
+# =============================================================================
+# rwr.yaml — RWR (Resilient Water Recon) SolutionPack — THE REFERENCE PACK.
+# -----------------------------------------------------------------------------
+# Captures CURRENT RWR behaviour EXACTLY. Nothing in the running app changes
+# for RWR users: this pack encodes the hardcoded values that already ship in
+#   * mvp/api/v1/iam/users.mjs            (KNOWN_ROLES)
+#   * mvp/src/crm/lib/auth-store.ts       (S12 allow-list + primary surface)
+#   * mvp/src/crm/lib/customer-scenes.ts  (S13 branded basemaps)
+#   * mvp/api/v1/db/sql/152_demo_customer_seed.sql (S14A seed scenes)
+# It is the default pack (RWR_VERTICAL / OPERATIONSOS_VERTICAL fall back here).
+# See ADR-0023. Validated against solution-pack.schema.json by the loader.
+# =============================================================================
+id: rwr
+name: RWR
+displayName: Resilient Water Recon
+version: 1.0.0
+extends: null
+
+# --- Lever 1: Roles ----------------------------------------------------------
+# The vertical roles layered over the platform-base roles. The exact set below
+# reproduces the current KNOWN_ROLES (users.mjs) PLUS the S9.1 ops-hierarchy /
+# field roles that the S12 allow-list routes. The platform-base set lives in
+# the loader; merging base ∪ these yields a KNOWN_ROLES superset of today's.
+roles:
+  - { key: "platform:admin", tier: platform, label: "Platform Admin" }
+  - { key: "sales:manage",   tier: sales,     label: "Sales Manager" }
+  - { key: "ops:manage",     tier: ops,        label: "Ops Manager" }
+  - { key: "analytics:view", tier: analytics,  label: "Analytics Viewer" }
+  - { key: "dashboard:view", tier: vertical,   label: "Dashboard Viewer (legacy)" }
+  - { key: "customer:view",  tier: customer,   label: "Customer" }
+  - { key: "vendor:view",    tier: vendor,     label: "Vendor (view)" }
+  - { key: "vendor:manage",  tier: vendor,     label: "Vendor (manage)" }
+  - { key: "vendor:billing", tier: vendor,     label: "Vendor (billing)" }
+  - { key: "ops.coordinator",      tier: ops,   label: "Ops Coordinator (S9.1 dispatcher)" }
+  - { key: "ops.field_specialist", tier: field, label: "Ops Field Specialist (S9.1 internal field)" }
+  - { key: "field.technician",     tier: field, label: "Field Technician (external contractor)" }
+
+# --- Lever 2: Surfaces + role->surface allow-list (S12) -----------------------
+# surfaces[] = the full set of authenticated HTML entries (ALL_AUTHED_SURFACES).
+surfaces:
+  - { id: tenants.html,    label: "Tenants" }
+  - { id: staff.html,      label: "Staff" }
+  - { id: sales.html,      label: "Sales" }
+  - { id: pm.html,         label: "Project Mgmt" }
+  - { id: analytics.html,  label: "Analytics" }
+  - { id: operations.html, label: "Operations" }
+  - { id: customer.html,   label: "Customer Portal" }
+  - { id: vendor.html,     label: "Vendor Portal" }
+  - { id: field.html,      label: "Field PWA" }
+  - { id: dashboard.html,  label: "Dashboard (legacy)" }
+  - { id: login.html,      label: "Login" }
+
+# roleSurfaceAllowList — byte-for-byte reproduction of allowedSurfacesForRoles.
+# Evaluation order matters and is enforced by the loader/consumer in this order:
+#   1. '*admin' (platform:admin) -> ALL surfaces (super-user)
+#   2. 'vendor:*' -> vendor.html only
+#   3. field tier -> field.html only
+#   4. ops.coordinator / ops:manage -> ops cluster
+#   5. sales:manage -> sales + analytics
+#   6. analytics:view -> analytics only
+#   7. customer:view -> customer only
+#   8. (dashboard:view alone -> login.html only — intentional S12 demotion)
+# login.html is implicitly added to every non-admin bundle by the consumer.
+roleSurfaceAllowList:
+  "*admin": [tenants.html, staff.html, sales.html, pm.html, analytics.html, operations.html, customer.html, vendor.html, field.html, dashboard.html, login.html]
+  "vendor:*": [vendor.html]
+  "field.technician": [field.html]
+  "field:technician": [field.html]
+  "ops.field_specialist": [field.html]
+  "ops.coordinator": [operations.html, dashboard.html, pm.html, analytics.html]
+  "ops:manage": [operations.html, dashboard.html, pm.html, analytics.html]
+  "sales:manage": [sales.html, analytics.html]
+  "analytics:view": [analytics.html]
+  "customer:view": [customer.html]
+
+# primarySurfaceByRole — ordered reproduction of primarySurfaceForRoles. First
+# matching key (in this object's order) wins. 'vendor:*' matches any vendor:* role.
+primarySurfaceByRole:
+  "platform:admin": tenants.html
+  "vendor:*": vendor.html
+  "ops.field_specialist": field.html
+  "field.technician": field.html
+  "field:technician": field.html
+  "ops.coordinator": operations.html
+  "ops:manage": operations.html
+  "sales:manage": sales.html
+  "analytics:view": analytics.html
+  "customer:view": customer.html
+  "dashboard:view": dashboard.html
+
+# --- Lever 3: Basemaps (S13) -------------------------------------------------
+# The 10 branded analytic basemaps RWR surfaces. Default = satellite.
+basemaps:
+  - { id: satellite,     name: "Satellite",     use: "True-color imagery — operational baseline" }
+  - { id: hydrovision,   name: "HydroVision",   use: "Moisture saturation pseudo-color — leak halo signatures pop" }
+  - { id: thermsight,    name: "ThermSight",    use: "Thermal infrared — buried-pipe heat corridors and leak warmth" }
+  - { id: pressurepulse, name: "PressurePulse", use: "Pressure-anomaly heatmap — green nominal, amber fluctuation, red event" }
+  - { id: nightwatch,    name: "NightWatch",    use: "Dark satellite with urban infrastructure highlighting — night-ops shift" }
+  - { id: echoscan,      name: "EchoScan",      use: "Sentinel-1 SAR backscatter baked in — radar-native ops view" }
+  - { id: coherencemap,  name: "CoherenceMap",  use: "InSAR change-detection — ground motion and subsidence between passes" }
+  - { id: greenline,     name: "GreenLine",     use: "NDVI vegetation index — anomalous green growth flags water below" }
+  - { id: deepgrid,      name: "DeepGrid",      use: "Minimal-clutter streets — AOI drawing and route planning" }
+  - { id: riskatlas,     name: "RiskAtlas",     use: "Risk heatmap fused over satellite — executive briefing view" }
+defaultBasemap: satellite
+
+# --- Lever 4: Vocabulary -----------------------------------------------------
+vocabulary:
+  entities:
+    detection: "leak"
+    detectionPlural: "leaks"
+    areaOfInterest: "AOI"
+    pointOfInterest: "POI"
+    lead: "lead"
+    opportunity: "opportunity"
+    case: "case"
+    mission: "mission"
+    job: "job"
+    asset: "pipe"
+  kpis:
+    detections: "Leaks detected"
+    aoiCount: "AOIs surveyed"
+    waterSaved: "Estimated water saved"
+    responseTime: "Mean response time"
+
+# --- Lever 5: Brand tokens ---------------------------------------------------
+# Extends the S7A token system + brand.js. RWR ships the current strings.
+brandTokens:
+  brandName: "RWR Sentinel"
+  brandLegalName: "Resilient Water Recon, LLC"
+  brandHost: "https://rwrsentinel.com"
+  emailFrom: "noreply@rwrsentinel.com"
+  emailOps: "ops@rwrsentinel.com"
+  emailRecovery: "recovery@rwrsentinel.com"
+  emailPartners: "partners@rwrsentinel.com"
+  emailPress: "press@rwrsentinel.com"
+  accentColor: "#00b3ff"
+
+# --- Investigation types -----------------------------------------------------
+investigationTypes:
+  - { key: leak_detection,   label: "Leak detection",    description: "SAR/EO-flagged subsurface water escape" }
+  - { key: pressure_anomaly, label: "Pressure anomaly",  description: "Network pressure deviation event" }
+  - { key: aoi_survey,       label: "AOI survey",        description: "Scheduled area-of-interest reconnaissance" }
+  - { key: field_verify,     label: "Field verification", description: "On-site confirmation of a remote detection" }
+
+# --- Lever 6: Seed scenes (S14A) ---------------------------------------------
+# Mirrors 152_demo_customer_seed.sql (Demoville coordinates used as the
+# pack-level template; tenant seeders substitute per-tenant lat/lon).
+seedScenes:
+  - title: "Overview"
+    description: "Default project view — leaks + AOI on satellite"
+    isDefault: true
+    ordinal: 0
+    centerLat: 33.4484
+    centerLon: -112.0740
+    zoom: 12.0
+    pitch: 0.0
+    bearing: 0.0
+    basemapId: satellite
+    sarOverlay: false
+    sarOpacity: 60
+    activeLayers: [leaks, aoi, pois]
+  - title: "Thermal close-up"
+    description: "ThermSight basemap — buried-pipe heat corridors"
+    isDefault: false
+    ordinal: 1
+    centerLat: 33.4484
+    centerLon: -112.0740
+    zoom: 16.0
+    pitch: 45.0
+    bearing: 30.0
+    basemapId: thermsight
+    sarOverlay: false
+    sarOpacity: 60
+    activeLayers: [leaks, pois]
+  - title: "SAR survey"
+    description: "EchoScan + Sentinel-1 SAR overlay — radar-native ops view"
+    isDefault: false
+    ordinal: 2
+    centerLat: 33.4484
+    centerLon: -112.0740
+    zoom: 13.5
+    pitch: 0.0
+    bearing: 0.0
+    basemapId: echoscan
+    sarOverlay: true
+    sarOpacity: 70
+    activeLayers: [leaks, aoi, pois]

@@ -1,0 +1,175 @@
+/* =============================================================================
+   RWR CRM — shadcn ↔ token bridge (S7A)
+   ---------------------------------------------------------------------------
+   1. Pull in the design-system tokens.
+   2. Map every shadcn semantic variable to the matching token so the existing
+      shadcn primitive imports keep working without per-component edits.
+   3. Keep the legacy cinematic aliases (`--rwr-*`, `--signal-*`, `--t1..t4`)
+      pointed at the new palette so any module still referencing them renders
+      correctly during the S7B/S7C migration window.
+
+   This file does NOT declare token values — those live in `theme/tokens.css`.
+   ============================================================================= */
+
+@import './theme/tokens.css';
+
+
+/* ---------------------------------------------------------------------------
+   shadcn semantic variables — both surface modes.
+   --------------------------------------------------------------------------- */
+.crm,
+.crm[data-surface='light'] {
+  /* canvas */
+  --background:            var(--bg);
+  --foreground:            var(--fg);
+
+  /* card / popover */
+  --card:                  var(--surface);
+  --card-foreground:       var(--fg);
+  --popover:               var(--surface-elevated);
+  --popover-foreground:    var(--fg);
+
+  /* primary = lime accent (high-contrast CTA) */
+  --primary:               var(--accent);
+  --primary-foreground:    var(--fg-on-accent);
+
+  /* secondary = sunken surface */
+  --secondary:             var(--surface-sunken);
+  --secondary-foreground:  var(--fg);
+
+  /* muted = sub-stats */
+  --muted:                 var(--surface-sunken);
+  --muted-foreground:      var(--fg-muted);
+
+  /* accent (hover tint, not the brand accent) */
+  --accent-bg:             var(--accent-soft);
+  --accent-foreground:     var(--fg);
+
+  /* destructive */
+  --destructive:           var(--red);
+  --destructive-foreground:var(--fg-inverted);
+
+  /* form fields + rings */
+  --border-color:          var(--border);
+  --input:                 var(--surface);
+  --input-background:      var(--surface);
+  --ring-color:            var(--ring);
+
+  /* shadcn's reusable single token */
+  --radius:                var(--radius-lg);
+
+  /* -- LEGACY ALIASES (kept until S7B/S7C migrate every page) ----------- */
+  --signal-cyan:    var(--cyan);
+  --signal-green:   var(--green);
+  --signal-amber:   var(--yellow);
+  --signal-red:     var(--red);
+  --signal-blue:    var(--blue);
+  --signal-purple:  var(--blue);
+  --signal-magenta: var(--red);
+
+  --rwr-bg:    var(--bg);
+  --rwr-bg1:   var(--bg-elevated);
+  --rwr-bg2:   var(--surface);
+  --rwr-bg3:   var(--surface-sunken);
+  --rwr-bg4:   var(--surface-sunken);
+  --rwr-glass: var(--surface);
+  --rwr-glass2:var(--surface);
+  --rwr-glass3:var(--surface-elevated);
+  --rwr-t1:    var(--fg);
+  --rwr-t2:    var(--fg-muted);
+  --rwr-t3:    var(--fg-subtle);
+  --rwr-t4:    var(--border-strong);
+  --rwr-borderH: var(--border-strong);
+  --rwr-borderA: var(--ring-accent);
+
+  --t1: var(--fg);
+  --t2: var(--fg-muted);
+  --t3: var(--fg-subtle);
+  --t4: var(--border-strong);
+}
+
+/* Dark surface re-binds shadcn vars to the dark token palette. Token names are
+   the same — only the underlying values flip in tokens.css. The explicit map
+   here is required because the [data-surface='dark'] selector has higher
+   specificity than the base `.crm` selector above on the *same* element.
+   We match both `.crm[data-surface='dark']` (attribute on the wrapper) AND
+   `:root[data-surface='dark'] .crm` (attribute on <html>, set by the inline
+   bootstrap script) so the pre-paint mode is honoured. */
+.crm[data-surface='dark'],
+:root[data-surface='dark'] .crm {
+  --background:            var(--bg);
+  --foreground:            var(--fg);
+  --card:                  var(--surface);
+  --card-foreground:       var(--fg);
+  --popover:               var(--surface-elevated);
+  --popover-foreground:    var(--fg);
+  --primary:               var(--accent);
+  --primary-foreground:    var(--fg-on-accent);
+  --secondary:             var(--surface-sunken);
+  --secondary-foreground:  var(--fg);
+  --muted:                 var(--surface-sunken);
+  --muted-foreground:      var(--fg-muted);
+  --accent-bg:             var(--accent-soft);
+  --accent-foreground:     var(--fg);
+  --destructive:           var(--red);
+  --destructive-foreground:var(--fg-inverted);
+  --border-color:          var(--border);
+  --input:                 var(--surface);
+  --input-background:      var(--surface);
+  --ring-color:            var(--ring);
+  --radius:                var(--radius-lg);
+}
+
+
+/* ---------------------------------------------------------------------------
+   Base reset — only inside `.crm` so marketing/dashboard pages stay untouched.
+   --------------------------------------------------------------------------- */
+.crm {
+  background-color: var(--bg);
+  color:            var(--fg);
+  font-family:      var(--font-sans);
+  font-size:        var(--font-size-base);
+  line-height:      var(--line-height-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering:   optimizeLegibility;
+}
+.crm *,
+.crm *::before,
+.crm *::after {
+  border-color: var(--border);
+}
+.crm pre,
+.crm code,
+.crm kbd,
+.crm samp {
+  font-family: var(--font-mono);
+}
+
+/* Compatibility wrappers used by the existing primitives ------------------- */
+.crm .glass,
+.crm .glass-2,
+.crm .glass-3,
+.crm .panel {
+  background:    var(--surface);
+  border:        1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+.crm .panel-hover { transition: border-color var(--duration-fast) var(--easing-standard); }
+.crm .panel-hover:hover { border-color: var(--border-strong); }
+.crm .ring-cyan { box-shadow: 0 0 0 1px var(--ring-accent), 0 0 16px -6px var(--accent); }
+
+.crm .text-mono  { font-family: var(--font-mono); letter-spacing: var(--tracking-widest); text-transform: uppercase; font-size: 9px; }
+.crm .text-label { font-family: var(--font-mono); letter-spacing: var(--tracking-wider);  text-transform: uppercase; font-size: 10px; color: var(--fg-muted); }
+.crm .text-micro { font-size: 8px; letter-spacing: var(--tracking-wider); color: var(--fg-subtle); }
+
+/* Scrollbars ----------------------------------------------------------------- */
+.crm ::-webkit-scrollbar { width: 8px; height: 8px; }
+.crm ::-webkit-scrollbar-track { background: transparent; }
+.crm ::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: var(--radius-full);
+}
+.crm ::-webkit-scrollbar-thumb:hover { background: var(--fg-subtle); }
+
+.crm .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.crm .no-scrollbar::-webkit-scrollbar { display: none; }

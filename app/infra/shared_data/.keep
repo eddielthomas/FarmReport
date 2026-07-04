@@ -1,0 +1,1 @@
+# Drop shapefiles, GeoTIFFs, GeoPackages here and they appear at /opt/shared_data inside the GeoServer container.

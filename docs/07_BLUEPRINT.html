@@ -1,0 +1,739 @@
+<title>Report.Farm — Site Map & Product Blueprint</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --bg: #F2F0EB; --surface: #FFFFFF; --sunken: #ECEAE3; --raise: #FBFAF7;
+    --fg: #171512; --fg-muted: #5C574F; --fg-subtle: #8A857B;
+    --accent: #2B5FE3; --accent-soft: #E3EAFB; --on-accent: #FFFFFF;
+    --border: rgba(20,19,17,0.11); --border-strong: rgba(20,19,17,0.20);
+    --built: #0E7A3F; --built-bg: #E2F0E7;
+    --themed: #B26A00; --themed-bg: #F6ECD8;
+    --planned: #7A6FA8; --planned-bg: #ECE8F5;
+    --mono: ui-monospace, "Cascadia Code", "JetBrains Mono", "SF Mono", Menlo, monospace;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --shadow: 0 6px 20px -10px rgba(20,19,17,0.14), 0 1px 2px rgba(20,19,17,0.05);
+    --maxw: 1140px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0C0B09; --surface: #1A1815; --sunken: #131109; --raise: #221F1B;
+      --fg: #F5F3EE; --fg-muted: #ACA69B; --fg-subtle: #7C766B;
+      --accent: #6E97FF; --accent-soft: #1E2942; --on-accent: #0C0B09;
+      --border: rgba(245,243,238,0.12); --border-strong: rgba(245,243,238,0.22);
+      --built: #45C97E; --built-bg: #12271B;
+      --themed: #FFB93E; --themed-bg: #2E2410;
+      --planned: #B3A6E6; --planned-bg: #211C31;
+      --shadow: 0 10px 30px -12px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F2F0EB; --surface: #FFFFFF; --sunken: #ECEAE3; --raise: #FBFAF7;
+    --fg: #171512; --fg-muted: #5C574F; --fg-subtle: #8A857B;
+    --accent: #2B5FE3; --accent-soft: #E3EAFB; --on-accent: #FFFFFF;
+    --border: rgba(20,19,17,0.11); --border-strong: rgba(20,19,17,0.20);
+    --built: #0E7A3F; --built-bg: #E2F0E7; --themed: #B26A00; --themed-bg: #F6ECD8;
+    --planned: #7A6FA8; --planned-bg: #ECE8F5;
+    --shadow: 0 6px 20px -10px rgba(20,19,17,0.14), 0 1px 2px rgba(20,19,17,0.05);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0C0B09; --surface: #1A1815; --sunken: #131109; --raise: #221F1B;
+    --fg: #F5F3EE; --fg-muted: #ACA69B; --fg-subtle: #7C766B;
+    --accent: #6E97FF; --accent-soft: #1E2942; --on-accent: #0C0B09;
+    --border: rgba(245,243,238,0.12); --border-strong: rgba(245,243,238,0.22);
+    --built: #45C97E; --built-bg: #12271B; --themed: #FFB93E; --themed-bg: #2E2410;
+    --planned: #B3A6E6; --planned-bg: #211C31;
+    --shadow: 0 10px 30px -12px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.5);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--sans);
+    font-size: 15px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+  a { color: var(--accent); text-decoration: none; }
+  h1,h2,h3,h4 { text-wrap: balance; line-height: 1.15; margin: 0; }
+  .mono { font-family: var(--mono); }
+  .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--fg-subtle); }
+
+  /* ---- top bar ---- */
+  header.top { position: sticky; top: 0; z-index: 50; background: color-mix(in oklch, var(--bg) 88%, transparent);
+    backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+  .top .wrap { display: flex; align-items: center; gap: 16px; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 11px; font-weight: 600; }
+  .brand .mark { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center;
+    background: var(--accent); flex-shrink: 0; }
+  .brand .mark svg { display:block; }
+  .brand small { display: block; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--fg-subtle); font-weight: 500; }
+  nav.jump { margin-left: auto; display: flex; gap: 4px; flex-wrap: wrap; }
+  nav.jump a { font-size: 12.5px; color: var(--fg-muted); padding: 6px 10px; border-radius: 7px; }
+  nav.jump a:hover { color: var(--fg); background: var(--sunken); }
+  .toggle { border: 1px solid var(--border-strong); background: var(--surface); color: var(--fg);
+    width: 34px; height: 34px; border-radius: 8px; cursor: pointer; display: grid; place-items: center; }
+  .toggle:hover { border-color: var(--accent); }
+
+  /* ---- hero ---- */
+  .hero { padding: 60px 0 40px; border-bottom: 1px solid var(--border); }
+  .hero h1 { font-size: clamp(30px, 5vw, 46px); letter-spacing: -0.02em; font-weight: 650; max-width: 18ch; }
+  .hero .lead { font-size: 17px; color: var(--fg-muted); max-width: 60ch; margin-top: 16px; }
+  .stack-diagram { display: grid; gap: 8px; margin-top: 34px; max-width: 620px; }
+  .layer { border: 1px solid var(--border); border-radius: 12px; padding: 13px 16px; background: var(--surface);
+    display: flex; align-items: baseline; gap: 12px; }
+  .layer b { font-size: 14px; }
+  .layer .k { font-family: var(--mono); font-size: 10.5px; color: var(--accent); letter-spacing: 0.1em;
+    text-transform: uppercase; flex-shrink: 0; width: 78px; }
+  .layer .d { font-size: 12.5px; color: var(--fg-muted); margin-left: auto; text-align: right; }
+  .layer.app { border-left: 3px solid var(--accent); }
+  .flowarrow { text-align:center; color: var(--fg-subtle); font-size: 13px; line-height: 1; }
+
+  /* ---- legend ---- */
+  .legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+  .status { display: inline-flex; align-items: center; gap: 7px; font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.03em; padding: 5px 11px; border-radius: 999px; border: 1px solid transparent; }
+  .status .dot { width: 8px; height: 8px; border-radius: 50%; }
+  .s-built { color: var(--built); background: var(--built-bg); }
+  .s-built .dot { background: var(--built); }
+  .s-themed { color: var(--themed); background: var(--themed-bg); }
+  .s-themed .dot { background: var(--themed); }
+  .s-planned { color: var(--planned); background: var(--planned-bg); }
+  .s-planned .dot { background: var(--planned); }
+
+  /* ---- sections ---- */
+  section { padding: 52px 0; border-bottom: 1px solid var(--border); scroll-margin-top: 72px; }
+  .sec-head { margin-bottom: 30px; }
+  .sec-head h2 { font-size: 27px; letter-spacing: -0.015em; font-weight: 640; margin-top: 6px; }
+  .sec-head p { color: var(--fg-muted); max-width: 66ch; margin: 10px 0 0; }
+
+  /* ---- site map tree ---- */
+  .zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .zone { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); overflow: hidden; }
+  .zone > h3 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--fg-subtle); padding: 14px 16px 10px; }
+  .zone ul { list-style: none; margin: 0; padding: 0 8px 10px; }
+  .zone li { display: flex; align-items: center; gap: 9px; padding: 8px 8px; border-radius: 8px; font-size: 13.5px; }
+  .zone li:hover { background: var(--sunken); }
+  .zone li .route { font-family: var(--mono); font-size: 11px; color: var(--fg-subtle); margin-left: auto; }
+  .pip { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .pip.built { background: var(--built); } .pip.themed { background: var(--themed); } .pip.planned { background: var(--planned); }
+
+  /* ---- surface cards ---- */
+  .surfaces { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 18px; }
+  .card { border: 1px solid var(--border); border-radius: 16px; background: var(--surface); padding: 20px;
+    box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px; }
+  .card.wide { grid-column: 1 / -1; }
+  .card-head { display: flex; align-items: flex-start; gap: 12px; }
+  .card-head .t { flex: 1; }
+  .card-head h3 { font-size: 17px; font-weight: 620; letter-spacing: -0.01em; }
+  .card-head .route { font-family: var(--mono); font-size: 11px; color: var(--fg-subtle); margin-top: 3px; }
+  .card .role { font-family: var(--mono); font-size: 10.5px; color: var(--fg-muted); letter-spacing: 0.04em; }
+  .card p.purpose { font-size: 13.5px; color: var(--fg-muted); margin: 0; }
+  .feat { display: grid; gap: 9px; }
+  .feat .f { border-left: 2px solid var(--border-strong); padding-left: 12px; }
+  .feat .f b { font-size: 13px; display: block; }
+  .feat .f span { font-size: 12.5px; color: var(--fg-muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { font-family: var(--mono); font-size: 10.5px; padding: 3px 8px; border-radius: 6px; background: var(--sunken);
+    color: var(--fg-muted); }
+  .chip.api { background: var(--accent-soft); color: var(--accent); }
+
+  /* ---- data / api ---- */
+  .grid2 { display: grid; grid-template-columns: 1.15fr 1fr; gap: 18px; }
+  @media (max-width: 820px){ .grid2 { grid-template-columns: 1fr; } }
+  .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .tbl th { text-align: left; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--fg-subtle); font-weight: 500; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+  .tbl td { padding: 8px 10px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .tbl td.m { font-family: var(--mono); font-size: 11.5px; color: var(--accent); white-space: nowrap; }
+  .tbl tr:last-child td { border-bottom: none; }
+  .entity-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .entity { font-family: var(--mono); font-size: 11.5px; padding: 6px 11px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); }
+  .entity.core { border-color: var(--accent); color: var(--accent); }
+
+  /* ---- personas ---- */
+  .personas { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 16px; }
+  .persona { border: 1px solid var(--border); border-radius: 14px; background: var(--surface); padding: 18px; }
+  .persona .av { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center;
+    font-weight: 700; font-size: 16px; color: var(--on-accent); background: var(--accent); margin-bottom: 12px; }
+  .persona h3 { font-size: 15.5px; }
+  .persona .who { font-size: 12.5px; color: var(--fg-muted); margin: 5px 0 10px; }
+  .persona .acct { font-family: var(--mono); font-size: 10.5px; color: var(--fg-subtle); }
+  .persona .perms { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+
+  /* ---- user stories ---- */
+  .story-group { margin-bottom: 26px; }
+  .story-group > h3 { font-size: 15px; font-family: var(--mono); letter-spacing: 0.04em; color: var(--accent);
+    text-transform: uppercase; font-size: 12px; margin-bottom: 12px; }
+  .story { border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px;
+    background: var(--surface); padding: 13px 16px; margin-bottom: 8px; font-size: 13.5px; }
+  .story b { color: var(--accent); font-weight: 600; }
+  .story .accept { display: block; font-size: 12px; color: var(--fg-subtle); margin-top: 5px; }
+  .story .accept::before { content: "✓ "; color: var(--built); }
+
+  /* ---- journeys ---- */
+  .journey { border: 1px solid var(--border); border-radius: 16px; background: var(--surface); padding: 22px;
+    margin-bottom: 18px; box-shadow: var(--shadow); }
+  .journey > h3 { font-size: 17px; font-weight: 620; display: flex; align-items: center; gap: 10px; }
+  .journey > h3 .who { font-family: var(--mono); font-size: 10.5px; color: var(--fg-muted); margin-left: auto;
+    background: var(--sunken); padding: 4px 9px; border-radius: 6px; letter-spacing: 0.04em; }
+  .steps { display: flex; gap: 0; margin-top: 18px; overflow-x: auto; padding-bottom: 6px; }
+  .step { flex: 1; min-width: 150px; position: relative; padding: 0 14px; }
+  .step:not(:last-child)::after { content: "→"; position: absolute; right: -7px; top: 4px; color: var(--fg-subtle); }
+  .step .n { font-family: var(--mono); font-size: 10.5px; color: var(--accent); font-weight: 600; }
+  .step b { display: block; font-size: 13px; margin: 4px 0 4px; }
+  .step span { font-size: 12px; color: var(--fg-muted); }
+  .step .sys { display:inline-block; margin-top:6px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--fg-subtle); border: 1px solid var(--border); border-radius: 5px; padding: 2px 6px; }
+
+  footer { padding: 40px 0 60px; color: var(--fg-subtle); font-size: 12.5px; }
+  @media (max-width: 640px){ nav.jump { display:none; } .hero { padding: 40px 0 30px; } }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <span class="mark"><svg width="18" height="18" viewBox="0 0 100 100"><rect x="14" y="14" width="72" height="72" rx="10" fill="none" stroke="#fff" stroke-width="7"/><path d="M14 50 Q50 34 86 50 M50 14 Q34 50 50 86" fill="none" stroke="#fff" stroke-width="6"/><rect x="55" y="19" width="26" height="26" rx="4" fill="#fff" opacity="0.9"/></svg></span>
+      <span>Report.Farm<small>Product Blueprint</small></span>
+    </div>
+    <nav class="jump">
+      <a href="#overview">Overview</a>
+      <a href="#sitemap">Site Map</a>
+      <a href="#surfaces">Surfaces</a>
+      <a href="#data">API &amp; Data</a>
+      <a href="#personas">Personas</a>
+      <a href="#stories">Stories</a>
+      <a href="#journeys">Journeys</a>
+    </nav>
+    <button class="toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle light/dark">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M19 5l-1.5 1.5M6.5 17.5L5 19"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Site map · Feature map · User stories &amp; journeys</p>
+    <h1>The autonomous operating layer for farms and the supply chains that depend on them.</h1>
+    <p class="lead">Report.Farm watches land, crops, water and assets across single fields to entire supplier portfolios — explaining what changed, what it costs, and what to do, as scheduled reports and urgent alerts. This blueprint maps every surface, its sections and elements, the people who use it, and the journeys they take. Built as a thin vertical on the AlphaGeo geospatial engine.</p>
+
+    <div class="stack-diagram">
+      <div class="layer app"><span class="k">App tier</span><b>Report.Farm</b><span class="d">Digital twin · reports · alerts · copilot · this UI</span></div>
+      <div class="flowarrow">↕ &nbsp;<span class="mono" style="font-size:10px">/api/farm/* relay · change events</span></div>
+      <div class="layer"><span class="k">Gateway</span><b>AlphaGeo Gateway</b><span class="d">Auth · scan/EO/indicator pipeline · evidence</span></div>
+      <div class="flowarrow">↕</div>
+      <div class="layer"><span class="k">Engine</span><b>AlphaGeoCore</b><span class="d">Sentinel/Landsat · indices · change detection · embeddings</span></div>
+    </div>
+
+    <div class="legend">
+      <span class="status s-built"><span class="dot"></span>BUILT — farm-native, working now</span>
+      <span class="status s-themed"><span class="dot"></span>THEMED — new look, shell inherited from clone base</span>
+      <span class="status s-planned"><span class="dot"></span>PLANNED — designed, not yet implemented</span>
+    </div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">01 — Orientation</p>
+      <h2>How the product is organized</h2>
+      <p>Report.Farm is one multi-tenant application with four zones. A <b>public marketing site</b> tells the story and captures interest. An <b>authentication gate</b> (passcode + login) scopes every session to a tenant. The <b>operating console</b> is where work happens — a set of role-gated surfaces sharing one shell. A <b>field &amp; map</b> zone handles on-the-ground and geospatial views. Everything the console shows is served by the <span class="mono" style="font-size:12px">/api/farm/*</span> API over the farm digital twin.</p>
+    </div>
+    <div class="zones">
+      <div class="zone">
+        <h3>Tenancy model</h3>
+        <ul>
+          <li><span class="pip built"></span>Buyer = tenant<span class="route">iam.tenant</span></li>
+          <li><span class="pip built"></span>Supplier / grower org<span class="route">farm.supplier</span></li>
+          <li><span class="pip built"></span>Sourcing region<span class="route">farm.sourcing_region</span></li>
+          <li><span class="pip built"></span>Farm → parcel → zone<span class="route">farm.*</span></li>
+        </ul>
+      </div>
+      <div class="zone">
+        <h3>Isolation &amp; security</h3>
+        <ul>
+          <li><span class="pip built"></span>Row-level security, every table<span class="route">RLS</span></li>
+          <li><span class="pip built"></span>Role → permission RBAC<span class="route">farm.yaml</span></li>
+          <li><span class="pip built"></span>Passcode access gate<span class="route">prod</span></li>
+          <li><span class="pip built"></span>Zero cross-tenant leak<span class="route">verified</span></li>
+        </ul>
+      </div>
+      <div class="zone">
+        <h3>The monitoring loop</h3>
+        <ul>
+          <li><span class="pip built"></span>Onboard farm + zone intent</li>
+          <li><span class="pip planned"></span>Satellite pass → analysis<span class="route">P2</span></li>
+          <li><span class="pip planned"></span>Observation → signal → alert<span class="route">P2</span></li>
+          <li><span class="pip built"></span>Report + portfolio rollup</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SITE MAP -->
+<section id="sitemap">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">02 — Site map</p>
+      <h2>Every route, grouped by zone</h2>
+      <p>Fifteen HTML entry points plus the API. Marketing pages are public; everything else sits behind the auth gate and role checks. Console surfaces share one React shell (top-nav tabs + status bar) and swap the active surface by role.</p>
+    </div>
+    <div class="zones">
+      <div class="zone">
+        <h3>Public / Marketing</h3>
+        <ul>
+          <li><span class="pip themed"></span>Home<span class="route">/index.html</span></li>
+          <li><span class="pip planned"></span>Solutions<span class="route">/solutions.html</span></li>
+          <li><span class="pip planned"></span>Industries<span class="route">/industries.html</span></li>
+          <li><span class="pip planned"></span>Platform<span class="route">/platform.html</span></li>
+          <li><span class="pip planned"></span>Company<span class="route">/company.html</span></li>
+          <li><span class="pip planned"></span>Contact<span class="route">/contact.html</span></li>
+        </ul>
+      </div>
+      <div class="zone">
+        <h3>Authentication</h3>
+        <ul>
+          <li><span class="pip built"></span>Access gate<span class="route">/access.html</span></li>
+          <li><span class="pip built"></span>Sign in<span class="route">/login.html</span></li>
+          <li><span class="pip themed"></span>Request access<span class="route">/register.html</span></li>
+        </ul>
+      </div>
+      <div class="zone">
+        <h3>Operating console</h3>
+        <ul>
+          <li><span class="pip built"></span>Portfolio Dashboard<span class="route">/operations.html</span></li>
+          <li><span class="pip themed"></span>Buyer Success (CRM)<span class="route">/sales.html</span></li>
+          <li><span class="pip themed"></span>Programs<span class="route">/pm.html</span></li>
+          <li><span class="pip themed"></span>Analytics<span class="route">/analytics.html</span></li>
+          <li><span class="pip themed"></span>Grower Portal<span class="route">/customer.html</span></li>
+          <li><span class="pip themed"></span>Supplier Portal<span class="route">/vendor.html</span></li>
+          <li><span class="pip themed"></span>Tenant Admin<span class="route">/tenants.html</span></li>
+          <li><span class="pip themed"></span>Staff &amp; Teams<span class="route">/staff.html</span></li>
+        </ul>
+      </div>
+      <div class="zone">
+        <h3>Field &amp; Map</h3>
+        <ul>
+          <li><span class="pip themed"></span>Field Agronomist app<span class="route">/field.html</span></li>
+          <li><span class="pip themed"></span>Operational map<span class="route">/dashboard-react.html</span></li>
+          <li><span class="pip themed"></span>Legacy map<span class="route">/dashboard.html</span></li>
+        </ul>
+      </div>
+      <div class="zone">
+        <h3>Farm API <span style="font-weight:400;text-transform:none;letter-spacing:0">(/api/v1/farm)</span></h3>
+        <ul>
+          <li><span class="pip built"></span>farms · parcels · zones</li>
+          <li><span class="pip built"></span>portfolio rollups</li>
+          <li><span class="pip built"></span>alerts</li>
+          <li><span class="pip built"></span>reports</li>
+          <li><span class="pip planned"></span>observations<span class="route">P2</span></li>
+        </ul>
+      </div>
+      <div class="zone">
+        <h3>Planned farm screens</h3>
+        <ul>
+          <li><span class="pip planned"></span>Farm Detail (map + zones)</li>
+          <li><span class="pip planned"></span>Onboarding Copilot</li>
+          <li><span class="pip planned"></span>Report Viewer</li>
+          <li><span class="pip planned"></span>Alert Inbox</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SURFACES -->
+<section id="surfaces">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">03 — Feature map</p>
+      <h2>Each surface, its sections &amp; elements</h2>
+      <p>What every page contains, section by section. The Portfolio Dashboard is fully farm-native today; several console surfaces carry the new theme over inherited structure and are next for a domain rewrite; the deeper farm screens are designed and queued.</p>
+    </div>
+    <div class="surfaces">
+
+      <!-- Marketing home -->
+      <div class="card wide">
+        <div class="card-head">
+          <div class="t"><h3>Marketing Home</h3><div class="route">/index.html · public</div></div>
+          <span class="status s-themed"><span class="dot"></span>THEMED</span>
+        </div>
+        <p class="purpose">The public thesis: the autonomous farm operating layer, positioned for growers, landowners and supply-chain buyers. Hero, problem framing, audience router and outcomes are farm-native; deeper sections still carry clone-base copy.</p>
+        <div class="feat" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr));display:grid">
+          <div class="f"><b>Nav + brand</b><span>Report.Farm mark, section links, "Enter console" CTA</span></div>
+          <div class="f"><b>Hero</b><span>"See the disruption before it reaches your supply" + lead + dual CTA + orbital visual</span></div>
+          <div class="f"><b>Problem stats</b><span>Six cited figures (FAO crop loss, Sentinel revisit, ag water use)</span></div>
+          <div class="f"><b>Audience router</b><span>Growers · Supply-chain buyers · Landowners cards</span></div>
+          <div class="f"><b>Outcome lines</b><span>Loss prevention, change detection, financial impact</span></div>
+          <div class="f"><b>Modules · Pilots · FAQ</b><span>Capability grid, pilot patterns, pricing philosophy — <i>rewrite queued</i></span></div>
+          <div class="f"><b>Footer</b><span>Report.Farm contact, legal, links</span></div>
+        </div>
+      </div>
+
+      <!-- Access -->
+      <div class="card">
+        <div class="card-head"><div class="t"><h3>Access Gate</h3><div class="route">/access.html</div></div><span class="status s-built"><span class="dot"></span>BUILT</span></div>
+        <p class="purpose">Passcode wall for the private pilot. Sets a signed <span class="mono" style="font-size:11px">access_pass</span> cookie for the whole site. Bypassed automatically in local dev.</p>
+        <div class="feat">
+          <div class="f"><b>Brand spark + heading</b><span>"Restricted Preview" framing</span></div>
+          <div class="f"><b>Passcode field</b><span>Verifies against seeded codes → cookie → redirect to next</span></div>
+          <div class="f"><b>Trust strip</b><span>Build version · security program · support</span></div>
+        </div>
+      </div>
+
+      <!-- Login -->
+      <div class="card">
+        <div class="card-head"><div class="t"><h3>Sign In</h3><div class="route">/login.html</div></div><span class="status s-built"><span class="dot"></span>BUILT</span></div>
+        <p class="purpose">Mints a tenant-scoped session. Demo-perspective picker for pilots; credential form; OIDC hand-off ready for production identity.</p>
+        <div class="feat">
+          <div class="f"><b>Report.Farm / Mission Control header</b><span>brand mark + surface toggle</span></div>
+          <div class="f"><b>Demo perspective picker</b><span>admin · buyer · ops · grower one-click sign-in</span></div>
+          <div class="f"><b>Credential sign-in</b><span>email + password → JWT; role-routes to primary surface</span></div>
+          <div class="f"><b>Create account</b><span>invite-scoped registration hand-off</span></div>
+        </div>
+      </div>
+
+      <!-- Portfolio Dashboard -->
+      <div class="card wide">
+        <div class="card-head">
+          <div class="t"><h3>Portfolio Dashboard</h3><div class="route">/operations.html · roles: ops:manage · farm:view · farm.portfolio.view</div></div>
+          <span class="status s-built"><span class="dot"></span>BUILT</span>
+        </div>
+        <p class="purpose">The buyer's supply-chain command surface and the first fully farm-native screen. Summary-before-detail: portfolio KPIs, then supplier risk, then farm-level structure — all live from <span class="mono" style="font-size:11px">/api/farm/*</span>, with honest empty-states until satellite observations land.</p>
+        <div class="feat" style="grid-template-columns:repeat(auto-fill,minmax(250px,1fr));display:grid">
+          <div class="f"><b>Header + risk legend</b><span>"[Buyer] — Global Portfolio" + ordered Healthy→Critical vegetation ramp</span></div>
+          <div class="f"><b>KPI row</b><span>Suppliers Monitored · Portfolio Risk /100 · Yield at Risk % · Revenue at Risk $</span></div>
+          <div class="f"><b>Suppliers under monitoring</b><span>Sortable table: supplier, region, farms, RiskPill severity, revenue-at-risk</span></div>
+          <div class="f"><b>Active disruptions feed</b><span>Alert cards with severity + confidence; empty-state until first pass</span></div>
+          <div class="f"><b>Monitored farms grid</b><span>Farm cards: crops, hectares, latest risk band, hover-to-open</span></div>
+          <div class="f"><b>Data-honesty footnote</b><span>"Structure is live; signals begin with the first satellite pass"</span></div>
+        </div>
+        <div class="chips">
+          <span class="chip api">GET /farm/portfolio/rollup</span><span class="chip api">GET /farm/portfolio/suppliers</span>
+          <span class="chip api">GET /farm/farms</span><span class="chip api">GET /farm/alerts</span>
+        </div>
+      </div>
+
+      <!-- Buyer Success / Sales -->
+      <div class="card">
+        <div class="card-head"><div class="t"><h3>Buyer Success (CRM)</h3><div class="route">/sales.html · sales:manage</div></div><span class="status s-themed"><span class="dot"></span>THEMED</span></div>
+        <p class="purpose">Relationship pipeline for onboarding buyers and suppliers. Inherited CRM (leads → opportunities → contracts); domain rewrite to supplier/grower relationships queued.</p>
+        <div class="feat">
+          <div class="f"><b>Pipeline board</b><span>Stages, deal cards, drag between stages</span></div>
+          <div class="f"><b>Account panel</b><span>Contacts, notes, meetings, files, activity</span></div>
+          <div class="f"><b>Insights hero + charts</b><span>Utilization, closures, performance trends</span></div>
+        </div>
+      </div>
+
+      <!-- Grower portal -->
+      <div class="card">
+        <div class="card-head"><div class="t"><h3>Grower Portal</h3><div class="route">/customer.html · customer:view</div></div><span class="status s-themed"><span class="dot"></span>THEMED</span></div>
+        <p class="purpose">A grower's own view — their farms, scenes and findings, scoped to their identity. Full-bleed map console (no chrome). Being reshaped from the customer project view.</p>
+        <div class="feat">
+          <div class="f"><b>Project / farm switcher</b><span>Between the grower's own farms</span></div>
+          <div class="f"><b>Scene strip</b><span>Saved map views: basemap, layers, time window</span></div>
+          <div class="f"><b>Map + findings</b><span>AOI, layers, detected signals over the fields</span></div>
+        </div>
+      </div>
+
+      <!-- Analytics -->
+      <div class="card">
+        <div class="card-head"><div class="t"><h3>Analytics</h3><div class="route">/analytics.html · analytics:view</div></div><span class="status s-themed"><span class="dot"></span>THEMED</span></div>
+        <p class="purpose">Cross-portfolio metrics and rollups. Charts inherited; farm KPIs (yield-at-risk trends, region rollups) to be wired to the rollup views.</p>
+        <div class="feat">
+          <div class="f"><b>Dashboard KPIs</b><span>Aggregate metric tiles</span></div>
+          <div class="f"><b>Rollup / drilldown</b><span>Region → supplier → farm hierarchy</span></div>
+          <div class="f"><b>Trends</b><span>Time-series, conversion, sources</span></div>
+        </div>
+      </div>
+
+      <!-- Field -->
+      <div class="card">
+        <div class="card-head"><div class="t"><h3>Field Agronomist App</h3><div class="route">/field.html · field.technician</div></div><span class="status s-themed"><span class="dot"></span>THEMED</span></div>
+        <p class="purpose">On-the-ground companion: geofenced check-in at a farm, task checklist, photo/evidence capture, live location, and a chat line to operations. Ground-truths satellite findings.</p>
+        <div class="feat">
+          <div class="f"><b>Assigned work</b><span>Job list, status lifecycle</span></div>
+          <div class="f"><b>Geofence check-in</b><span>GPS validated against the farm boundary</span></div>
+          <div class="f"><b>Evidence upload</b><span>Photos to object store; field notes</span></div>
+          <div class="f"><b>Ops chat</b><span>Real-time channel via websocket</span></div>
+        </div>
+      </div>
+
+      <!-- Admin -->
+      <div class="card">
+        <div class="card-head"><div class="t"><h3>Tenant &amp; Staff Admin</h3><div class="route">/tenants.html · /staff.html · platform:admin</div></div><span class="status s-themed"><span class="dot"></span>THEMED</span></div>
+        <p class="purpose">Platform-admin control: tenant lifecycle, feature flags, users, roles, teams, invites, token revocation. Domain-neutral — reused as-is.</p>
+        <div class="feat">
+          <div class="f"><b>Tenant admin</b><span>Plans, flags, aliases, suspension</span></div>
+          <div class="f"><b>Users &amp; roles</b><span>Directory, role grants, permission catalog</span></div>
+          <div class="f"><b>Teams &amp; invites</b><span>Membership, invite lifecycle</span></div>
+        </div>
+      </div>
+
+      <!-- Planned: Farm Detail -->
+      <div class="card">
+        <div class="card-head"><div class="t"><h3>Farm Detail</h3><div class="route">planned · screen B</div></div><span class="status s-planned"><span class="dot"></span>PLANNED</span></div>
+        <p class="purpose">A single farm's twin: map with parcels &amp; zones styled by intent, observation timeline, alerts, and a one-tap "Generate report". API already serves it.</p>
+        <div class="feat">
+          <div class="f"><b>Farm header</b><span>Crops, area, supplier, latest risk</span></div>
+          <div class="f"><b>Field map</b><span>Parcels + intent-styled zones; NDVI/moisture layers (P2)</span></div>
+          <div class="f"><b>Zone list</b><span>Intent chips: water flow, standing-water rule, priority</span></div>
+          <div class="f"><b>Signal timeline + alerts</b><span>Observation history, alert acknowledge</span></div>
+        </div>
+        <div class="chips"><span class="chip api">GET /farm/farms/:id</span><span class="chip api">/zones</span><span class="chip api">/observations</span><span class="chip api">POST /reports/generate</span></div>
+      </div>
+
+      <!-- Planned: Onboarding -->
+      <div class="card">
+        <div class="card-head"><div class="t"><h3>Onboarding Copilot</h3><div class="route">planned · screen C</div></div><span class="status s-planned"><span class="dot"></span>PLANNED</span></div>
+        <p class="purpose">The map-native setup flow: create a farm, draw or import a boundary, add parcels, and tag zones with intent. Geometry is validated server-side — self-intersections rejected inline.</p>
+        <div class="feat">
+          <div class="f"><b>Farm basics</b><span>Name, crops, types, supplier</span></div>
+          <div class="f"><b>Boundary editor</b><span>Draw on map · import GeoJSON/KML/Shapefile · bulk supplier import</span></div>
+          <div class="f"><b>Zone intent editor</b><span>Water flow, standing-water allowed, vegetation priority, sensitivity</span></div>
+          <div class="f"><b>Validation</b><span>422 invalid_geometry surfaced on the offending shape</span></div>
+        </div>
+        <div class="chips"><span class="chip api">POST /farm/farms</span><span class="chip api">POST /:id/parcels</span><span class="chip api">POST /:id/zones</span></div>
+      </div>
+
+      <!-- Planned: Report viewer -->
+      <div class="card">
+        <div class="card-head"><div class="t"><h3>Report Viewer</h3><div class="route">planned · screen D</div></div><span class="status s-planned"><span class="dot"></span>PLANNED</span></div>
+        <p class="purpose">Print-grade rendering of a generated report's sections: executive summary, changes-since-previous, evidence, data-quality notes, ranked recommendations — with a machine-readable JSON companion.</p>
+        <div class="feat">
+          <div class="f"><b>Executive summary</b><span>Portfolio or field, period-scoped</span></div>
+          <div class="f"><b>Evidence panels</b><span>Scene thumbnails + tiles (P2)</span></div>
+          <div class="f"><b>Confidence &amp; recommendations</b><span>Data-quality notes, ranked actions with ROI</span></div>
+        </div>
+        <div class="chips"><span class="chip api">GET /farm/reports/:id</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- DATA / API -->
+<section id="data">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">04 — API &amp; data model</p>
+      <h2>The farm twin and the endpoints that serve it</h2>
+      <p>Eighteen tenant-scoped tables form the digital twin; buyer rollups aggregate supplier → region → buyer as database views. The <span class="mono" style="font-size:12px">/api/v1/farm/*</span> surface is live today — reads honest structure now, real signals once the AlphaGeo connection ingests observations (P2).</p>
+    </div>
+    <div class="grid2">
+      <div class="card" style="box-shadow:none">
+        <h3 style="font-size:15px">Live endpoints</h3>
+        <div style="overflow-x:auto">
+        <table class="tbl">
+          <tr><th>Method &amp; path</th><th>Does</th></tr>
+          <tr><td class="m">GET/POST /farm/farms</td><td>List &amp; create farm profiles</td></tr>
+          <tr><td class="m">GET/PUT/DELETE /farm/farms/:id</td><td>Read, edit, remove a farm</td></tr>
+          <tr><td class="m">GET/POST …/:id/parcels</td><td>Parcels — polygon, area auto-computed</td></tr>
+          <tr><td class="m">GET/POST …/:id/zones</td><td>Zones with intent JSON</td></tr>
+          <tr><td class="m">GET /farm/portfolio/rollup</td><td>Buyer KPI rollup</td></tr>
+          <tr><td class="m">GET /farm/portfolio/suppliers</td><td>Supplier risk table</td></tr>
+          <tr><td class="m">GET /farm/portfolio/regions</td><td>Region rollup</td></tr>
+          <tr><td class="m">GET /farm/alerts · POST /:id/ack</td><td>Alerts &amp; acknowledge</td></tr>
+          <tr><td class="m">POST /farm/reports/generate</td><td>Build a report from live twin data</td></tr>
+          <tr><td class="m">GET /farm/reports · /:id</td><td>List &amp; read reports</td></tr>
+          <tr><td class="m">GET /farm/observations</td><td>Signals — empty until P2 ingest</td></tr>
+        </table>
+        </div>
+      </div>
+      <div class="card" style="box-shadow:none">
+        <h3 style="font-size:15px">Digital-twin entities</h3>
+        <p class="purpose">Core spec entities in bold; supply-chain overlay added for the buyer wedge.</p>
+        <div class="entity-list">
+          <span class="entity core">FarmProfile</span><span class="entity core">Parcel</span><span class="entity core">Zone</span>
+          <span class="entity core">Asset</span><span class="entity core">Observation</span><span class="entity core">DerivedSignal</span>
+          <span class="entity core">Alert</span><span class="entity core">Recommendation</span><span class="entity core">Report</span>
+          <span class="entity core">SensorConnector</span><span class="entity core">ImageryScene</span><span class="entity core">ActionFeedback</span>
+          <span class="entity">Supplier</span><span class="entity">SourcingRegion</span><span class="entity">RiskScore</span>
+          <span class="entity">YieldAtRisk</span><span class="entity">DisruptionAlert</span><span class="entity">Scan</span>
+        </div>
+        <div style="margin-top:16px">
+          <h3 style="font-size:13px;font-family:var(--mono);color:var(--accent);letter-spacing:.05em;text-transform:uppercase">Rollup views</h3>
+          <p class="purpose" style="margin-top:8px">v_farm_latest_risk → v_supplier_rollup → v_region_rollup → v_buyer_rollup. Each aggregates the level below; the dashboard reads the top of the chain.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PERSONAS -->
+<section id="personas">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">05 — Who uses it</p>
+      <h2>Personas &amp; access</h2>
+      <p>Four working personas ship as demo logins on the <span class="mono" style="font-size:12px">demo-buyer</span> tenant, mapped to real permission bundles. Each lands on the surface their role makes primary.</p>
+    </div>
+    <div class="personas">
+      <div class="persona">
+        <div class="av">A</div>
+        <h3>Buyer Admin</h3>
+        <p class="who">Runs the account. Onboards suppliers &amp; farms, manages users, sees every surface.</p>
+        <div class="acct">admin@demo-buyer.demo</div>
+        <div class="perms"><span class="chip">platform:admin</span><span class="chip">farm:onboard</span><span class="chip">alert:manage</span></div>
+      </div>
+      <div class="persona">
+        <div class="av" style="background:var(--themed)">B</div>
+        <h3>Buyer / Portfolio Lead</h3>
+        <p class="who">Watches the supplier portfolio for sourcing risk. Reads reports, can't edit boundaries.</p>
+        <div class="acct">buyer@demo-buyer.demo</div>
+        <div class="perms"><span class="chip">farm:view</span><span class="chip">farm.portfolio.view</span><span class="chip">report:generate</span></div>
+      </div>
+      <div class="persona">
+        <div class="av" style="background:var(--built)">O</div>
+        <h3>Farm Operations</h3>
+        <p class="who">Onboards farms, draws boundaries, sets zone intent, triages alerts.</p>
+        <div class="acct">ops@demo-buyer.demo</div>
+        <div class="perms"><span class="chip">ops:manage</span><span class="chip">farm:onboard</span><span class="chip">alert:manage</span></div>
+      </div>
+      <div class="persona">
+        <div class="av" style="background:var(--planned)">G</div>
+        <h3>Grower</h3>
+        <p class="who">Sees only their own farms and the findings on their fields.</p>
+        <div class="acct">grower@demo-buyer.demo</div>
+        <div class="perms"><span class="chip">customer:view</span><span class="chip">farm:view</span></div>
+      </div>
+      <div class="persona">
+        <div class="av" style="background:var(--fg-muted)">F</div>
+        <h3>Field Agronomist</h3>
+        <p class="who">In the field. Checks in at a farm, verifies findings on the ground, uploads evidence.</p>
+        <div class="acct">field.technician role</div>
+        <div class="perms"><span class="chip">field.job.read</span><span class="chip">field.upload</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USER STORIES -->
+<section id="stories">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">06 — User stories</p>
+      <h2>What each persona needs to do</h2>
+      <p>Grouped by persona, in the "as a … I want … so that …" form, each with its key acceptance signal.</p>
+    </div>
+
+    <div class="story-group">
+      <h3>Buyer / Portfolio Lead</h3>
+      <div class="story">As a buyer, I want <b>one portfolio view of every supplier's risk</b> so that I can see sourcing exposure without chasing individual farms.<span class="accept">Dashboard shows supplier count, portfolio risk, yield-at-risk and revenue-at-risk from a single rollup call.</span></div>
+      <div class="story">As a buyer, I want <b>suppliers ranked by risk</b> so that I act on the worst exposure first.<span class="accept">Supplier table sorts by peak risk; each row carries a labelled severity pill.</span></div>
+      <div class="story">As a buyer, I want <b>urgent disruption alerts</b> so that I can re-source or hedge before a bad season becomes a broken contract.<span class="accept">Active-disruptions feed surfaces threshold crossings; empty-state is honest until the first pass.</span></div>
+      <div class="story">As a buyer, I want to <b>generate an executive report for a period</b> so that I can brief my team with evidence.<span class="accept">Report generates from live twin data with data-quality notes; no fabricated signals.</span></div>
+    </div>
+
+    <div class="story-group">
+      <h3>Farm Operations</h3>
+      <div class="story">As ops, I want to <b>onboard a farm by drawing or importing its boundary</b> so that monitoring can start in minutes.<span class="accept">Boundary saved; area auto-computed; self-intersecting shapes rejected with a clear inline error.</span></div>
+      <div class="story">As ops, I want to <b>bulk-import many supplier farms</b> so that a large portfolio onboards without manual drawing.<span class="accept">Shapefile/KML/CSV import creates farms + parcels per feature.</span></div>
+      <div class="story">As ops, I want to <b>tag zones with intent</b> (irrigation, barn, wetland) so that alerts respect what each zone is <i>for</i>.<span class="accept">Zone stores intent JSON; a standing-water reading in a "no standing water" zone becomes a critical alert.</span></div>
+      <div class="story">As ops, I want to <b>acknowledge and triage alerts</b> so that the team isn't re-alerted on known issues.<span class="accept">Alert status moves open → ack; dedup prevents replay double-fire.</span></div>
+    </div>
+
+    <div class="story-group">
+      <h3>Buyer Admin</h3>
+      <div class="story">As an admin, I want <b>tenant-isolated data</b> so that no buyer ever sees another's suppliers.<span class="accept">Row-level security on every farm table; verified zero cross-tenant leakage.</span></div>
+      <div class="story">As an admin, I want to <b>manage users, roles and invites</b> so that each teammate gets the right surfaces.<span class="accept">Role grants map to permission bundles; users land on their primary surface.</span></div>
+    </div>
+
+    <div class="story-group">
+      <h3>Grower &amp; Field</h3>
+      <div class="story">As a grower, I want to <b>see only my own farms and their findings</b> so that my data stays private within the network.<span class="accept">Grower portal scopes to the grower's identity; no portfolio-wide access.</span></div>
+      <div class="story">As a field agronomist, I want to <b>check in at a farm and log what I find</b> so that ground truth sharpens the satellite signal.<span class="accept">Geofenced check-in validated against the boundary; photos + notes attach to the farm.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- JOURNEYS -->
+<section id="journeys">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">07 — End-to-end journeys</p>
+      <h2>How the work actually flows</h2>
+      <p>Five journeys tie the surfaces, API and engine together — from first login to the autonomous alert loop. Steps marked <span class="mono" style="font-size:10px;border:1px solid var(--border);border-radius:4px;padding:1px 5px">ENGINE</span> happen in AlphaGeo, not the app.</p>
+    </div>
+
+    <div class="journey">
+      <h3>Onboard a supplier's farm<span class="who">Farm Operations</span></h3>
+      <div class="steps">
+        <div class="step"><span class="n">01</span><b>Sign in</b><span>Ops lands on the console with onboarding rights.</span><span class="sys">login</span></div>
+        <div class="step"><span class="n">02</span><b>Create farm</b><span>Name, crops, type, supplier.</span><span class="sys">POST /farm/farms</span></div>
+        <div class="step"><span class="n">03</span><b>Draw / import boundary</b><span>Polygon on the map or a Shapefile; geometry validated.</span><span class="sys">422 on bad shape</span></div>
+        <div class="step"><span class="n">04</span><b>Add zones + intent</b><span>Irrigation, barn, wetland — with alert rules.</span><span class="sys">POST /zones</span></div>
+        <div class="step"><span class="n">05</span><b>Farm goes live</b><span>Appears on the portfolio, ready for its first pass.</span><span class="sys">rollup</span></div>
+      </div>
+    </div>
+
+    <div class="journey">
+      <h3>The autonomous monitoring loop<span class="who">System → Buyer</span></h3>
+      <div class="steps">
+        <div class="step"><span class="n">01</span><b>Satellite revisit</b><span>Sentinel/Landsat covers the farm AOI.</span><span class="sys">ENGINE</span></div>
+        <div class="step"><span class="n">02</span><b>Analyze</b><span>Indices, change detection over the AOI.</span><span class="sys">ENGINE</span></div>
+        <div class="step"><span class="n">03</span><b>Change event</b><span>Core pushes a result the moment it lands.</span><span class="sys">Redis Streams</span></div>
+        <div class="step"><span class="n">04</span><b>Normalize</b><span>Result → Observation → DerivedSignal in the twin.</span><span class="sys">ingest</span></div>
+        <div class="step"><span class="n">05</span><b>Alert</b><span>Zone-intent + threshold rules fire; dedup + confidence gate.</span><span class="sys">alert.created</span></div>
+        <div class="step"><span class="n">06</span><b>Notify</b><span>Buyer sees the disruption; email/webhook out.</span><span class="sys">dashboard</span></div>
+      </div>
+    </div>
+
+    <div class="journey">
+      <h3>Review portfolio risk &amp; act<span class="who">Buyer / Portfolio Lead</span></h3>
+      <div class="steps">
+        <div class="step"><span class="n">01</span><b>Open dashboard</b><span>KPIs summarize the whole portfolio.</span><span class="sys">rollup</span></div>
+        <div class="step"><span class="n">02</span><b>Scan the risk table</b><span>Suppliers ranked; severity pills read at a glance.</span><span class="sys">suppliers</span></div>
+        <div class="step"><span class="n">03</span><b>Drill into a flagged supplier</b><span>Into the farm detail behind it.</span><span class="sys">Farm Detail</span></div>
+        <div class="step"><span class="n">04</span><b>Confirm with evidence</b><span>Signal timeline + satellite evidence.</span><span class="sys">observations</span></div>
+        <div class="step"><span class="n">05</span><b>Generate a report</b><span>Executive brief for the period; re-source decision.</span><span class="sys">POST /reports/generate</span></div>
+      </div>
+    </div>
+
+    <div class="journey">
+      <h3>Ground-truth a finding<span class="who">Field Agronomist</span></h3>
+      <div class="steps">
+        <div class="step"><span class="n">01</span><b>Get assigned</b><span>A flagged field lands in the field app.</span><span class="sys">field/jobs</span></div>
+        <div class="step"><span class="n">02</span><b>Check in on site</b><span>GPS validated against the farm boundary.</span><span class="sys">geofence</span></div>
+        <div class="step"><span class="n">03</span><b>Capture evidence</b><span>Photos + notes on what's actually happening.</span><span class="sys">upload</span></div>
+        <div class="step"><span class="n">04</span><b>Feed back</b><span>Confirmation/false-positive sharpens the model.</span><span class="sys">ActionFeedback</span></div>
+      </div>
+    </div>
+
+    <div class="journey">
+      <h3>Grower self-service<span class="who">Grower</span></h3>
+      <div class="steps">
+        <div class="step"><span class="n">01</span><b>Sign in</b><span>Scoped to their own identity.</span><span class="sys">login</span></div>
+        <div class="step"><span class="n">02</span><b>Open their farms</b><span>Only the fields they operate.</span><span class="sys">Grower Portal</span></div>
+        <div class="step"><span class="n">03</span><b>See findings</b><span>Crop health, water, alerts on their land.</span><span class="sys">alerts</span></div>
+        <div class="step"><span class="n">04</span><b>Act</b><span>Prioritize the acre that needs attention first.</span><span class="sys">—</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Report.Farm — product blueprint · reflects the build as of this session. Status pips: <b style="color:var(--built)">BUILT</b> farm-native &amp; working · <b style="color:var(--themed)">THEMED</b> new look over inherited shell · <b style="color:var(--planned)">PLANNED</b> designed, queued. The engine layer (AlphaGeo) and P2 satellite ingest are integration work, tracked in docs/02 &amp; docs/06.
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+    btn.addEventListener('click', function () {
+      var cur = root.getAttribute('data-theme');
+      if (!cur) cur = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      root.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+    });
+    document.querySelectorAll('nav.jump a').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var el = document.querySelector(a.getAttribute('href'));
+        if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+  })();
+</script>

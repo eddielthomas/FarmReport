@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="en" data-surface="light">
+<head>
+<meta charset="utf-8" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Industries — Growers, Landowners, Buyers, Co-ops, Insurers &amp; Ag Lenders · Report.Farm</title>
+<meta name="description" content="Farm intelligence for growers, landowners, supply-chain buyers, co-ops &amp; farmers' markets, agronomists, crop insurers and ag lenders. Many audiences, one Report.Farm stack, one evidence model." />
+<meta name="keywords" content="crop monitoring for growers, farmland monitoring landowners, supply chain buyers sourcing, co-op producer groups, farmers markets, agronomist scouting, crop insurance remote sensing, ag lending collateral, NDVI, soil moisture, yield forecast, sustainability evidence, Sentinel-2 agriculture" />
+<meta name="theme-color" content="#F0F1F3" />
+<meta name="author" content="Report.Farm" />
+<meta name="robots" content="index,follow,max-image-preview:large" />
+<meta name="color-scheme" content="light" />
+<link rel="canonical" href="https://report.farm/industries.html" />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Report.Farm" />
+<meta property="og:title" content="Built for the people who own the harvest. — Report.Farm" />
+<meta property="og:description" content="Many audiences. One Report.Farm stack. Satellite-based farm intelligence for growers, landowners, supply-chain buyers, co-ops, agronomists, insurers and ag lenders." />
+<meta property="og:url" content="https://report.farm/industries.html" />
+<meta property="og:image" content="https://report.farm/og/industries.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Report.Farm industries overview — farm audiences served by a unified intelligence stack." />
+<meta property="og:locale" content="en_US" />
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@ReportFarm" />
+<meta name="twitter:title" content="Industries — Report.Farm" />
+<meta name="twitter:description" content="Many farm audiences on one Report.Farm stack: growers, landowners, buyers, co-ops, agronomists, insurers, ag lenders." />
+<meta name="twitter:image" content="https://report.farm/og/industries.png" />
+<meta name="twitter:image:alt" content="Report.Farm industries overview — farm audiences on one intelligence stack." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="./marketing/site.css">
+<link rel="stylesheet" href="./marketing/premium.css">
+<link rel="stylesheet" href="/src/marketing-tokens.css">
+
+<!-- Schema.org: Organization + ItemList (audiences) + Service entries + BreadcrumbList -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://report.farm/#org",
+      "name": "Report.Farm",
+      "alternateName": "Report Farm",
+      "url": "https://report.farm/",
+      "logo": "https://report.farm/og/logo.png",
+      "contactPoint": { "@type": "ContactPoint", "email": "ops@report.farm", "url": "https://report.farm/contact.html", "contactType": "sales" },
+      "sameAs": []
+    },
+    {
+      "@type": "ItemList",
+      "name": "Audiences served by Report.Farm",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Growers & Farm Operators", "url": "https://report.farm/industries.html#growers" },
+        { "@type": "ListItem", "position": 2, "name": "Co-ops, Associations & Markets", "url": "https://report.farm/industries.html#buyers" },
+        { "@type": "ListItem", "position": 3, "name": "Landowners & Land Managers", "url": "https://report.farm/industries.html#landowners" },
+        { "@type": "ListItem", "position": 4, "name": "Supply-Chain Buyers", "url": "https://report.farm/industries.html#buyers" },
+        { "@type": "ListItem", "position": 5, "name": "Brands, Retailers & Food Manufacturers", "url": "https://report.farm/industries.html#brands" },
+        { "@type": "ListItem", "position": 6, "name": "Agronomists & Crop Advisors", "url": "https://report.farm/industries.html#advisors" },
+        { "@type": "ListItem", "position": 7, "name": "Crop Insurers", "url": "https://report.farm/industries.html#insurers" },
+        { "@type": "ListItem", "position": 8, "name": "Ag Lenders & Investors", "url": "https://report.farm/industries.html#asset-finance" }
+      ]
+    },
+    {
+      "@type": "Service",
+      "name": "Report.Farm for Growers & Farm Operators",
+      "serviceType": "Satellite crop-health, water and disease monitoring for farms",
+      "areaServed": "Global",
+      "description": "Independent, multi-source satellite imagery and AI that tracks crop health, irrigation, and disease pressure across every field, with prioritized scouting tasks and scheduled reports plus urgent alerts for growers.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/industries.html#growers"
+    },
+    {
+      "@type": "Service",
+      "name": "Report.Farm for Co-ops, Associations & Markets",
+      "serviceType": "Member-farm and producer-group monitoring",
+      "areaServed": "Global",
+      "description": "A shared view of member farms and producer regions for co-ops, grower associations, and farmers' markets — aggregate crop and yield outlooks with an independent record members and buyers can trust.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/industries.html#buyers"
+    },
+    {
+      "@type": "Service",
+      "name": "Report.Farm for Landowners & Land Managers",
+      "serviceType": "Farmland value, water-asset and land-use monitoring",
+      "areaServed": "Global",
+      "description": "Continuous oversight of land value, water assets, and land-use change across owned and leased ground, with defensible documentation for leases, insurers, lenders and disputes.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/industries.html#landowners"
+    },
+    {
+      "@type": "Service",
+      "name": "Report.Farm for Supply-Chain Buyers",
+      "serviceType": "Supplier-portfolio and sourcing-region monitoring",
+      "areaServed": "Global",
+      "description": "Portfolio-of-suppliers monitoring for processors and traders — every sourcing region on one map, with early warning on the origins that feed contracts and an evidence trail for origin and volume claims.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/industries.html#buyers"
+    },
+    {
+      "@type": "Service",
+      "name": "Report.Farm for Brands, Retailers & Food Manufacturers",
+      "serviceType": "Sourcing risk and sustainability-evidence monitoring",
+      "areaServed": "Global",
+      "description": "Sourcing-region risk awareness plus sustainability and land-use evidence for brands, retailers, and food manufacturers, aligned to GRI / SASB and Scope 3 reporting needs.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/industries.html#brands"
+    },
+    {
+      "@type": "Service",
+      "name": "Report.Farm for Agronomists & Crop Advisors",
+      "serviceType": "Field-scoped scouting, change detection and evidence exports",
+      "areaServed": "Global",
+      "description": "Advisor-tasked fields, zone-level change detection, disease and stress prioritization, and clean report exports built for agronomists and crop advisors to hand to their growers.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/industries.html#advisors"
+    },
+    {
+      "@type": "Service",
+      "name": "Report.Farm for Crop Insurers",
+      "serviceType": "Exposure mapping, post-event damage assessment and parametric evidence",
+      "areaServed": "Global",
+      "description": "Portfolio exposure mapping, rapid post-event crop-damage assessment, parametric trigger validation and independent change records for loss adjustment, compatible with crop-insurance reporting practices.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/industries.html#insurers"
+    },
+    {
+      "@type": "Service",
+      "name": "Report.Farm for Ag Lenders & Investors",
+      "serviceType": "Collateral monitoring, yield verification and ESG evidence",
+      "areaServed": "Global",
+      "description": "Independent monitoring of farmland collateral and crop condition, yield-outlook verification for capital at risk, and GRI / SASB-aligned ESG evidence packs for ag lenders, farm-credit institutions and infrastructure funds.",
+      "provider": { "@id": "https://report.farm/#org" },
+      "url": "https://report.farm/industries.html#asset-finance"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home",       "item": "https://report.farm/" },
+        { "@type": "ListItem", "position": 2, "name": "Industries", "item": "https://report.farm/industries.html" }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+<div class="grid-bg"></div>
+<div class="glow-orb a"></div>
+<div class="glow-orb b"></div>
+
+<nav class="nav">
+  <a class="nav-logo" href="./"><span class="logo-mark"></span><span><span class="nav-logo-text">Report.Farm</span><span class="nav-logo-sub">Farm Intelligence</span></span></a>
+  <div class="nav-links">
+    <div class="nav-item"><a class="nav-trigger" href="./solutions.html">Solutions</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./industries.html">Industries</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./platform.html">Platform</a></div>
+    <div class="nav-item"><a class="nav-trigger" href="./company.html">Company</a></div>
+  </div>
+  <div class="nav-cta">
+    <a class="btn btn-ghost btn-sm" href="./contact.html">Contact</a>
+    <a class="btn btn-primary btn-sm" href="./access.html">Launch Report.Farm →</a>
+    <button class="nav-burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<aside class="mobile-drawer">
+  <h4>Pages</h4><a href="./">Home</a><a href="./solutions.html">Solutions</a><a href="./industries.html">Industries</a><a href="./platform.html">Platform</a><a href="./company.html">Company</a><a href="./contact.html">Contact</a><a href="./access.html">Launch Report.Farm →</a>
+</aside>
+
+<header class="page-hero">
+  <div class="crumbs"><a href="./">Report.Farm</a><span>/</span><span>Industries</span></div>
+  <h1>Built for the people who own<br/>the <span class="grad">harvest</span>.</h1>
+  <p class="reveal">Growers, landowners, supply-chain buyers and the advisors, insurers and lenders around them rely on Report.Farm to see crop, water and land change <b>before</b> it costs a season — and to receive it as scheduled reports plus urgent alerts. One intelligence platform, adapted to the decisions, contracts and reporting that define each audience.</p>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:22px">
+    <a class="btn btn-primary btn-lg" href="./contact.html">Request a Farm Report</a>
+    <a class="btn btn-outline btn-lg" href="./platform.html">Platform overview</a>
+  </div>
+  <div class="screenshot-placeholder reveal" data-screenshot="industries-overview" aria-hidden="true" style="max-width:980px;margin:38px auto 0"></div>
+</header>
+
+<!-- ──────────────────────────────────────────────────────────────── -->
+<!-- The stakes — free Earth-observation baseline                      -->
+<!-- ──────────────────────────────────────────────────────────────── -->
+<section class="tight">
+  <div class="container">
+    <div class="section-eyebrow">THE STAKES · WHY THIS MATTERS</div>
+    <h2 style="font-family:var(--display);font-size:clamp(26px,3.2vw,38px);font-weight:700;letter-spacing:var(--track-tight);text-align:center;margin:8px 0 8px;color:var(--text)">The change is already in the field. Most of it just isn't visible from the road yet.</h2>
+    <p style="text-align:center;color:var(--text-muted);max-width:780px;margin:0 auto 30px;line-height:1.7">Crop stress, water problems, and land-use change build quietly between farm visits — and the cost of finding them at harvest dwarfs the cost of finding them early. Report.Farm reads it from orbit on a free Earth-observation baseline, so every grower, land manager and buyer works from the same evidence.</p>
+    <div class="metrics-band reveal">
+      <div class="m"><div class="v">10 m</div><div class="l">Free Sentinel-2 resolution we watch every field at · ESA Copernicus</div></div>
+      <div class="m"><div class="v">5-day</div><div class="l">Revisit cadence across the Sentinel-2 constellation · ESA</div></div>
+      <div class="m"><div class="v">$0</div><div class="l">Imagery cost of the Sentinel-2 + Landsat baseline · Copernicus / USGS</div></div>
+      <div class="m"><div class="v">Weekly</div><div class="l">Scheduled farm reports, plus urgent alerts between them</div></div>
+    </div>
+    <p style="text-align:center;color:var(--text-subtle);font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;margin-top:18px">Imagery: ESA Copernicus Sentinel-2 (free) · USGS / NASA Landsat (free) · commercial SAR &amp; VHR tasking layered in on escalation</p>
+  </div>
+</section>
+
+<!-- Industry router cards -->
+<section>
+  <div class="container">
+    <div class="section-eyebrow">WHO WE SERVE · CHOOSE YOUR ROLE</div>
+    <h2 style="font-family:var(--display);font-size:clamp(24px,3vw,34px);font-weight:700;letter-spacing:var(--track-tight);text-align:center;margin:8px 0 30px;color:var(--text)">From a single field to a portfolio of sourcing regions.</h2>
+    <div class="grid c4">
+      <a class="card reveal" href="#growers"><div class="ico">≋</div><h3>Growers &amp; Farm Operators</h3><p>See crop stress, irrigation failures and disease pressure early — with prioritized scouting tasks.</p><span class="more">Role →</span></a>
+      <a class="card reveal" href="#buyers"><div class="ico">◈</div><h3>Co-ops, Associations &amp; Markets</h3><p>A shared view across member farms — aggregate outlooks and an independent record members trust.</p><span class="more">Role →</span></a>
+      <a class="card reveal" href="#landowners"><div class="ico">⬡</div><h3>Landowners &amp; Land Managers</h3><p>Estates, family holdings &amp; leased ground — protect land and water value from unseen change.</p><span class="more">Role →</span></a>
+      <a class="card reveal" href="#buyers"><div class="ico">⬣</div><h3>Supply-Chain Buyers</h3><p>Processors &amp; traders — watch every sourcing region before a shortfall hits your contracts.</p><span class="more">Role →</span></a>
+      <a class="card reveal" href="#brands"><div class="ico">⚡</div><h3>Brands &amp; Retailers</h3><p>Sourcing-region risk plus sustainability and land-use evidence — GRI / SASB-aligned.</p><span class="more">Role →</span></a>
+      <a class="card reveal" href="#insurers"><div class="ico">◇</div><h3>Crop Insurers</h3><p>Pre-bind exposure, fast post-event damage maps and defensible loss-adjustment evidence.</p><span class="more">Role →</span></a>
+      <a class="card reveal" href="#asset-finance"><div class="ico">⌬</div><h3>Ag Lenders &amp; Investors</h3><p>Independent collateral truth and yield-outlook verification for lenders and funds.</p><span class="more">Role →</span></a>
+      <a class="card reveal" href="#advisors"><div class="ico">◤</div><h3>Agronomists &amp; Advisors</h3><p>Advisor-tasked fields with zone-level change and clean report exports for your growers.</p><span class="more">Role →</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────────── -->
+<!-- 01 · GROWERS & FARM OPERATORS                                     -->
+<!-- ──────────────────────────────────────────────────────────────── -->
+<section id="growers">
+  <div class="container">
+    <div class="split reveal" data-screenshot="industries-water">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">ROLE · GROWERS &amp; FARM OPERATORS</div>
+        <h2>See the field the day it starts to slip — not at harvest.</h2>
+        <p>Crop stress, a stuck pivot, or an early disease cluster can cost a whole season, and most of it starts long before it's visible from the cab. Report.Farm uses independent, multi-source satellite imagery and AI to track NDVI, soil moisture, and stress across every field, then hands your team prioritized, field-ready scouting tasks — not heatmaps. Every finding arrives explained, with a financial number and the confidence behind it.</p>
+        <ul>
+          <li><span class="b">≋</span><span class="t"><b>See stress before you can walk it</b><span>Crop-health intelligence that points scouts to the highest-probability zones across your fields.</span></span></li>
+          <li><span class="b">◔</span><span class="t"><b>Prioritized, dispatch-ready tasks</b><span>Findings ranked by likelihood and yield consequence so crews work the zones that matter first.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Reports plus urgent alerts</b><span>Scheduled field reports and event-driven alerts, routed to your farm-management system.</span></span></li>
+          <li><span class="b">◑</span><span class="t"><b>Judged against your own fields</b><span>Multi-season baselines per field, so anomalies are measured against how that ground actually behaves.</span></span></li>
+        </ul>
+        <div class="case" style="margin-top:20px">
+          <div class="stats">
+            <div class="s"><b>10 m</b><span>Free Sentinel-2 resolution per field (ESA Copernicus)</span></div>
+            <div class="s"><b>5-day</b><span>Revisit across the Sentinel-2 constellation (ESA)</span></div>
+            <div class="s"><b>Zone-level</b><span>Scouting tasks, not heatmaps</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+          <span class="chip">Sentinel-2</span><span class="chip">NDVI / EVI</span><span class="chip">ISOXML</span><span class="chip">GLOBALG.A.P.</span>
+        </div>
+        <div style="margin-top:22px">
+          <a class="btn btn-outline btn-sm" href="./solutions.html#leak-detection">See the outcome →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:14px;background:repeating-linear-gradient(45deg,var(--accent-glow) 0 2px,transparent 2px 14px);border-radius:14px"></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)">
+          <path d="M5 50 Q25 24 50 50 T95 50" stroke="var(--accent)" stroke-width="0.9" fill="none"/>
+          <path d="M5 62 Q25 36 50 62 T95 62" stroke="var(--accent-strong)" stroke-width="0.9" fill="none" opacity="0.6"/>
+          <path d="M5 74 Q25 48 50 74 T95 74" stroke="var(--accent-deep)" stroke-width="0.7" fill="none" stroke-dasharray="2 2" opacity="0.4"/>
+          <circle cx="36" cy="42" r="2.6" fill="var(--rose)"/>
+          <circle cx="66" cy="52" r="2.4" fill="var(--rose)"/>
+          <circle cx="22" cy="58" r="1.8" fill="var(--amber)"/>
+          <circle cx="80" cy="68" r="1.8" fill="var(--green)"/>
+        </svg>
+        <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-family:var(--font-mono);font-size:9.5px;font-weight:700;color:var(--accent-deep);letter-spacing:2.4px;text-transform:uppercase">Field crop intelligence</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────────── -->
+<!-- CO-OPS, ASSOCIATIONS & FARMERS' MARKETS                           -->
+<!-- ──────────────────────────────────────────────────────────────── -->
+<section id="government" style="background:var(--bg-soft)">
+  <div class="container">
+    <div class="split flip reveal" data-screenshot="industries-government">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">ROLE · CO-OPS, ASSOCIATIONS &amp; MARKETS</div>
+        <h2>One shared view across every member farm.</h2>
+        <p>Co-ops, grower associations, and farmers' markets answer to their members and their buyers at once — and they rarely have a single, independent picture of how the whole membership is doing. Report.Farm gives producer groups an aggregate view across member farms and regions: which crops are trending up, where stress is building, and what the collective outlook is — backed by evidence members trust and buyers can act on.</p>
+        <ul>
+          <li><span class="b">◈</span><span class="t"><b>Aggregate the whole membership</b><span>Roll crop-health, water, and yield signals up from member fields to a regional and program view.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Evidence members trust</b><span>Independent, time-stamped records that support grower payments, grants, and buyer conversations.</span></span></li>
+          <li><span class="b">◔</span><span class="t"><b>Early warning for the group</b><span>Spot regional stress and shortfall risk before it reaches contracts and market commitments.</span></span></li>
+          <li><span class="b">◑</span><span class="t"><b>Origin &amp; quality story</b><span>A defensible record behind the provenance and sustainability claims your market is built on.</span></span></li>
+        </ul>
+        <div class="case" style="margin-top:20px">
+          <div class="stats">
+            <div class="s"><b>Program-wide</b><span>Aggregate outlook across member farms</span></div>
+            <div class="s"><b>Region-level</b><span>Rollups by crop and area</span></div>
+            <div class="s"><b>Independent</b><span>Evidence members and buyers trust</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+          <span class="chip">Co-ops</span><span class="chip">Producer Groups</span><span class="chip">Farmers' Markets</span><span class="chip">GLOBALG.A.P.</span>
+        </div>
+        <div style="margin-top:22px">
+          <a class="btn btn-outline btn-sm" href="./contact.html">Talk to the co-op team →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:14px;background:repeating-linear-gradient(0deg,var(--accent-glow) 0 2px,transparent 2px 18px);border-radius:14px"></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)">
+          <!-- membership tiers -->
+          <rect x="14" y="14" width="72" height="72" fill="none" stroke="var(--accent)" stroke-width="0.7" opacity="0.5" rx="2"/>
+          <rect x="26" y="26" width="48" height="48" fill="none" stroke="var(--accent-strong)" stroke-width="0.7" opacity="0.5" rx="2"/>
+          <rect x="38" y="38" width="24" height="24" fill="var(--accent-glow)" stroke="var(--accent-deep)" stroke-width="0.7" rx="2"/>
+          <!-- member farm pins -->
+          <circle cx="22" cy="22" r="2.2" fill="var(--rose)"/>
+          <circle cx="68" cy="30" r="2" fill="var(--amber)"/>
+          <circle cx="50" cy="50" r="2.4" fill="var(--rose)"/>
+          <circle cx="34" cy="66" r="1.8" fill="var(--green)"/>
+          <circle cx="74" cy="70" r="1.8" fill="var(--amber)"/>
+        </svg>
+        <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-family:var(--font-mono);font-size:9.5px;font-weight:700;color:var(--accent-deep);letter-spacing:2.4px;text-transform:uppercase">Member · Region · Program</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────────── -->
+<!-- LANDOWNERS & LAND MANAGERS                                        -->
+<!-- ──────────────────────────────────────────────────────────────── -->
+<section id="landowners">
+  <div class="container">
+    <div class="split reveal" data-screenshot="industries-landowners">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">ROLE · LANDOWNERS &amp; LAND MANAGERS</div>
+        <h2>Protect the value of land you can't watch every acre of.</h2>
+        <p>Estates, family holdings, and managed portfolios of leased ground face change that builds invisibly — declining land, failing irrigation and water infrastructure, and land-use shifts that quietly erode both productivity and property value. Report.Farm watches your holdings from above and tells you where the land, the water, and the way ground is being farmed are changing — before it shows up on the surface or on the balance sheet.</p>
+        <ul>
+          <li><span class="b">⬡</span><span class="t"><b>Whole-property coverage</b><span>Continuous oversight of land too large to walk — across every parcel and boundary.</span></span></li>
+          <li><span class="b">▲</span><span class="t"><b>Land &amp; water-asset change</b><span>Early warning where ground, water bodies, or on-farm infrastructure are shifting.</span></span></li>
+          <li><span class="b">≋</span><span class="t"><b>How leased ground is farmed</b><span>Verify that tenants are cropping, irrigating, and caring for the land as the lease requires.</span></span></li>
+          <li><span class="b">◑</span><span class="t"><b>An independent record of your asset</b><span>Defensible documentation for leases, insurers, lenders, partners and disputes.</span></span></li>
+        </ul>
+        <div class="case" style="margin-top:20px">
+          <div class="stats">
+            <div class="s"><b>Whole-property</b><span>No acre left unwatched</span></div>
+            <div class="s"><b>Multi-season</b><span>Change judged against your own baseline</span></div>
+            <div class="s"><b>Independent</b><span>Evidence for leases and lending</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+          <span class="chip">Estates</span><span class="chip">Leased Ground</span><span class="chip">Tenancy</span><span class="chip">Land Trusts</span>
+        </div>
+        <div style="margin-top:22px">
+          <a class="btn btn-outline btn-sm" href="./contact.html">Protect your land →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:14px;background:repeating-linear-gradient(90deg,var(--accent-glow) 0 2px,transparent 2px 16px);border-radius:14px"></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)">
+          <!-- parcel field grid -->
+          <g stroke="var(--accent)" stroke-width="0.5" opacity="0.5" fill="none">
+            <rect x="12" y="20" width="34" height="26" rx="2"/>
+            <rect x="54" y="20" width="34" height="26" rx="2"/>
+            <rect x="12" y="54" width="34" height="26" rx="2"/>
+            <rect x="54" y="54" width="34" height="26" rx="2"/>
+          </g>
+          <!-- change contour -->
+          <path d="M20 70 Q40 50 62 66 T92 60" stroke="var(--accent-deep)" stroke-width="0.7" fill="none" stroke-dasharray="2 2" opacity="0.6"/>
+          <!-- alerts -->
+          <circle cx="30" cy="34" r="2.4" fill="var(--rose)"/>
+          <circle cx="70" cy="68" r="2.2" fill="var(--amber)"/>
+          <circle cx="68" cy="32" r="1.8" fill="var(--green)"/>
+        </svg>
+        <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-family:var(--font-mono);font-size:9.5px;font-weight:700;color:var(--accent-deep);letter-spacing:2.4px;text-transform:uppercase">Land &amp; water oversight</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────────── -->
+<!-- SUPPLY-CHAIN BUYERS — PROCESSORS & TRADERS                        -->
+<!-- ──────────────────────────────────────────────────────────────── -->
+<section id="buyers">
+  <div class="container">
+    <div class="split flip reveal" data-screenshot="industries-oil-gas">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">ROLE · SUPPLY-CHAIN BUYERS</div>
+        <h2>Catch the shortfall before it reaches your contracts.</h2>
+        <p>A processor's or trader's risk isn't one field — it's every origin that feeds a contract. Report.Farm watches your supplier portfolio and sourcing regions with independent, multi-source satellite imagery and AI, and surfaces where crop condition and yield are trending in ways that precede a shortfall. Findings arrive tied to the supplier and region, and packaged into the origin and volume evidence your sourcing and sustainability teams already work in.</p>
+        <ul>
+          <li><span class="b">⬣</span><span class="t"><b>Portfolio-wide sourcing awareness</b><span>Flags stress and yield risk across suppliers and regions before it threatens supply.</span></span></li>
+          <li><span class="b">▲</span><span class="t"><b>Yield-shortfall early warning</b><span>Surfaces origins trending below baseline, mapped to the contracts they feed.</span></span></li>
+          <li><span class="b">⌖</span><span class="t"><b>Prioritized, supplier-tied findings</b><span>Every signal rolled up to the supplier and region and ranked by likely impact.</span></span></li>
+          <li><span class="b">◑</span><span class="t"><b>Origin &amp; volume evidence</b><span>Time-stamped records for sourcing reviews, origin claims, and contingency planning.</span></span></li>
+        </ul>
+        <div class="case" style="margin-top:20px">
+          <div class="stats">
+            <div class="s"><b>Portfolio-wide</b><span>Every origin under watch</span></div>
+            <div class="s"><b>Supplier-tied</b><span>Signals bound to your suppliers</span></div>
+            <div class="s"><b>Pre-shortfall</b><span>Risk surfaced early</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+          <span class="chip">Sourcing</span><span class="chip">Origin Traceability</span><span class="chip">SAI FSA</span><span class="chip">GLOBALG.A.P.</span>
+        </div>
+        <div style="margin-top:22px">
+          <a class="btn btn-outline btn-sm" href="./solutions.html#physical-ai">See the outcome →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%">
+          <path d="M0 72 L100 28" stroke="var(--accent)" stroke-width="1.4" fill="none"/>
+          <path d="M0 76 L100 32" stroke="var(--accent-strong)" stroke-width="0.8" fill="none" stroke-dasharray="2 3" opacity="0.6"/>
+          <path d="M0 68 L100 24" stroke="var(--accent-deep)" stroke-width="0.6" fill="none" stroke-dasharray="1 3" opacity="0.4"/>
+          <circle cx="32" cy="58" r="2.6" fill="var(--rose)"/>
+          <circle cx="58" cy="48" r="2.6" fill="var(--amber)"/>
+          <circle cx="78" cy="38" r="2.2" fill="var(--rose)"/>
+          <circle cx="14" cy="64" r="1.8" fill="var(--green)"/>
+        </svg>
+        <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-family:var(--font-mono);font-size:9.5px;font-weight:700;color:var(--accent-deep);letter-spacing:2.4px;text-transform:uppercase">Sourcing portfolio watch</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────────── -->
+<!-- BRANDS, RETAILERS & FOOD MANUFACTURERS                            -->
+<!-- ──────────────────────────────────────────────────────────────── -->
+<section id="brands">
+  <div class="container">
+    <div class="split reveal" data-screenshot="industries-power">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">ROLE · BRANDS, RETAILERS &amp; FOOD MANUFACTURERS</div>
+        <h2>Sourcing regions, watched continuously — and evidenced.</h2>
+        <p>Supply shocks and sustainability claims often share the same root cause: an un-noticed change in a sourcing region. Report.Farm keeps continuous watch over the origins behind your products, surfaces yield risk and land-use change, and packages findings into the GRI / SASB and Scope 3 evidence formats your sustainability and procurement teams already use — so you act before a problem becomes a stock-out or a reporting gap.</p>
+        <ul>
+          <li><span class="b">⌬</span><span class="t"><b>Sourcing-region risk priorities</b><span>Early awareness of yield and quality risk across the regions behind your products.</span></span></li>
+          <li><span class="b">⚡</span><span class="t"><b>Land-use &amp; deforestation awareness</b><span>Flags clearing and land-use change in sourcing areas, scoped to the region.</span></span></li>
+          <li><span class="b">▲</span><span class="t"><b>Supply-continuity signals</b><span>Early warning where a region is trending below baseline, tied to product lines.</span></span></li>
+          <li><span class="b">◤</span><span class="t"><b>Sustainability evidence packs</b><span>Change awareness across sourcing footprints with evidence-grade, reportable exports.</span></span></li>
+        </ul>
+        <div class="case" style="margin-top:20px">
+          <div class="stats">
+            <div class="s"><b>Per-region</b><span>Sourcing-footprint awareness</span></div>
+            <div class="s"><b>Continuous</b><span>Origins under ongoing watch</span></div>
+            <div class="s"><b>Reportable</b><span>GRI / SASB-aligned exports</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+          <span class="chip">GRI</span><span class="chip">SASB</span><span class="chip">Scope 3</span><span class="chip">Deforestation-free</span>
+        </div>
+        <div style="margin-top:22px">
+          <a class="btn btn-outline btn-sm" href="./solutions.html#physical-ai">See the outcome →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:14px;background:repeating-linear-gradient(135deg,var(--accent-glow) 0 2px,transparent 2px 14px);border-radius:14px"></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)">
+          <!-- sourcing corridor -->
+          <path d="M5 78 L95 22" stroke="var(--accent)" stroke-width="1.2" fill="none"/>
+          <path d="M5 82 L95 26" stroke="var(--accent-strong)" stroke-width="0.6" fill="none" stroke-dasharray="2 3" opacity="0.5"/>
+          <path d="M5 74 L95 18" stroke="var(--accent-strong)" stroke-width="0.6" fill="none" stroke-dasharray="2 3" opacity="0.5"/>
+          <!-- region nodes -->
+          <g stroke="var(--text-subtle)" stroke-width="0.6" fill="none" opacity="0.7">
+            <polygon points="18,72 22,72 24,62 16,62"/>
+            <polygon points="40,58 44,58 46,48 38,48"/>
+            <polygon points="62,44 66,44 68,34 60,34"/>
+            <polygon points="84,30 88,30 90,20 82,20"/>
+          </g>
+          <!-- alerts -->
+          <circle cx="40" cy="58" r="2.4" fill="var(--amber)"/>
+          <circle cx="62" cy="44" r="2.4" fill="var(--rose)"/>
+          <circle cx="84" cy="30" r="2" fill="var(--green)"/>
+        </svg>
+        <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-family:var(--font-mono);font-size:9.5px;font-weight:700;color:var(--accent-deep);letter-spacing:2.4px;text-transform:uppercase">Sourcing footprint watch</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────────── -->
+<!-- AGRONOMISTS & CROP ADVISORS                                       -->
+<!-- ──────────────────────────────────────────────────────────────── -->
+<section id="advisors">
+  <div class="container">
+    <div class="split flip reveal" data-screenshot="industries-defense">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">ROLE · AGRONOMISTS &amp; CROP ADVISORS</div>
+        <h2>Point it at the fields. Walk in with the answers.</h2>
+        <p>Advisors need to designate the fields they manage, get rapid awareness of what's changed across each one between visits, and leave with a clean report to hand to the grower — without re-engineering a pipeline. Report.Farm provides advisor-tasked field monitoring, zone-level change detection, and report exports built to hand off cleanly to the growers you serve.</p>
+        <ul>
+          <li><span class="b">◤</span><span class="t"><b>Advisor-tasked fields</b><span>Designate the fields; set the priority. We watch them and report what changes.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Rapid change awareness</b><span>Confidence-scored alerts on what's different from one revisit to the next.</span></span></li>
+          <li><span class="b">⊞</span><span class="t"><b>Zone-level scouting focus</b><span>Stress and disease priorities per field with advisor-defined rule sets.</span></span></li>
+          <li><span class="b">⚞</span><span class="t"><b>Grower-ready exports</b><span>Clean, time-keyed report packages built to hand straight to your growers.</span></span></li>
+        </ul>
+        <div class="case" style="margin-top:20px">
+          <div class="stats">
+            <div class="s"><b>Advisor-tasked</b><span>You set the fields</span></div>
+            <div class="s"><b>Rapid</b><span>Change awareness</span></div>
+            <div class="s"><b>Grower-ready</b><span>Clean report exports</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+          <span class="chip">Scouting</span><span class="chip">Agronomy</span><span class="chip">ADAPT</span><span class="chip">ISOXML</span>
+        </div>
+        <div style="margin-top:16px;padding:14px 16px;border:1px solid var(--border-strong);border-radius:12px;background:var(--accent-soft);font-size:12px;color:var(--text-muted);line-height:1.55">
+          <b style="color:var(--accent-deep);display:block;margin-bottom:4px;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;font-family:var(--font-mono)">How we source the intelligence</b>
+          Report.Farm builds no imagery or ML of its own — it delegates to an independent geospatial intelligence core and open Sentinel-2 / Landsat baselines, with commercial tasking layered in on escalation. Findings ship with confidence levels, not guarantees.
+        </div>
+        <div style="margin-top:22px">
+          <a class="btn btn-outline btn-sm" href="./solutions.html#infra-risk">See the outcome →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:14px;background:repeating-linear-gradient(0deg,var(--accent-glow) 0 2px,transparent 2px 18px);border-radius:14px"></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)">
+          <!-- advisor field polygon -->
+          <polygon points="22,28 78,22 82,72 28,80" fill="var(--accent-glow)" stroke="var(--accent)" stroke-width="0.8" stroke-dasharray="2 2"/>
+          <!-- crosshair -->
+          <g stroke="var(--accent-deep)" stroke-width="0.5" fill="none" opacity="0.7">
+            <line x1="50" y1="14" x2="50" y2="86"/>
+            <line x1="14" y1="50" x2="86" y2="50"/>
+            <circle cx="50" cy="50" r="22"/>
+            <circle cx="50" cy="50" r="10"/>
+          </g>
+          <!-- change-detection markers -->
+          <circle cx="36" cy="42" r="2.2" fill="var(--rose)"/>
+          <circle cx="68" cy="58" r="2.2" fill="var(--amber)"/>
+          <circle cx="58" cy="34" r="1.8" fill="var(--green)"/>
+        </svg>
+        <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-family:var(--font-mono);font-size:9.5px;font-weight:700;color:var(--accent-deep);letter-spacing:2.4px;text-transform:uppercase">Field-of-interest watch</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────────── -->
+<!-- CROP INSURERS                                                     -->
+<!-- ──────────────────────────────────────────────────────────────── -->
+<section id="insurers">
+  <div class="container">
+    <div class="split reveal" data-screenshot="industries-insurance">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">ROLE · CROP INSURERS</div>
+        <h2>Exposure clarity, faster claims, defensible evidence.</h2>
+        <p>Crop losses concentrate exactly where visibility is thinnest — across dispersed fields, in the window between a weather event and a field visit, where damage and liability compound. Crop insurers and reinsurers use Report.Farm for pre-bind exposure clarity, post-event crop-damage awareness in hours, and independent, signed evidence for parametric triggers and contested claims — all backed by an immutable audit trail compatible with crop-insurance reporting practices.</p>
+        <ul>
+          <li><span class="b">◇</span><span class="t"><b>Portfolio exposure mapping</b><span>Pre-bind risk overlays across insured fields and accumulations.</span></span></li>
+          <li><span class="b">◐</span><span class="t"><b>Post-event damage awareness</b><span>Hours-to-output crop-damage maps across affected portfolios.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>Parametric trigger validation</b><span>Independent imagery and signed time-stamps for fast, defensible pay-out.</span></span></li>
+          <li><span class="b">⊟</span><span class="t"><b>Loss-adjustment evidence</b><span>Independent change records useful in loss adjustment and dispute review.</span></span></li>
+        </ul>
+        <div class="case" style="margin-top:20px">
+          <div class="stats">
+            <div class="s"><b>Pre-bind</b><span>Portfolio exposure clarity</span></div>
+            <div class="s"><b>Hours</b><span>Post-event damage awareness</span></div>
+            <div class="s"><b>Signed</b><span>Evidence for parametric &amp; disputes</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+          <span class="chip">Parametric</span><span class="chip">Loss Adjustment</span><span class="chip">ISO 31000</span><span class="chip">Reinsurance</span>
+        </div>
+        <div style="margin-top:22px">
+          <a class="btn btn-outline btn-sm" href="./solutions.html#asset-recovery">See the outcome →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:14px;background:repeating-linear-gradient(-45deg,var(--accent-glow) 0 2px,transparent 2px 14px);border-radius:14px"></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)">
+          <!-- portfolio heat-rings -->
+          <circle cx="62" cy="40" r="28" fill="var(--accent-glow)" stroke="var(--accent)" stroke-width="0.6" opacity="0.5"/>
+          <circle cx="62" cy="40" r="18" fill="var(--accent-glow)" stroke="var(--accent-strong)" stroke-width="0.6" opacity="0.7"/>
+          <circle cx="62" cy="40" r="9" fill="var(--accent-soft)" stroke="var(--accent-deep)" stroke-width="0.6"/>
+          <!-- insured fields -->
+          <g fill="var(--accent)">
+            <rect x="20" y="62" width="3" height="3"/>
+            <rect x="32" y="70" width="3" height="3"/>
+            <rect x="48" y="58" width="3" height="3"/>
+            <rect x="60" y="40" width="3" height="3"/>
+            <rect x="72" y="34" width="3" height="3"/>
+            <rect x="80" y="46" width="3" height="3"/>
+          </g>
+          <circle cx="62" cy="40" r="2.4" fill="var(--rose)"/>
+        </svg>
+        <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-family:var(--font-mono);font-size:9.5px;font-weight:700;color:var(--accent-deep);letter-spacing:2.4px;text-transform:uppercase">Portfolio exposure &amp; damage</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────────── -->
+<!-- AG LENDERS & INVESTORS                                            -->
+<!-- ──────────────────────────────────────────────────────────────── -->
+<section id="asset-finance">
+  <div class="container">
+    <div class="split flip reveal" data-screenshot="industries-asset-finance">
+      <div class="body">
+        <div class="section-eyebrow" style="justify-content:flex-start">ROLE · AG LENDERS &amp; INVESTORS</div>
+        <h2>Independent proof the ground is being farmed — and on track.</h2>
+        <p>Ag lenders, farm-credit institutions and infrastructure funds need independent attestation that the farmland they financed is being worked, the crop is progressing, and the collateral still holds its value. Report.Farm keeps continuous watch over farmland collateral and crop condition, verifies the season's outlook against baseline, and produces GRI / SASB-aligned ESG evidence packs your reporting team can drop straight into investor returns — independent of the borrower's own reporting.</p>
+        <ul>
+          <li><span class="b">⌬</span><span class="t"><b>Collateral oversight</b><span>Independent confirmation of farmland condition, cropping, and change on a cadence.</span></span></li>
+          <li><span class="b">◔</span><span class="t"><b>Yield-outlook verification</b><span>Independent confirmation of crop progression and season outlook against baseline.</span></span></li>
+          <li><span class="b">⊕</span><span class="t"><b>ESG evidence packs</b><span>GRI / SASB-aligned exports for investor and regulator returns.</span></span></li>
+          <li><span class="b">◑</span><span class="t"><b>Portfolio dashboards</b><span>One pane across farmland holdings with a full audit log.</span></span></li>
+        </ul>
+        <div class="case" style="margin-top:20px">
+          <div class="stats">
+            <div class="s"><b>Per-holding</b><span>Independent attestation</span></div>
+            <div class="s"><b>On cadence</b><span>Season-outlook verification</span></div>
+            <div class="s"><b>GRI/SASB</b><span>ESG-aligned exports</span></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:18px">
+          <span class="chip">Farm Credit</span><span class="chip">Collateral</span><span class="chip">GRI</span><span class="chip">SASB</span>
+        </div>
+        <div style="margin-top:22px">
+          <a class="btn btn-outline btn-sm" href="./solutions.html#asset-recovery">See the outcome →</a>
+        </div>
+      </div>
+      <div class="visual">
+        <div style="position:absolute;inset:14px;background:repeating-linear-gradient(90deg,var(--accent-glow) 0 2px,transparent 2px 14px);border-radius:14px"></div>
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:14px;width:calc(100% - 28px);height:calc(100% - 28px)">
+          <!-- season progression bar -->
+          <rect x="12" y="48" width="76" height="4" fill="var(--surface-2)" stroke="var(--border-strong)" stroke-width="0.4"/>
+          <rect x="12" y="48" width="50" height="4" fill="var(--accent)"/>
+          <!-- ticks -->
+          <g stroke="var(--accent-deep)" stroke-width="0.6" opacity="0.7">
+            <line x1="20" y1="44" x2="20" y2="56"/>
+            <line x1="36" y1="44" x2="36" y2="56"/>
+            <line x1="52" y1="44" x2="52" y2="56"/>
+            <line x1="68" y1="44" x2="68" y2="56"/>
+            <line x1="84" y1="44" x2="84" y2="56"/>
+          </g>
+          <!-- holding pin -->
+          <g>
+            <circle cx="52" cy="28" r="3" fill="var(--amber)"/>
+            <line x1="52" y1="28" x2="52" y2="44" stroke="var(--amber)" stroke-width="0.5" stroke-dasharray="1 2" opacity="0.7"/>
+          </g>
+          <!-- portfolio dots -->
+          <g fill="var(--accent)">
+            <circle cx="20" cy="72" r="1.6"/>
+            <circle cx="36" cy="78" r="1.6"/>
+            <circle cx="52" cy="74" r="1.6"/>
+            <circle cx="68" cy="80" r="1.6"/>
+            <circle cx="84" cy="72" r="1.6"/>
+          </g>
+        </svg>
+        <div style="position:absolute;left:50%;bottom:14px;transform:translateX(-50%);font-family:var(--font-mono);font-size:9.5px;font-weight:700;color:var(--accent-deep);letter-spacing:2.4px;text-transform:uppercase">Collateral &amp; season trace</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ──────────────────────────────────────────────────────────────── -->
+<!-- Cross-audience capabilities                                       -->
+<!-- ──────────────────────────────────────────────────────────────── -->
+<section>
+  <div class="container">
+    <div class="section-eyebrow">CROSS-ROLE · ONE PLATFORM</div>
+    <h2 style="font-family:var(--display);font-size:clamp(26px,3.2vw,38px);font-weight:700;letter-spacing:var(--track-tight);text-align:center;margin:8px 0 8px;color:var(--text)">The same trusted platform, whatever you farm or finance.</h2>
+    <p style="text-align:center;color:var(--text-muted);max-width:760px;margin:0 auto 28px;line-height:1.7">A single grower, a regional co-op and a national food brand all get the same thing from Report.Farm: farm intelligence, prioritized findings, scheduled reports plus urgent alerts, and an evidence trail that holds up to scrutiny.</p>
+    <div class="grid c3 reveal">
+      <div class="card"><div class="ico">⊞</div><h3>Built for teams</h3><p>Tenant isolation, role-based access, single sign-on and per-field permissioning — fit for enterprise agribusiness and advisory teams.</p></div>
+      <div class="card"><div class="ico">◑</div><h3>Immutable audit trail</h3><p>Every finding, export and action is time-keyed and signed — defensible to buyers, insurers, lenders and auditors.</p></div>
+      <div class="card"><div class="ico">⇆</div><h3>Fits your systems</h3><p>Clean integration with the farm-management software, GIS, machinery and sensor tools your teams already run on.</p></div>
+      <div class="card"><div class="ico">⊕</div><h3>Reports &amp; urgent alerts</h3><p>Scheduled, signed report packages plus event-driven alerts — GRI/SASB-aligned and ready for lenders and buyers.</p></div>
+      <div class="card"><div class="ico">⚞</div><h3>Deploy where you must</h3><p>Data-residency and on-prem options for large agribusiness, sovereign and high-security environments.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Final CTA band -->
+<section>
+  <div class="container">
+    <div class="cta-band reveal">
+      <h2>Find the change before it finds your season.</h2>
+      <p>Tell us what you own or answer for — the fields, the portfolio, the sourcing region, the loan book — and we'll come back with a plan that maps directly to it: farm intelligence, scheduled reports plus urgent alerts, and an evidence trail you can defend.</p>
+      <div class="a">
+        <a class="btn btn-primary btn-lg" href="./contact.html">Request a Farm Report</a>
+        <a class="btn btn-outline btn-lg" href="./solutions.html">See solutions</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <a class="nav-logo" href="./"><span class="logo-mark"></span><span><span class="nav-logo-text">Report.Farm</span><span class="nav-logo-sub">Farm Intelligence</span></span></a>
+      <p>Satellite-based farm intelligence — delivered as scheduled reports plus urgent alerts across every audience.</p>
+    </div>
+    <div><h5>Solutions</h5><a href="./solutions.html#leak-detection">Crop Health</a><a href="./solutions.html#asset-recovery">Yield &amp; Risk</a><a href="./solutions.html#infra-risk">Disease &amp; Pest</a><a href="./solutions.html#physical-ai">Supplier Portfolio</a><a href="./solutions.html#operations">Land-Use Change</a></div>
+    <div><h5>Industries</h5><a href="#growers">Growers</a><a href="#buyers">Supply-Chain Buyers</a><a href="#brands">Brands &amp; Retailers</a><a href="#advisors">Agronomists</a><a href="#asset-finance">Ag Lenders</a></div>
+    <div><h5>Platform</h5><a href="./platform.html#data-sources">Data Layer</a><a href="./platform.html#detection-ai">AI Engine</a><a href="./platform.html#command-center">Reports &amp; Alerts</a><a href="./platform.html#api-integration">Integrations</a><a href="./platform.html#security-compliance">Security</a></div>
+    <div><h5>Company</h5><a href="./company.html">About</a><a href="./company.html#careers">Careers</a><a href="./contact.html">Contact</a><a href="./access.html">Launch Report.Farm</a></div>
+  </div>
+  <div class="foot-bar"><div>© <span data-year>2026</span> Report.Farm · Pilot v0.9</div><div class="l"><a href="./company.html#privacy">Privacy</a><a href="./company.html#security">Security</a><a href="./company.html#terms">Terms</a></div></div>
+</footer>
+
+<script type="module" src="./marketing/site.js" defer></script>
+<script type="module" src="./marketing/reveal.js"></script>
+<script src="./marketing-videos.js" defer></script>
+</body>
+</html>
