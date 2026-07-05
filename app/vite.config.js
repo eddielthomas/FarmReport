@@ -147,6 +147,7 @@ export default defineConfig({
         staff:      resolve(__dirname, 'staff.html'),
         operations: resolve(__dirname, 'operations.html'),
         report:     resolve(__dirname, 'report.html'),
+        studio:     resolve(__dirname, 'studio.html'),
         customer:   resolve(__dirname, 'customer.html'),
         vendor:     resolve(__dirname, 'vendor.html'),
         login:      resolve(__dirname, 'login.html'),

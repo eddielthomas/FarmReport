@@ -1,0 +1,300 @@
+// =============================================================================
+// ParcelCutaway — a slowly-rotating "geological cutaway" of a twin's parcel.
+// -----------------------------------------------------------------------------
+// Ported from the concept prototype's React-Three-Fiber scene, rewritten in raw
+// three.js (already a dependency) so it needs no new packages:
+//   • Top face   — Esri satellite composite over the twin's AOI center.
+//   • Side faces — procedurally-drawn soil strata (topsoil→subsoil→clay→bedrock).
+//   • Bottom     — dark.
+// Map construction is guarded (WebGL can be unavailable in VMs / headless / with
+// hardware-accel off) so it degrades to a static card instead of crashing the
+// workspace — same pattern as FarmMap/GeometryPreview.
+// =============================================================================
+
+import * as React from 'react';
+import * as THREE from 'three';
+import { Layers3 } from 'lucide-react';
+import { geomCenter, geomAreaAcres, type Twin } from '@crm/lib/twins-store';
+
+function lngLatToTile(lng: number, lat: number, z: number) {
+  const n = Math.pow(2, z);
+  const x = ((lng + 180) / 360) * n;
+  const latRad = (lat * Math.PI) / 180;
+  const y = ((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2) * n;
+  return { x, y, z };
+}
+
+// Compose a 4×4 grid of Esri World Imagery tiles into a single canvas texture.
+function buildSatelliteTexture(center: [number, number], zoom: number, onReady: (t: THREE.Texture) => void) {
+  const [lng, lat] = center;
+  const t = lngLatToTile(lng, lat, zoom);
+  const GRID = 4, TILE = 256, SIZE = GRID * TILE;
+  const canvas = document.createElement('canvas');
+  canvas.width = SIZE; canvas.height = SIZE;
+  const ctx = canvas.getContext('2d')!;
+  ctx.fillStyle = '#1e2a15';
+  ctx.fillRect(0, 0, SIZE, SIZE);
+  const originX = Math.floor(t.x) - GRID / 2 + 1;
+  const originY = Math.floor(t.y) - GRID / 2 + 1;
+  let loaded = 0, cancelled = false;
+  const total = GRID * GRID;
+  const finish = () => {
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 8;
+    if (!cancelled) onReady(tex);
+  };
+  for (let gy = 0; gy < GRID; gy++) {
+    for (let gx = 0; gx < GRID; gx++) {
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      const tx = originX + gx, ty = originY + gy;
+      img.onload = () => { if (!cancelled) ctx.drawImage(img, gx * TILE, gy * TILE, TILE, TILE); if (++loaded === total) finish(); };
+      img.onerror = () => { if (++loaded === total) finish(); };
+      img.src = `https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/${zoom}/${ty}/${tx}`;
+    }
+  }
+  return () => { cancelled = true; };
+}
+
+// Procedural soil-strata texture: horizon bands with grain + mottling.
+function buildStrataTexture(): THREE.Texture {
+  const W = 512, H = 512;
+  const canvas = document.createElement('canvas');
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d')!;
+  // Horizons top→bottom: topsoil, subsoil, clay, weathered rock, bedrock.
+  const bands: Array<[number, string]> = [
+    [0.16, '#5b4327'], // O/A topsoil (dark organic)
+    [0.34, '#6f4f2c'], // A/B
+    [0.55, '#8a5a2f'], // B subsoil (iron-rich)
+    [0.74, '#9a7b52'], // C clay/loam
+    [0.88, '#7c7266'], // weathered rock
+    [1.0,  '#4f4a44'], // bedrock
+  ];
+  let prev = 0;
+  for (const [stop, color] of bands) {
+    const y0 = prev * H, y1 = stop * H;
+    const grad = ctx.createLinearGradient(0, y0, 0, y1);
+    grad.addColorStop(0, color);
+    grad.addColorStop(1, shade(color, -18));
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, y0, W, y1 - y0);
+    prev = stop;
+  }
+  // Grain + mottling speckle for a photoreal-ish read.
+  for (let i = 0; i < 14000; i++) {
+    const x = Math.random() * W, y = Math.random() * H;
+    const a = Math.random() * 0.09;
+    ctx.fillStyle = Math.random() > 0.5 ? `rgba(0,0,0,${a})` : `rgba(255,240,210,${a * 0.7})`;
+    ctx.fillRect(x, y, 1.4, 1.4);
+  }
+  // A few pebble clusters in the lower horizons.
+  for (let i = 0; i < 60; i++) {
+    const y = H * (0.6 + Math.random() * 0.38);
+    ctx.beginPath();
+    ctx.arc(Math.random() * W, y, 1 + Math.random() * 3, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(40,36,30,${0.3 + Math.random() * 0.3})`;
+    ctx.fill();
+  }
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 8;
+  return tex;
+}
+
+function shade(hex: string, amt: number): string {
+  const n = parseInt(hex.slice(1), 16);
+  const r = Math.max(0, Math.min(255, ((n >> 16) & 255) + amt));
+  const g = Math.max(0, Math.min(255, ((n >> 8) & 255) + amt));
+  const b = Math.max(0, Math.min(255, (n & 255) + amt));
+  return `rgb(${r},${g},${b})`;
+}
+
+// Photoreal strata side material (ported from the concept prototype): a base
+// albedo texture + an onBeforeCompile shader that shifts UVs per face for
+// variation, derives a normal map from the base luminance (Sobel-lite), and
+// adds depth-based ambient occlusion + a wet-rock sheen toward the lower half —
+// no bake step. Works with a raw THREE.MeshStandardMaterial.
+function makeStrataMaterial(base: THREE.Texture, uOffset: number, uFlip = false) {
+  const mat = new THREE.MeshStandardMaterial({ map: base, roughness: 0.92, metalness: 0.02, bumpScale: 0.08 });
+  mat.onBeforeCompile = (shader: { uniforms: Record<string, { value: number }>; vertexShader: string; fragmentShader: string }) => {
+    shader.uniforms.uOffset = { value: uOffset };
+    shader.uniforms.uFlip = { value: uFlip ? 1 : 0 };
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\n varying vec3 vWorldPos;')
+      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\n vWorldPos = worldPosition.xyz;');
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\n uniform float uOffset;\n uniform float uFlip;\n varying vec3 vWorldPos;')
+      .replace('#include <map_fragment>', `
+        vec2 uv = vMapUv;
+        uv.x = uFlip > 0.5 ? 1.0 - uv.x : uv.x;
+        uv.x = fract(uv.x + uOffset);
+        vec4 sampledDiffuseColor = texture2D( map, uv );
+        vec3 c = sampledDiffuseColor.rgb;
+        float lum = dot(c, vec3(0.299, 0.587, 0.114));
+        c = mix(vec3(lum), c, 1.12);
+        c = (c - 0.5) * 1.08 + 0.5;
+        sampledDiffuseColor.rgb = c;
+        diffuseColor *= sampledDiffuseColor;
+      `)
+      .replace('#include <normal_fragment_maps>', `
+        vec2 nUv = vMapUv;
+        nUv.x = uFlip > 0.5 ? 1.0 - nUv.x : nUv.x;
+        nUv.x = fract(nUv.x + uOffset);
+        float e = 1.0 / 1024.0;
+        float lR = dot(texture2D(map, nUv + vec2( e, 0.0)).rgb, vec3(0.333));
+        float lL = dot(texture2D(map, nUv + vec2(-e, 0.0)).rgb, vec3(0.333));
+        float lU = dot(texture2D(map, nUv + vec2(0.0,  e)).rgb, vec3(0.333));
+        float lD = dot(texture2D(map, nUv + vec2(0.0, -e)).rgb, vec3(0.333));
+        vec3 bump = normalize(vec3((lL - lR) * 6.0, (lD - lU) * 6.0, 1.0));
+        normal = normalize(normal + bump * 0.35 - vec3(0.0, 0.0, 0.35));
+      `)
+      .replace('#include <dithering_fragment>', `#include <dithering_fragment>
+        float depthT = clamp((0.8 - vWorldPos.y) / 1.6, 0.0, 1.0);
+        gl_FragColor.rgb *= mix(1.0, 0.55, depthT);
+        float sheen = smoothstep(0.35, 0.55, depthT) * (1.0 - smoothstep(0.55, 0.75, depthT));
+        gl_FragColor.rgb += vec3(0.15, 0.22, 0.28) * sheen * 0.18;
+        gl_FragColor.rgb += vec3(0.35, 0.22, 0.10) * (1.0 - depthT) * 0.06;
+      `);
+  };
+  return mat;
+}
+
+export function ParcelCutaway({ twin, height = 260 }: { twin: Twin; height?: number }) {
+  const mountRef = React.useRef<HTMLDivElement>(null);
+  const [failed, setFailed] = React.useState(false);
+  const center = React.useMemo(() => geomCenter(twin.geom), [twin.geom]);
+  const acres = geomAreaAcres(twin.geom);
+
+  React.useEffect(() => {
+    const el = mountRef.current;
+    if (!el) return;
+
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch (e) {
+      console.warn('[ParcelCutaway] WebGL unavailable; static fallback', e);
+      setFailed(true);
+      return;
+    }
+
+    const w = el.clientWidth || 300;
+    const h = height;
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.05;
+    el.appendChild(renderer.domElement);
+    renderer.domElement.addEventListener('webglcontextlost', (ev: Event) => { ev.preventDefault(); setFailed(true); });
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.Fog(0x050403, 6, 15);
+
+    const camera = new THREE.PerspectiveCamera(36, w / h, 0.1, 100);
+    camera.position.set(2.8, 2.1, 3.2);
+    camera.lookAt(0, -0.05, 0);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.45));
+    const key = new THREE.DirectionalLight(0xfff2d8, 2.2); key.position.set(4.5, 6.5, 3.5); scene.add(key);
+    const fill = new THREE.DirectionalLight(0x7fa8c8, 0.6); fill.position.set(-3, 2.5, -2); scene.add(fill);
+    const warm = new THREE.DirectionalLight(0xc88a5a, 0.35); warm.position.set(0, -1.5, 3); scene.add(warm);
+
+    // Procedural strata shows instantly; the photoreal texture swaps in on load.
+    const strata = buildStrataTexture();
+    strata.wrapS = THREE.RepeatWrapping; strata.wrapT = THREE.ClampToEdgeWrapping;
+    // Distinct U offset + flip per side so no two faces of the cutaway match.
+    const px = makeStrataMaterial(strata, 0.0, false);
+    const nx = makeStrataMaterial(strata, 0.33, true);
+    const pz = makeStrataMaterial(strata, 0.66, false);
+    const nz = makeStrataMaterial(strata, 0.15, true);
+    const sideMats = [px, nx, pz, nz];
+    const topMat = new THREE.MeshStandardMaterial({ color: 0x2a3a1e, roughness: 0.75, metalness: 0.0 });
+    const bottomMat = new THREE.MeshStandardMaterial({ color: 0x080706, roughness: 1 });
+    // Box order: +X, -X, +Y(top), -Y(bottom), +Z, -Z
+    const materials = [px, nx, topMat, bottomMat, pz, nz];
+
+    // Load the photoreal soil-profile texture and swap it into the side faces.
+    new THREE.TextureLoader().load('/textures/soil-strata.jpg', (t: THREE.Texture) => {
+      t.colorSpace = THREE.SRGBColorSpace;
+      t.anisotropy = 8;
+      t.wrapS = THREE.RepeatWrapping;
+      t.wrapT = THREE.ClampToEdgeWrapping;
+      sideMats.forEach((m) => { m.map = t; m.needsUpdate = true; });
+    }, undefined, () => { /* keep procedural fallback on error */ });
+
+    const W = 2.2, H = 1.6;
+    const group = new THREE.Group();
+    const cube = new THREE.Mesh(new THREE.BoxGeometry(W, H, W), materials);
+    group.add(cube);
+    // Thin bright rim on the top edge.
+    const rim = new THREE.Mesh(
+      new THREE.RingGeometry(W * 0.34, W * 0.36, 6),
+      new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5, side: THREE.DoubleSide }),
+    );
+    rim.rotation.x = -Math.PI / 2; rim.position.y = H / 2 + 0.004;
+    group.add(rim);
+    scene.add(group);
+
+    const cancelSat = buildSatelliteTexture(center, 18, (tex) => {
+      topMat.map = tex; topMat.color.set(0xffffff); topMat.needsUpdate = true;
+    });
+
+    let raf = 0;
+    const clock = new THREE.Clock();
+    const loop = () => {
+      const dt = clock.getDelta();
+      group.rotation.y += dt * 0.12;
+      renderer.render(scene, camera);
+      raf = requestAnimationFrame(loop);
+    };
+    loop();
+
+    const onResize = () => {
+      const nw = el.clientWidth || w;
+      renderer.setSize(nw, h);
+      camera.aspect = nw / h;
+      camera.updateProjectionMatrix();
+    };
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(onResize) : null;
+    ro?.observe(el);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      cancelSat?.();
+      ro?.disconnect();
+      strata.dispose();
+      materials.forEach((m) => { (m as THREE.MeshStandardMaterial).map?.dispose?.(); m.dispose(); });
+      cube.geometry.dispose();
+      renderer.dispose();
+      try { el.removeChild(renderer.domElement); } catch { /* ignore */ }
+    };
+  }, [center[0], center[1], height]);
+
+  if (failed) {
+    return (
+      <div
+        className="flex flex-col items-center justify-center gap-1.5 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-sunken)] text-center px-4"
+        style={{ height }}
+      >
+        <Layers3 className="size-5 text-[var(--fg-subtle)]" />
+        <div className="text-[12px] font-medium text-[var(--fg-muted)]">Cutaway unavailable in this browser</div>
+        <div className="text-[11px] text-[var(--fg-subtle)]">{acres != null ? `${acres.toFixed(2)} ac · ` : ''}{twin.geom.type} geometry</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[#0a0806]" style={{ height }}>
+      <div ref={mountRef} className="absolute inset-0" aria-label="Parcel geological cutaway" />
+      <div className="pointer-events-none absolute left-3 top-3 space-y-0.5 text-[11px] leading-tight text-white/85">
+        <div className="font-[var(--font-mono)]">Parcel {twin.id.slice(2, 12).toUpperCase()}</div>
+        {acres != null && <div className="font-[var(--font-mono)]">Area {acres.toFixed(2)} ac</div>}
+      </div>
+      <div className="pointer-events-none absolute bottom-2.5 right-2.5 rounded-full bg-black/50 px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] text-white/70 backdrop-blur">
+        Geological cutaway
+      </div>
+    </div>
+  );
+}

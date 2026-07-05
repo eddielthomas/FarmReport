@@ -15,7 +15,7 @@
 import { useQuery } from '@tanstack/react-query';
 import {
   Building2, Gauge, TrendingDown, DollarSign, MapPinned,
-  Radio, Layers, ExternalLink, Sprout, Plus,
+  Radio, Layers, ExternalLink, Sprout, Plus, Boxes,
 } from 'lucide-react';
 import { apiGet } from '@crm/lib/api';
 import { useHasRole } from '@crm/lib/auth-store';
@@ -91,6 +91,12 @@ export function PortfolioDashboard() {
           </div>
           <div className="flex items-center gap-4">
             <RiskLegend />
+            <a
+              href="/studio.html"
+              className="inline-flex items-center gap-1.5 rounded-[var(--radius-full)] border border-[var(--border)] bg-[var(--surface)] text-[var(--fg)] px-3.5 py-2 text-[13px] font-semibold hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all duration-[var(--duration-fast)]"
+            >
+              <Boxes className="size-4" /> Twin Studio
+            </a>
             {canOnboard && (
               <a
                 href="/operations.html?view=onboard"
