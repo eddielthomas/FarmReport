@@ -15,7 +15,8 @@
 
 import { useCallback, useSyncExternalStore } from 'react';
 
-export type TwinCategory = 'structure' | 'equipment' | 'crop' | 'livestock' | 'water';
+export type TwinCategory =
+  | 'structure' | 'equipment' | 'crop' | 'field' | 'livestock' | 'water' | 'infra';
 
 export type TwinGeom =
   | { type: 'point'; lng: number; lat: number; rotation: number; scale: number }
@@ -108,40 +109,99 @@ export type CatalogItem = {
 };
 
 // Farm-native object library — what an operator can twin. Colors are per-object
-// identity accents (kept from the concept; they read well over our surfaces).
+// identity accents. Grouped to cover the common surface of farm management:
+// buildings, machinery, crops/beds, land zones, livestock, water, and access.
 export const CATALOG: CatalogItem[] = [
-  // Structures
+  // ---- Structures --------------------------------------------------------
   { kind: 'barn', category: 'structure', name: 'Barn', icon: '🏚️', color: '#8B5A3C', defaultGeomType: 'rect', defaultSize: { widthM: 30, heightM: 15 } },
   { kind: 'silo', category: 'structure', name: 'Grain Silo', icon: '🏗️', color: '#A8A29E', defaultGeomType: 'circle', defaultSize: { radiusM: 6 } },
-  { kind: 'shed', category: 'structure', name: 'Shed', icon: '🛖', color: '#B08968', defaultGeomType: 'rect', defaultSize: { widthM: 8, heightM: 6 } },
+  { kind: 'grainbin', category: 'structure', name: 'Grain Bin', icon: '🫙', color: '#B7B0A5', defaultGeomType: 'circle', defaultSize: { radiusM: 5 }, sampleReadings: [{ label: 'Fill', value: '61', unit: '%' }, { label: 'Grain temp', value: '14', unit: '°C' }] },
+  { kind: 'shed', category: 'structure', name: 'Machine Shed', icon: '🛖', color: '#B08968', defaultGeomType: 'rect', defaultSize: { widthM: 18, heightM: 10 } },
+  { kind: 'workshop', category: 'structure', name: 'Workshop', icon: '🔧', color: '#9A8478', defaultGeomType: 'rect', defaultSize: { widthM: 12, heightM: 9 } },
   { kind: 'greenhouse', category: 'structure', name: 'Greenhouse', icon: '🌿', color: '#7BB661', defaultGeomType: 'rect', defaultSize: { widthM: 20, heightM: 8 } },
+  { kind: 'packhouse', category: 'structure', name: 'Pack House', icon: '📦', color: '#C89B3C', defaultGeomType: 'rect', defaultSize: { widthM: 24, heightM: 16 } },
+  { kind: 'coldstore', category: 'structure', name: 'Cold Storage', icon: '❄️', color: '#5AB0D6', defaultGeomType: 'rect', defaultSize: { widthM: 16, heightM: 12 }, sampleReadings: [{ label: 'Temp', value: '2', unit: '°C' }, { label: 'RH', value: '90', unit: '%' }] },
+  { kind: 'inputstore', category: 'structure', name: 'Input Store', icon: '🧪', color: '#B06AB3', defaultGeomType: 'rect', defaultSize: { widthM: 10, heightM: 8 } },
+  { kind: 'fueldepot', category: 'structure', name: 'Fuel Depot', icon: '⛽', color: '#C4632F', defaultGeomType: 'rect', defaultSize: { widthM: 8, heightM: 6 }, sampleReadings: [{ label: 'Diesel', value: '3,400', unit: 'L' }] },
   { kind: 'farmhouse', category: 'structure', name: 'Farmhouse', icon: '🏡', color: '#C77D5E', defaultGeomType: 'rect', defaultSize: { widthM: 14, heightM: 12 } },
-  // Equipment
+  { kind: 'office', category: 'structure', name: 'Farm Office', icon: '🏢', color: '#7E8CA3', defaultGeomType: 'rect', defaultSize: { widthM: 10, heightM: 8 } },
+  { kind: 'scalehouse', category: 'structure', name: 'Scale House', icon: '⚖️', color: '#8A8F98', defaultGeomType: 'rect', defaultSize: { widthM: 6, heightM: 4 } },
+  { kind: 'solararray', category: 'structure', name: 'Solar Array', icon: '🔆', color: '#EAB308', defaultGeomType: 'rect', defaultSize: { widthM: 20, heightM: 12 }, sampleReadings: [{ label: 'Output', value: '18.4', unit: 'kW' }] },
+
+  // ---- Equipment ---------------------------------------------------------
   { kind: 'tractor', category: 'equipment', name: 'Tractor', icon: '🚜', color: '#4C9F70', defaultGeomType: 'point', sampleReadings: [{ label: 'Engine hrs', value: '1,240', unit: 'h' }, { label: 'Fuel', value: '68', unit: '%' }] },
+  { kind: 'combine', category: 'equipment', name: 'Combine', icon: '🌾', color: '#C6972F', defaultGeomType: 'point', sampleReadings: [{ label: 'Engine hrs', value: '860', unit: 'h' }, { label: 'Yield', value: '58', unit: 'bu/ac' }] },
+  { kind: 'planter', category: 'equipment', name: 'Planter', icon: '🌱', color: '#5FA052', defaultGeomType: 'point', sampleReadings: [{ label: 'Rows', value: '24' }, { label: 'Pop.', value: '34k', unit: '/ac' }] },
+  { kind: 'sprayer', category: 'equipment', name: 'Sprayer', icon: '💦', color: '#4DA3C7', defaultGeomType: 'point', sampleReadings: [{ label: 'Tank', value: '55', unit: '%' }, { label: 'Boom', value: '120', unit: 'ft' }] },
+  { kind: 'baler', category: 'equipment', name: 'Baler', icon: '🧺', color: '#B79A5B', defaultGeomType: 'point', sampleReadings: [{ label: 'Bales', value: '146' }] },
   { kind: 'pivot', category: 'equipment', name: 'Center Pivot', icon: '💧', color: '#5B8DEF', defaultGeomType: 'circle', defaultSize: { radiusM: 200 }, sampleReadings: [{ label: 'Flow', value: '820', unit: 'gpm' }, { label: 'Angle', value: '142', unit: '°' }] },
+  { kind: 'pump', category: 'equipment', name: 'Irrigation Pump', icon: '⚙️', color: '#5F7A99', defaultGeomType: 'point', sampleReadings: [{ label: 'Pressure', value: '42', unit: 'psi' }, { label: 'Flow', value: '640', unit: 'gpm' }] },
   { kind: 'drone', category: 'equipment', name: 'Scout Drone', icon: '🛸', color: '#8B5CF6', defaultGeomType: 'point', sampleReadings: [{ label: 'Battery', value: '92', unit: '%' }] },
   { kind: 'sensor', category: 'equipment', name: 'Soil Sensor', icon: '📡', color: '#F59E0B', defaultGeomType: 'point', sampleReadings: [{ label: 'Moisture', value: '22', unit: '%VWC' }, { label: 'Temp', value: '18', unit: '°C' }] },
   { kind: 'weather', category: 'equipment', name: 'Weather Station', icon: '🌦️', color: '#0EA5E9', defaultGeomType: 'point', sampleReadings: [{ label: 'Wind', value: '12', unit: 'mph' }, { label: 'Rain 24h', value: '0.3', unit: 'in' }] },
-  // Crops & Beds
+  { kind: 'camera', category: 'equipment', name: 'Field Camera', icon: '📷', color: '#6366F1', defaultGeomType: 'point', sampleReadings: [{ label: 'Uptime', value: '99.2', unit: '%' }] },
+  { kind: 'gateway', category: 'equipment', name: 'IoT Gateway', icon: '🛰️', color: '#14B8A6', defaultGeomType: 'point', sampleReadings: [{ label: 'Nodes', value: '18' }, { label: 'Signal', value: '−72', unit: 'dBm' }] },
+  { kind: 'generator', category: 'equipment', name: 'Generator', icon: '🔌', color: '#A16207', defaultGeomType: 'point', sampleReadings: [{ label: 'Load', value: '38', unit: '%' }] },
+
+  // ---- Crops & Beds ------------------------------------------------------
   { kind: 'row', category: 'crop', name: 'Crop Row', icon: '🌽', color: '#E8A24B', defaultGeomType: 'polyline' },
   { kind: 'orchard', category: 'crop', name: 'Orchard Block', icon: '🌳', color: '#6B8E23', defaultGeomType: 'rect', defaultSize: { widthM: 60, heightM: 40 } },
-  { kind: 'plot', category: 'crop', name: 'Trial Plot', icon: '🌾', color: '#C6A15B', defaultGeomType: 'rect', defaultSize: { widthM: 20, heightM: 20 } },
+  { kind: 'vineyard', category: 'crop', name: 'Vineyard Block', icon: '🍇', color: '#7C3AED', defaultGeomType: 'rect', defaultSize: { widthM: 50, heightM: 40 } },
+  { kind: 'berry', category: 'crop', name: 'Berry Field', icon: '🫐', color: '#4338CA', defaultGeomType: 'rect', defaultSize: { widthM: 40, heightM: 30 } },
+  { kind: 'plot', category: 'crop', name: 'Trial Plot', icon: '🧬', color: '#C6A15B', defaultGeomType: 'rect', defaultSize: { widthM: 20, heightM: 20 } },
   { kind: 'cover', category: 'crop', name: 'Cover Crop', icon: '🍀', color: '#4B8B3B', defaultGeomType: 'rect', defaultSize: { widthM: 40, heightM: 40 } },
-  // Livestock
-  { kind: 'herd', category: 'livestock', name: 'Cattle Herd', icon: '🐄', color: '#8B6F47', defaultGeomType: 'circle', defaultSize: { radiusM: 30 } },
-  { kind: 'pen', category: 'livestock', name: 'Animal Pen', icon: '🐖', color: '#A0522D', defaultGeomType: 'rect', defaultSize: { widthM: 25, heightM: 15 } },
-  // Water
+  { kind: 'raisedbed', category: 'crop', name: 'Raised Bed', icon: '🪴', color: '#8D6E63', defaultGeomType: 'rect', defaultSize: { widthM: 12, heightM: 3 } },
+  { kind: 'nursery', category: 'crop', name: 'Nursery', icon: '🎋', color: '#6D9F71', defaultGeomType: 'rect', defaultSize: { widthM: 24, heightM: 16 } },
+
+  // ---- Fields & Zones (drawn parcels) ------------------------------------
+  { kind: 'field', category: 'field', name: 'Crop Field', icon: '🟩', color: '#65A30D', defaultGeomType: 'polygon' },
+  { kind: 'pasture', category: 'field', name: 'Pasture', icon: '🌿', color: '#7CB342', defaultGeomType: 'polygon' },
+  { kind: 'hayfield', category: 'field', name: 'Hay Field', icon: '🟨', color: '#CA8A04', defaultGeomType: 'polygon' },
+  { kind: 'paddock', category: 'field', name: 'Grazing Paddock', icon: '🔲', color: '#84A17A', defaultGeomType: 'polygon' },
+  { kind: 'mgmtzone', category: 'field', name: 'Management Zone', icon: '🗺️', color: '#F59E0B', defaultGeomType: 'polygon' },
+  { kind: 'buffer', category: 'field', name: 'Buffer Strip', icon: '🌾', color: '#94A34B', defaultGeomType: 'polygon' },
+  { kind: 'fallow', category: 'field', name: 'Fallow Ground', icon: '🟫', color: '#A87C4F', defaultGeomType: 'polygon' },
+  { kind: 'terrace', category: 'field', name: 'Terrace', icon: '📶', color: '#8B7355', defaultGeomType: 'polygon' },
+
+  // ---- Livestock ---------------------------------------------------------
+  { kind: 'herd', category: 'livestock', name: 'Cattle Herd', icon: '🐄', color: '#8B6F47', defaultGeomType: 'circle', defaultSize: { radiusM: 30 }, sampleReadings: [{ label: 'Head', value: '120' }] },
+  { kind: 'dairy', category: 'livestock', name: 'Dairy Herd', icon: '🥛', color: '#B0A99F', defaultGeomType: 'circle', defaultSize: { radiusM: 25 }, sampleReadings: [{ label: 'Milking', value: '84' }, { label: 'Yield', value: '30', unit: 'L/d' }] },
+  { kind: 'sheep', category: 'livestock', name: 'Sheep Flock', icon: '🐑', color: '#C9C2B8', defaultGeomType: 'circle', defaultSize: { radiusM: 25 }, sampleReadings: [{ label: 'Head', value: '210' }] },
+  { kind: 'goats', category: 'livestock', name: 'Goat Herd', icon: '🐐', color: '#A98B6F', defaultGeomType: 'circle', defaultSize: { radiusM: 20 } },
+  { kind: 'poultry', category: 'livestock', name: 'Poultry House', icon: '🐔', color: '#D9A441', defaultGeomType: 'rect', defaultSize: { widthM: 90, heightM: 15 }, sampleReadings: [{ label: 'Birds', value: '28k' }, { label: 'Temp', value: '21', unit: '°C' }] },
+  { kind: 'pigbarn', category: 'livestock', name: 'Pig Barn', icon: '🐖', color: '#C58A9B', defaultGeomType: 'rect', defaultSize: { widthM: 40, heightM: 18 } },
+  { kind: 'apiary', category: 'livestock', name: 'Apiary', icon: '🐝', color: '#D4A017', defaultGeomType: 'point', sampleReadings: [{ label: 'Hives', value: '16' }] },
+  { kind: 'trough', category: 'livestock', name: 'Water Trough', icon: '🪣', color: '#4C87A6', defaultGeomType: 'point', sampleReadings: [{ label: 'Level', value: '80', unit: '%' }] },
+
+  // ---- Water -------------------------------------------------------------
   { kind: 'pond', category: 'water', name: 'Pond', icon: '🪷', color: '#3B82C4', defaultGeomType: 'circle', defaultSize: { radiusM: 25 } },
-  { kind: 'well', category: 'water', name: 'Well', icon: '⛲', color: '#0891B2', defaultGeomType: 'point', sampleReadings: [{ label: 'Depth', value: '120', unit: 'ft' }] },
+  { kind: 'reservoir', category: 'water', name: 'Reservoir', icon: '🌊', color: '#2563EB', defaultGeomType: 'polygon', sampleReadings: [{ label: 'Storage', value: '64', unit: '%' }] },
+  { kind: 'wetland', category: 'water', name: 'Wetland', icon: '🦆', color: '#0F766E', defaultGeomType: 'polygon' },
+  { kind: 'well', category: 'water', name: 'Well', icon: '⛲', color: '#0891B2', defaultGeomType: 'point', sampleReadings: [{ label: 'Depth', value: '120', unit: 'ft' }, { label: 'Table', value: '38', unit: 'ft' }] },
   { kind: 'tank', category: 'water', name: 'Water Tank', icon: '🛢️', color: '#0D9488', defaultGeomType: 'circle', defaultSize: { radiusM: 4 }, sampleReadings: [{ label: 'Level', value: '72', unit: '%' }] },
+  { kind: 'canal', category: 'water', name: 'Canal / Ditch', icon: '🏞️', color: '#0EA5A0', defaultGeomType: 'polyline', sampleReadings: [{ label: 'Flow', value: '3.2', unit: 'cfs' }] },
+  { kind: 'tiledrain', category: 'water', name: 'Tile Drain', icon: '➰', color: '#64748B', defaultGeomType: 'polyline' },
+  { kind: 'raingauge', category: 'water', name: 'Rain Gauge', icon: '🌧️', color: '#38BDF8', defaultGeomType: 'point', sampleReadings: [{ label: 'Rain 24h', value: '0.4', unit: 'in' }] },
+
+  // ---- Access & Utility --------------------------------------------------
+  { kind: 'boundary', category: 'infra', name: 'Property Boundary', icon: '📐', color: '#6E97FF', defaultGeomType: 'polygon' },
+  { kind: 'road', category: 'infra', name: 'Access Road', icon: '🛣️', color: '#9CA3AF', defaultGeomType: 'polyline' },
+  { kind: 'fence', category: 'infra', name: 'Fence Line', icon: '🔗', color: '#78716C', defaultGeomType: 'polyline' },
+  { kind: 'powerline', category: 'infra', name: 'Power Line', icon: '⚡', color: '#EAB308', defaultGeomType: 'polyline' },
+  { kind: 'gate', category: 'infra', name: 'Farm Gate', icon: '🚪', color: '#A16207', defaultGeomType: 'point' },
+  { kind: 'entrance', category: 'infra', name: 'Field Entrance', icon: '📍', color: '#EF6C42', defaultGeomType: 'point' },
+  { kind: 'bridge', category: 'infra', name: 'Bridge / Crossing', icon: '🌉', color: '#8B9DC3', defaultGeomType: 'point' },
+  { kind: 'parking', category: 'infra', name: 'Yard / Parking', icon: '🅿️', color: '#71717A', defaultGeomType: 'rect', defaultSize: { widthM: 20, heightM: 14 } },
 ];
 
 export const CATEGORY_LABEL: Record<TwinCategory, string> = {
   structure: 'Structures',
   equipment: 'Equipment',
   crop: 'Crops & Beds',
+  field: 'Fields & Zones',
   livestock: 'Livestock',
   water: 'Water',
+  infra: 'Access & Utility',
 };
 
 // A sensible default AOI (central Iowa) so a freshly-placed twin has geometry.
@@ -156,6 +216,7 @@ export function makeTwinFromCatalog(item: CatalogItem, parcelId: string | null =
     case 'circle': geom = { type: 'circle', center, radiusM: item.defaultSize?.radiusM ?? 20 }; break;
     case 'rect':   geom = { type: 'rect', center, widthM: item.defaultSize?.widthM ?? 20, heightM: item.defaultSize?.heightM ?? 20, rotation: 0 }; break;
     case 'polyline': geom = { type: 'polyline', points: [center, [center[0] + 0.001, center[1] + 0.0006]] }; break;
+    case 'polygon': { const d = 0.0009; geom = { type: 'polygon', ring: [[center[0] - d, center[1] - d], [center[0] + d, center[1] - d], [center[0] + d, center[1] + d], [center[0] - d, center[1] + d], [center[0] - d, center[1] - d]] }; break; }
     default: geom = { type: 'point', lng: center[0], lat: center[1], rotation: 0, scale: 1 };
   }
   return {

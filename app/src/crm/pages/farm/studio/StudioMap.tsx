@@ -44,7 +44,7 @@ const SATELLITE_STYLE: maplibregl.StyleSpecification = {
   sources: { esri: { type: 'raster', tiles: ['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'], tileSize: 256, attribution: 'Esri, Maxar, Earthstar Geographics' } },
   layers: [{ id: 'bg', type: 'background', paint: { 'background-color': '#0b0a08' } }, { id: 'esri', type: 'raster', source: 'esri', paint: { ...LAYER_PAINT.satellite, 'raster-opacity': 1 } }],
 };
-const CATS: TwinCategory[] = ['structure', 'equipment', 'crop', 'livestock', 'water'];
+const CATS: TwinCategory[] = ['structure', 'equipment', 'crop', 'field', 'livestock', 'water', 'infra'];
 const EMPTY_FC: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: [] };
 const LAYERS: Layer[] = ['satellite', 'ndvi', 'moisture', 'thermal'];
 const SCAN_OPTIONS: { id: ScanSignal; label: string }[] = [{ id: 'sar', label: 'SAR' }, { id: 'moisture', label: 'Moisture' }, { id: 'thermal', label: 'Thermal' }];
@@ -149,8 +149,10 @@ export function StudioMap() {
     map.on('error', (ev) => console.warn('[StudioMap] map error', ev?.error ?? ev));
     mapRef.current = map;
     map.on('load', () => {
-      for (const s of ['property', 'twin-poly', 'twin-line', 'twin-point', 'signals', 'draft', 'measure', 'zone', 'edit-verts', 'edit-mid']) map.addSource(s, { type: 'geojson', data: EMPTY_FC });
+      for (const s of ['property', 'mask', 'twin-poly', 'twin-line', 'twin-point', 'signals', 'draft', 'measure', 'zone', 'edit-verts', 'edit-mid']) map.addSource(s, { type: 'geojson', data: EMPTY_FC });
       map.addLayer({ id: 'property-fill', type: 'fill', source: 'property', paint: { 'fill-color': '#4C7EFF', 'fill-opacity': 0.05 } });
+      // Isolate mask: world fill with the property punched out — dims off-property.
+      map.addLayer({ id: 'mask-fill', type: 'fill', source: 'mask', paint: { 'fill-color': '#05060a', 'fill-opacity': 0.6 } });
       map.addLayer({ id: 'property-line', type: 'line', source: 'property', paint: { 'line-color': '#6E97FF', 'line-width': 2.5, 'line-dasharray': [2, 1.5] } });
       map.addLayer({ id: 'zone-fill', type: 'fill', source: 'zone', paint: { 'fill-color': '#F59E0B', 'fill-opacity': 0.16 } });
       map.addLayer({ id: 'zone-line', type: 'line', source: 'zone', paint: { 'line-color': '#F59E0B', 'line-width': 1.5, 'line-dasharray': [2, 1] } });
@@ -290,6 +292,28 @@ export function StudioMap() {
     else map.flyTo({ center: aoiCenter(property), zoom: 15 });
   }, [property, ready]);
 
+  React.useEffect(() => { // isolate: mask everything outside the property
+    const map = mapRef.current; if (!map || !ready) return;
+    const src = map.getSource('mask') as maplibregl.GeoJSONSource | undefined; if (!src) return;
+    const b = property?.boundaries;
+    if (!isolate || !b) { src.setData(EMPTY_FC); return; }
+    const holes: [number, number][][] = b.type === 'Polygon'
+      ? [b.coordinates[0] as [number, number][]]
+      : b.coordinates.map((poly) => poly[0] as [number, number][]);
+    // Outer ring: a large box around the property centroid (avoids the ±180
+    // antimeridian span that gets culled), big enough to cover any zoomed view.
+    let cx = 0, cy = 0, n = 0;
+    for (const [x, y] of holes[0]) { cx += x; cy += y; n++; }
+    cx /= n || 1; cy /= n || 1;
+    const M = 12;
+    const clampLat = (v: number) => Math.max(-85, Math.min(85, v));
+    const outer: [number, number][] = [
+      [cx - M, clampLat(cy - M)], [cx + M, clampLat(cy - M)],
+      [cx + M, clampLat(cy + M)], [cx - M, clampLat(cy + M)], [cx - M, clampLat(cy - M)],
+    ];
+    src.setData({ type: 'Feature', properties: {}, geometry: { type: 'Polygon', coordinates: [outer, ...holes] } });
+  }, [isolate, property, ready]);
+
   React.useEffect(() => { // twins → sources
     const map = mapRef.current; if (!map || !ready) return;
     const fc = twinsToGeoJSON(propertyTwins);
@@ -330,8 +354,8 @@ export function StudioMap() {
     mSrc?.setData({ type: 'FeatureCollection', features: mids });
   }, [tool, sel, twins, ready]);
 
-  React.useEffect(() => { const map = mapRef.current; if (!map || !ready) return; for (const [k, v] of Object.entries(LAYER_PAINT[layer])) map.setPaintProperty('esri', k, v as number); map.setPaintProperty('esri', 'raster-opacity', opacity); }, [layer, opacity, ready]);
-  React.useEffect(() => { const map = mapRef.current; if (!map || !ready) return; map.setLayoutProperty('twin-label', 'visibility', showLabels ? 'visible' : 'none'); }, [showLabels, ready]);
+  React.useEffect(() => { const map = mapRef.current; if (!map || !ready || !map.isStyleLoaded()) return; for (const [k, v] of Object.entries(LAYER_PAINT[layer])) map.setPaintProperty('esri', k, v as number); map.setPaintProperty('esri', 'raster-opacity', opacity); }, [layer, opacity, ready]);
+  React.useEffect(() => { const map = mapRef.current; if (!map || !ready || !map.isStyleLoaded()) return; map.setLayoutProperty('twin-label', 'visibility', showLabels ? 'visible' : 'none'); }, [showLabels, ready]);
   React.useEffect(() => { const map = mapRef.current; if (!map || !ready) return; map.getCanvas().style.cursor = tool === 'select' ? '' : 'crosshair'; setVerts([]); if (tool !== 'measure') setMeasurePts([]); }, [tool, ready]);
 
   // Notes markers.
@@ -354,7 +378,11 @@ export function StudioMap() {
 
   const pickObject = (item: CatalogItem) => {
     setPending(item); setLibraryOpen(false);
-    setTool(item.defaultGeomType === 'point' ? 'place' : item.defaultGeomType === 'rect' ? 'rect' : item.defaultGeomType === 'circle' ? 'circle' : 'row');
+    setTool(item.defaultGeomType === 'point' ? 'place'
+      : item.defaultGeomType === 'rect' ? 'rect'
+      : item.defaultGeomType === 'circle' ? 'circle'
+      : item.defaultGeomType === 'polygon' ? 'parcel'
+      : 'row');
   };
   const runScanNow = async () => {
     if (!bbox || scanBusy) return; const sigs = Array.from(scanPick); if (!sigs.length) return;

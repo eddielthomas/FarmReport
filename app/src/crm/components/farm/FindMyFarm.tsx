@@ -32,9 +32,12 @@ import {
 type Polygonal = GeoJSON.Polygon | GeoJSON.MultiPolygon;
 
 // Keyless Esri satellite substrate — same source BoundaryImport's preview uses,
-// so the "find" map and the "preview" map read as one surface.
+// so the "find" map and the "preview" map read as one surface. Rendered on a
+// globe (maplibre v5 projection) with an atmosphere so onboarding opens on the
+// whole planet, then flies down to the located farm.
 const SATELLITE_STYLE: maplibregl.StyleSpecification = {
   version: 8,
+  projection: { type: 'globe' },
   sources: {
     'esri-imagery': {
       type: 'raster',
@@ -43,11 +46,28 @@ const SATELLITE_STYLE: maplibregl.StyleSpecification = {
       attribution: 'Esri, Maxar, Earthstar Geographics',
     },
   },
+  sky: {
+    'sky-color': '#0a1a3a',
+    'sky-horizon-blend': 0.5,
+    'horizon-color': '#3a5f8a',
+    'horizon-fog-blend': 0.6,
+    'fog-color': '#0B0A08',
+    'fog-ground-blend': 0.4,
+    'atmosphere-blend': ['interpolate', ['linear'], ['zoom'], 0, 1, 4, 0.5, 8, 0],
+  },
   layers: [
-    { id: 'bg', type: 'background', paint: { 'background-color': '#0B0A08' } },
+    { id: 'bg', type: 'background', paint: { 'background-color': '#05060a' } },
     { id: 'esri-imagery', type: 'raster', source: 'esri-imagery' },
   ],
 };
+
+// Centroid of a (multi)polygon boundary — used to fly the globe to the farm.
+function boundaryCenter(b: Polygonal): [number, number] {
+  const rings = b.type === 'Polygon' ? [b.coordinates[0]] : b.coordinates.map((p) => p[0]);
+  let x = 0, y = 0, n = 0;
+  for (const ring of rings) for (const [lng, lat] of ring) { x += lng; y += lat; n++; }
+  return n ? [x / n, y / n] : [0, 0];
+}
 
 type Status = 'idle' | 'searching' | 'found' | 'notfound' | 'error';
 
@@ -64,6 +84,8 @@ export function FindMyFarm({ onParcel, className }: FindMyFarmProps) {
   const [configured, setConfigured] = React.useState(true);
   const [found, setFound] = React.useState<Parcel | null>(null);
   const [errMsg, setErrMsg] = React.useState<string | null>(null);
+  // Where to fly the globe: a located parcel's centroid (or a dropped pin).
+  const [focus, setFocus] = React.useState<{ lng: number; lat: number; zoom: number } | null>(null);
 
   // Handle a GatewayResult uniformly for both entry points.
   const consume = React.useCallback((
@@ -81,6 +103,8 @@ export function FindMyFarm({ onParcel, className }: FindMyFarmProps) {
     }
     setFound(res.parcel);
     setStatus('found');
+    const [lng, lat] = boundaryCenter(res.parcel.boundary);
+    setFocus({ lng, lat, zoom: 14 });
     onParcel(res.parcel.boundary);
   }, [onParcel]);
 
@@ -153,17 +177,20 @@ export function FindMyFarm({ onParcel, className }: FindMyFarmProps) {
         </Button>
       </div>
 
-      {/* Drop-a-pin satellite map */}
-      <PinMap onPick={(lat, lon) => void runPoint(lat, lon)} busy={busy} />
+      {/* Drop-a-pin globe */}
+      <PinMap onPick={(lat, lon) => void runPoint(lat, lon)} busy={busy} focus={focus} />
 
       {/* Result / status line */}
       {status === 'found' && found && (
         <div className="flex items-start gap-2 rounded-[var(--radius-md)] border border-[color-mix(in_oklch,var(--risk-healthy)_40%,transparent)] bg-[color-mix(in_oklch,var(--risk-healthy-fill)_12%,transparent)] px-3 py-2 text-[12px] text-[var(--fg)]">
           <Check className="mt-0.5 size-3.5 shrink-0 text-[var(--risk-healthy)]" />
           <span>
-            Found your farm{found.address ? <> — <span className="font-medium">{found.address}</span></> : ''}
+            {found.approximate ? 'Located your farm' : 'Found your parcel'}
+            {found.address ? <> — <span className="font-medium">{found.address}</span></> : ''}
             {found.areaHa != null && <> · <span className="tabular-nums">{found.areaHa.toLocaleString(undefined, { maximumFractionDigits: 1 })} ha</span></>}.
-            {' '}Not right? Adjust below or import manually.
+            {found.approximate
+              ? <> {' '}This is an <span className="font-medium">approximate</span> outline — drag its corners below to trace your exact boundary.</>
+              : <> {' '}Not right? Adjust below or import manually.</>}
           </span>
         </div>
       )}
@@ -189,7 +216,7 @@ export function FindMyFarm({ onParcel, className }: FindMyFarmProps) {
 // GeometryPreview), so onboarding never hard-crashes on a headless/VM browser.
 // -----------------------------------------------------------------------------
 
-function PinMap({ onPick, busy }: { onPick: (lat: number, lon: number) => void; busy: boolean }) {
+function PinMap({ onPick, busy, focus }: { onPick: (lat: number, lon: number) => void; busy: boolean; focus: { lng: number; lat: number; zoom: number } | null }) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const mapRef = React.useRef<maplibregl.Map | null>(null);
   const markerRef = React.useRef<maplibregl.Marker | null>(null);
@@ -202,9 +229,10 @@ function PinMap({ onPick, busy }: { onPick: (lat: number, lon: number) => void; 
     if (!el || mapRef.current) return;
     let map: maplibregl.Map;
     try {
+      // Open on the whole planet — a slow-spinning satellite globe floating in space.
       map = new maplibregl.Map({
-        container: el, style: SATELLITE_STYLE, center: [-98, 39], zoom: 3,
-        attributionControl: { compact: true }, maxPitch: 0,
+        container: el, style: SATELLITE_STYLE, center: [-30, 12], zoom: 0.15,
+        attributionControl: { compact: true }, maxPitch: 0, renderWorldCopies: false,
       });
     } catch (e) {
       console.warn('[FindMyFarm] map init failed; hiding pin drop', e);
@@ -214,7 +242,26 @@ function PinMap({ onPick, busy }: { onPick: (lat: number, lon: number) => void; 
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
     mapRef.current = map;
     map.on('error', (ev) => { console.warn('[FindMyFarm] map error', ev?.error ?? ev); });
+    // Belt-and-suspenders: ensure globe even if the style projection is dropped.
+    map.on('style.load', () => { try { map.setProjection({ type: 'globe' }); } catch { /* pre-v5 core has no globe */ } });
+    // A brief, bounded intro spin so the planet feels alive — then it settles.
+    // (Perpetual spin churns the globe's GPU readback path and spams warnings.)
+    let spin = true;
+    const SPIN_MS = 7000;
+    const startedAt = (typeof performance !== 'undefined' ? performance.now() : 0);
+    const stopSpin = () => { spin = false; };
+    map.on('mousedown', stopSpin); map.on('touchstart', stopSpin); map.on('wheel', stopSpin);
+    const tick = () => {
+      if (!mapRef.current) return;
+      const elapsed = (typeof performance !== 'undefined' ? performance.now() : 0) - startedAt;
+      if (spin && elapsed < SPIN_MS) {
+        if (!map.isMoving()) { const c = map.getCenter(); map.easeTo({ center: [c.lng + 0.6, c.lat], duration: 400, easing: (t) => t }); }
+        rafId = requestAnimationFrame(tick);
+      }
+    };
+    let rafId = requestAnimationFrame(tick);
     map.on('click', (e) => {
+      spin = false;
       const { lat, lng } = e.lngLat;
       if (!markerRef.current) {
         markerRef.current = new maplibregl.Marker({ color: '#4C7EFF' }).setLngLat([lng, lat]).addTo(map);
@@ -226,12 +273,22 @@ function PinMap({ onPick, busy }: { onPick: (lat: number, lon: number) => void; 
     const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(() => map.resize()) : null;
     ro?.observe(el);
     return () => {
+      cancelAnimationFrame(rafId);
       ro?.disconnect();
       try { map.remove(); } catch { /* ignore */ }
       mapRef.current = null;
       markerRef.current = null;
     };
   }, []);
+
+  // Fly the globe to a located farm and drop/settle the pin there.
+  React.useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !focus) return;
+    if (!markerRef.current) markerRef.current = new maplibregl.Marker({ color: '#4C7EFF' }).setLngLat([focus.lng, focus.lat]).addTo(map);
+    else markerRef.current.setLngLat([focus.lng, focus.lat]);
+    map.flyTo({ center: [focus.lng, focus.lat], zoom: focus.zoom, duration: 2600, essential: true });
+  }, [focus]);
 
   if (failed) {
     return (
@@ -246,7 +303,7 @@ function PinMap({ onPick, busy }: { onPick: (lat: number, lon: number) => void; 
     <div className="relative">
       <div
         ref={containerRef}
-        className="relative h-[220px] w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--bg)]"
+        className="relative h-[440px] w-full overflow-hidden rounded-[var(--radius-lg)] border border-[var(--border)] bg-[#05060a]"
         aria-label="Drop a pin to find your farm"
       />
       <div className="pointer-events-none absolute left-2.5 top-2.5 inline-flex items-center gap-1.5 rounded-[var(--radius-full)] bg-[color-mix(in_oklch,var(--bg)_70%,transparent)] px-2.5 py-1 text-[11px] font-medium text-[var(--fg)] backdrop-blur-sm">

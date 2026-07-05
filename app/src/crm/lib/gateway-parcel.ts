@@ -41,6 +41,11 @@ export interface Parcel {
   address?: string;
   /** Parcel area in hectares, if the gateway returned one. */
   areaHa?: number;
+  /** True when the boundary is a geocoder approximation (OSM fallback), not a
+   *  cadastral parcel — the UI should prompt the operator to fine-tune it. */
+  approximate?: boolean;
+  /** Where the boundary came from: the AlphaGeo gateway, or the OSM fallback. */
+  source?: 'gateway' | 'osm';
 }
 
 /** The raw gateway parcel envelope — field names are not final, so we accept the
@@ -68,7 +73,68 @@ function normalizeParcel(raw: RawParcel | null | undefined): Parcel | null {
   if (!boundary) return null;
   const address = typeof raw.address === 'string' && raw.address.trim() ? raw.address.trim() : undefined;
   const areaHa = num(raw.area_ha ?? raw.areaHa);
-  return { boundary, address, areaHa };
+  return { boundary, address, areaHa, source: 'gateway' };
+}
+
+// ---------------------------------------------------------------------------
+// OSM (Nominatim) fallback — used ONLY when the AlphaGeo gateway is unconfigured
+// so find-my-farm still locates the farm and drops an EDITABLE approximate
+// boundary the operator then refines. Cadastral parcels come from the gateway;
+// this is a best-effort geolocation, always flagged `approximate`.
+// ---------------------------------------------------------------------------
+
+const NOMINATIM = 'https://nominatim.openstreetmap.org';
+// A rectangle bigger than this (deg) is a place/city bbox, not a parcel — we
+// substitute a sensible starting field square instead of a huge box.
+const MAX_BBOX_DEG = 0.05;
+const DEFAULT_FIELD_DEG = 0.0035; // ~380 m half-extent → a plausible field to edit.
+
+function rectBoundary(w: number, s: number, e: number, n: number): GeoJSON.Polygon {
+  return { type: 'Polygon', coordinates: [[[w, s], [e, s], [e, n], [w, n], [w, s]]] };
+}
+
+/** Turn a Nominatim result into an approximate, editable Parcel. */
+function osmToParcel(r: {
+  geojson?: unknown; boundingbox?: string[]; lat?: string; lon?: string; display_name?: string;
+} | null): Parcel | null {
+  if (!r) return null;
+  const address = typeof r.display_name === 'string' ? r.display_name : undefined;
+  // 1) Real polygon geometry (named features) — best case.
+  const poly = extractPolygonal(r.geojson);
+  if (poly) return { boundary: poly, address, approximate: true, source: 'osm' };
+  // 2) A reasonably-sized bounding box → use it as the starting rectangle.
+  const lat = Number(r.lat), lon = Number(r.lon);
+  const bb = r.boundingbox?.map(Number);
+  if (bb && bb.length === 4 && bb.every(Number.isFinite)) {
+    const [s, n, w, e] = bb; // Nominatim order: [south, north, west, east]
+    if (Math.abs(n - s) <= MAX_BBOX_DEG && Math.abs(e - w) <= MAX_BBOX_DEG) {
+      return { boundary: rectBoundary(w, s, e, n), address, approximate: true, source: 'osm' };
+    }
+  }
+  // 3) Point only (or oversized bbox) → a default field square to refine.
+  if (Number.isFinite(lat) && Number.isFinite(lon)) {
+    const d = DEFAULT_FIELD_DEG;
+    return { boundary: rectBoundary(lon - d, lat - d, lon + d, lat + d), address, approximate: true, source: 'osm' };
+  }
+  return null;
+}
+
+async function osmSearch(q: string): Promise<Parcel | null> {
+  const qs = new URLSearchParams({ q, format: 'jsonv2', polygon_geojson: '1', limit: '1', addressdetails: '0' });
+  const res = await fetch(`${NOMINATIM}/search?${qs.toString()}`, { headers: { Accept: 'application/json' } });
+  if (!res.ok) return null;
+  const rows = (await res.json()) as unknown[];
+  return osmToParcel((Array.isArray(rows) ? rows[0] : null) as Parameters<typeof osmToParcel>[0]);
+}
+
+async function osmReverse(lat: number, lon: number): Promise<Parcel | null> {
+  const qs = new URLSearchParams({ lat: String(lat), lon: String(lon), format: 'jsonv2', polygon_geojson: '1' });
+  const res = await fetch(`${NOMINATIM}/reverse?${qs.toString()}`, { headers: { Accept: 'application/json' } });
+  if (!res.ok) return null;
+  const row = (await res.json()) as Parameters<typeof osmToParcel>[0];
+  // Reverse geocode returns the enclosing feature's polygon; if it's oversized,
+  // osmToParcel falls back to a field square centered on the requested pin.
+  return osmToParcel(row ?? { lat: String(lat), lon: String(lon) });
 }
 
 /**
@@ -81,13 +147,19 @@ export async function findParcelByPoint(
   lon: number,
 ): Promise<GatewayResult<{ parcel: Parcel | null }>> {
   const qs = new URLSearchParams({ lat: String(lat), lon: String(lon) });
+  // 1) Try the cadastral gateway. A usable parcel wins outright.
   try {
-    const raw = await apiGet<RawParcel>(`${PARCEL_PATH}?${qs.toString()}`);
-    return { configured: true, parcel: normalizeParcel(raw) };
+    const parcel = normalizeParcel(await apiGet<RawParcel>(`${PARCEL_PATH}?${qs.toString()}`));
+    if (parcel) return { configured: true, parcel };
   } catch (err) {
-    if (isUnconfigured(err)) return { configured: false };
-    throw err;
+    // Any gateway miss (unconfigured 503, not_found 404, error) falls through to
+    // the OSM fallback below — find-my-farm never hard-fails on the gateway.
+    if (!isUnconfigured(err)) console.warn('[find-my-farm] gateway parcel lookup failed, using OSM', err);
   }
+  // 2) OSM fallback → approximate, editable boundary. Only a network failure
+  //    (OSM unreachable) collapses to the honest not-connected note.
+  try { return { configured: true, parcel: await osmReverse(lat, lon) }; }
+  catch { return { configured: false }; }
 }
 
 /**
@@ -98,13 +170,16 @@ export async function findParcelByAddress(
   q: string,
 ): Promise<GatewayResult<{ parcel: Parcel | null }>> {
   const qs = new URLSearchParams({ q });
+  // 1) Try the cadastral gateway. A usable parcel wins outright.
   try {
-    const raw = await apiGet<RawParcel>(`${PARCEL_BY_ADDRESS_PATH}?${qs.toString()}`);
-    return { configured: true, parcel: normalizeParcel(raw) };
+    const parcel = normalizeParcel(await apiGet<RawParcel>(`${PARCEL_BY_ADDRESS_PATH}?${qs.toString()}`));
+    if (parcel) return { configured: true, parcel };
   } catch (err) {
-    if (isUnconfigured(err)) return { configured: false };
-    throw err;
+    if (!isUnconfigured(err)) console.warn('[find-my-farm] gateway address lookup failed, using OSM', err);
   }
+  // 2) OSM geocode fallback → approximate, editable boundary.
+  try { return { configured: true, parcel: await osmSearch(q) }; }
+  catch { return { configured: false }; }
 }
 
 /** Re-export ApiError so callers can narrow on it without a second import. */
