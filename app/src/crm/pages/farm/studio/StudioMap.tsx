@@ -15,12 +15,17 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {
   MousePointerClick, X, Boxes, ExternalLink, Trash2, MapPinned, Layers, ChevronDown, Sprout,
+  Satellite, Activity, Loader2,
 } from 'lucide-react';
 import { apiGet } from '@crm/lib/api';
 import {
   useTwins, CATALOG, CATEGORY_LABEL, makeTwinFromCatalog, twinsToGeoJSON,
   type TwinCategory, type CatalogItem, type Twin,
 } from '@crm/lib/twins-store';
+import {
+  fetchSignals, runScan, pollJob, bboxFromAoi,
+  type SignalFeature, type ScanSignal,
+} from '@crm/lib/gateway-signals';
 import { StudioHeader } from './studio-ui';
 
 interface FarmProperty {
@@ -46,6 +51,22 @@ const SATELLITE_STYLE: maplibregl.StyleSpecification = {
 const CATS: TwinCategory[] = ['structure', 'equipment', 'crop', 'livestock', 'water'];
 const EMPTY_FC: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: [] };
 
+// Real EO producers the operator can launch from the property surface. ndvi/evi
+// are deliberately omitted (the gateway records them as an honest no_producer).
+const SCAN_OPTIONS: { id: ScanSignal; label: string }[] = [
+  { id: 'sar', label: 'SAR' },
+  { id: 'moisture', label: 'Moisture' },
+  { id: 'thermal', label: 'Thermal' },
+];
+
+// Live-signals fetch lifecycle for the selected property's bbox.
+type SignalsState =
+  | { kind: 'idle' }
+  | { kind: 'loading' }
+  | { kind: 'unconfigured' }
+  | { kind: 'error'; message: string }
+  | { kind: 'ready'; features: SignalFeature[] };
+
 function aoiCenter(p: FarmProperty): [number, number] {
   if (p.aoi_west != null && p.aoi_east != null && p.aoi_south != null && p.aoi_north != null) {
     return [(p.aoi_west + p.aoi_east) / 2, (p.aoi_south + p.aoi_north) / 2];
@@ -68,6 +89,17 @@ export function StudioMap() {
   const [propertyId, setPropertyId] = React.useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const property = farms?.find((f) => f.id === propertyId) ?? null;
+
+  // Live gateway signals for the selected property's bbox.
+  const [signals, setSignals] = React.useState<SignalsState>({ kind: 'idle' });
+  const [refetchTick, setRefetchTick] = React.useState(0);
+  const [scanPick, setScanPick] = React.useState<Set<ScanSignal>>(() => new Set<ScanSignal>(['sar', 'moisture', 'thermal']));
+  const [scanBusy, setScanBusy] = React.useState(false);
+  const [scanMsg, setScanMsg] = React.useState<string | null>(null);
+  const bbox = React.useMemo(() => (property ? bboxFromAoi(property) : null), [property]);
+  const bboxKey = bbox ? bbox.join(',') : '';
+  const aliveRef = React.useRef(true);
+  React.useEffect(() => () => { aliveRef.current = false; }, []);
 
   // Twins belonging to the selected property (parcelId === propertyId).
   const propertyTwins = React.useMemo(
@@ -123,6 +155,10 @@ export function StudioMap() {
       map.addLayer({ id: 'twin-line', type: 'line', source: 'twin-line', paint: { 'line-color': ['get', 'color'], 'line-width': 3 } });
       map.addLayer({ id: 'twin-point', type: 'circle', source: 'twin-point', paint: { 'circle-radius': 7, 'circle-color': ['get', 'color'], 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
       map.addLayer({ id: 'twin-label', type: 'symbol', source: 'twin-point', layout: { 'text-field': ['get', 'name'], 'text-size': 11, 'text-offset': [0, 1.3], 'text-anchor': 'top' }, paint: { 'text-color': '#fff', 'text-halo-color': '#000', 'text-halo-width': 1.2 } });
+      // Live gateway signals overlay (drawn under twins so twins stay clickable).
+      map.addSource('signals', { type: 'geojson', data: EMPTY_FC });
+      map.addLayer({ id: 'signals-glow', type: 'circle', source: 'signals', paint: { 'circle-radius': 9, 'circle-color': '#2DD4BF', 'circle-opacity': 0.18, 'circle-blur': 0.6 } }, 'twin-poly-fill');
+      map.addLayer({ id: 'signals-dot', type: 'circle', source: 'signals', paint: { 'circle-radius': 4, 'circle-color': '#2DD4BF', 'circle-stroke-color': '#04201c', 'circle-stroke-width': 1 } }, 'twin-poly-fill');
       setReady(true);
       map.resize();
     });
@@ -163,6 +199,69 @@ export function StudioMap() {
     (map.getSource('twin-line') as maplibregl.GeoJSONSource | undefined)?.setData(fc.lines);
     (map.getSource('twin-point') as maplibregl.GeoJSONSource | undefined)?.setData(fc.points);
   }, [propertyTwins, ready]);
+
+  // Fetch live gateway signals for the property's bbox (re-runs after a scan).
+  React.useEffect(() => {
+    if (!bbox) { setSignals({ kind: 'idle' }); return; }
+    let live = true;
+    setSignals({ kind: 'loading' });
+    fetchSignals(bbox)
+      .then((r) => {
+        if (!live) return;
+        if (!r.configured) { setSignals({ kind: 'unconfigured' }); return; }
+        setSignals({ kind: 'ready', features: r.collection.features ?? [] });
+      })
+      .catch((e) => { if (live) setSignals({ kind: 'error', message: (e as Error)?.message ?? 'fetch_failed' }); });
+    return () => { live = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bboxKey, refetchTick]);
+
+  // Push signal features (those carrying geometry) onto the map overlay.
+  React.useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !ready) return;
+    const feats = signals.kind === 'ready' ? signals.features.filter((f) => f && f.geometry) : [];
+    const fc: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: feats as unknown as GeoJSON.Feature[] };
+    (map.getSource('signals') as maplibregl.GeoJSONSource | undefined)?.setData(fc);
+  }, [signals, ready]);
+
+  // Launch a real scan for the property bbox, then poll the job and refresh signals.
+  async function handleScan() {
+    if (!bbox || scanBusy) return;
+    const picked = SCAN_OPTIONS.map((o) => o.id).filter((id) => scanPick.has(id));
+    if (picked.length === 0) { setScanMsg('Pick at least one signal'); return; }
+    setScanBusy(true); setScanMsg('Queuing scan…');
+    try {
+      const r = await runScan(bbox, picked);
+      if (!aliveRef.current) return;
+      if (!r.configured) { setSignals({ kind: 'unconfigured' }); setScanMsg(null); return; }
+      const jobId = r.ack.jobId;
+      setScanMsg(`Scan ${r.ack.status ?? 'queued'} · ${jobId.slice(0, 16)}`);
+      // Poll-fallback (browser EventSource can't send the bearer header). Bounded.
+      let tries = 0;
+      const poll = async () => {
+        if (!aliveRef.current) return;
+        tries += 1;
+        try {
+          const jr = await pollJob(jobId);
+          if (aliveRef.current && jr.configured) {
+            const st = String(jr.job.status ?? 'running');
+            setScanMsg(`Scan ${st} · ${jobId.slice(0, 16)}`);
+            if (/complete|done|success|finished|error|failed/i.test(st)) { setRefetchTick((t) => t + 1); return; }
+          }
+        } catch { /* transient — keep polling */ }
+        if (tries < 6) setTimeout(poll, 5000);
+        else if (aliveRef.current) setRefetchTick((t) => t + 1);
+      };
+      setTimeout(poll, 4000);
+    } catch (e) {
+      if (aliveRef.current) setScanMsg((e as Error)?.message ?? 'Scan failed');
+    } finally {
+      if (aliveRef.current) setScanBusy(false);
+    }
+  }
+
+  const signalCount = signals.kind === 'ready' ? signals.features.length : 0;
 
   const sel = twins.find((t) => t.id === selected) ?? null;
   const items = CATALOG.filter((i) => i.category === cat);
@@ -242,8 +341,9 @@ export function StudioMap() {
           </p>
         </div>
 
-        {/* Placed-twin summary + selection panel */}
-        <div className="absolute right-4 top-4 w-64 rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[color-mix(in_oklch,var(--surface)_92%,transparent)] p-3 shadow-[var(--shadow-popover)] backdrop-blur-xl">
+        {/* Right-side column: twin summary/selection + live gateway signals */}
+        <div className="absolute right-4 top-4 flex max-h-[calc(100%-2rem)] w-64 flex-col gap-3 overflow-y-auto">
+        <div className="rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[color-mix(in_oklch,var(--surface)_92%,transparent)] p-3 shadow-[var(--shadow-popover)] backdrop-blur-xl">
           {sel ? (
             <div>
               <div className="flex items-start justify-between">
@@ -274,6 +374,78 @@ export function StudioMap() {
               )}
             </div>
           )}
+        </div>
+
+        {/* Live gateway signals + Run scan — driven by the property's bbox. */}
+        {property && (
+          <div className="rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[color-mix(in_oklch,var(--surface)_92%,transparent)] p-3 shadow-[var(--shadow-popover)] backdrop-blur-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-[11px] uppercase tracking-[var(--tracking-wide)] text-[var(--fg-muted)]">
+                <Satellite className="size-3.5 text-[var(--accent)]" /> Live signals
+              </div>
+              {signals.kind === 'loading' && <Loader2 className="size-3.5 animate-spin text-[var(--fg-subtle)]" />}
+              {signals.kind === 'ready' && (
+                <span className="inline-flex items-center gap-1 rounded-full border border-[color-mix(in_oklch,var(--risk-healthy)_45%,transparent)] bg-[color-mix(in_oklch,var(--risk-healthy-fill)_55%,transparent)] px-2 py-0.5 text-[10px] font-semibold tabular-nums text-[var(--risk-healthy)]">
+                  <Activity className="size-3" /> {signalCount}
+                </span>
+              )}
+            </div>
+
+            {!bbox ? (
+              <p className="mt-2 text-[11px] text-[var(--fg-subtle)]">This property has no bounding box yet — add one to pull live signals.</p>
+            ) : signals.kind === 'unconfigured' ? (
+              <p className="mt-2 text-[11px] leading-relaxed text-[var(--fg-subtle)]">Connect the AlphaGeo gateway to see live signals.</p>
+            ) : signals.kind === 'error' ? (
+              <p className="mt-2 text-[11px] text-[var(--risk-high)]">Couldn’t load signals — {signals.message}</p>
+            ) : signals.kind === 'ready' && signalCount === 0 ? (
+              <p className="mt-2 text-[11px] text-[var(--fg-subtle)]">No signals yet for this area. Run a scan to launch EO producers.</p>
+            ) : signals.kind === 'ready' ? (
+              <div className="mt-2 max-h-40 space-y-1 overflow-y-auto">
+                {signals.features.slice(0, 12).map((f, i) => {
+                  const p = f.properties ?? {};
+                  const val = typeof p.value === 'number' ? p.value.toFixed(2) : null;
+                  return (
+                    <div key={i} className="flex items-center justify-between gap-2 rounded-md border border-[var(--border)] bg-[var(--surface-sunken)] px-2 py-1.5 text-[11px]">
+                      <span className="flex-1 truncate text-[var(--fg)]">{p.measurement ?? p.name ?? 'signal'}</span>
+                      {val != null && <span className="tabular-nums text-[var(--fg-muted)]">{val}</span>}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+
+            {/* Run scan — only meaningful when the gateway is reachable + bbox exists. */}
+            {bbox && signals.kind !== 'unconfigured' && (
+              <div className="mt-3 border-t border-[var(--border)] pt-3">
+                <div className="mb-1.5 text-[10px] uppercase tracking-[var(--tracking-wide)] text-[var(--fg-subtle)]">Run scan</div>
+                <div className="mb-2 flex flex-wrap gap-1">
+                  {SCAN_OPTIONS.map((o) => {
+                    const on = scanPick.has(o.id);
+                    return (
+                      <button
+                        key={o.id}
+                        disabled={scanBusy}
+                        onClick={() => setScanPick((prev) => { const next = new Set(prev); if (next.has(o.id)) next.delete(o.id); else next.add(o.id); return next; })}
+                        className={`rounded-full border px-2 py-0.5 text-[10px] transition disabled:opacity-50 ${on ? 'border-[var(--accent)] bg-[color-mix(in_oklch,var(--accent)_16%,transparent)] text-[var(--fg)]' : 'border-[var(--border)] bg-[var(--surface-sunken)] text-[var(--fg-muted)] hover:border-[var(--accent)]'}`}
+                      >
+                        {o.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <button
+                  onClick={handleScan}
+                  disabled={scanBusy || scanPick.size === 0}
+                  className="inline-flex w-full items-center justify-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--accent)] px-3 py-2 text-xs font-semibold text-[var(--fg-on-accent)] transition hover:brightness-110 disabled:opacity-50"
+                >
+                  {scanBusy ? <Loader2 className="size-3.5 animate-spin" /> : <Satellite className="size-3.5" />}
+                  {scanBusy ? 'Scanning…' : 'Run scan'}
+                </button>
+                {scanMsg && <p className="mt-2 truncate text-[10px] text-[var(--fg-subtle)]" title={scanMsg}>{scanMsg}</p>}
+              </div>
+            )}
+          </div>
+        )}
         </div>
       </div>
     </div>

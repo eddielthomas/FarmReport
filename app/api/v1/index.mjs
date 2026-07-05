@@ -87,7 +87,7 @@ let leadsMod, notesMod, meetingsMod, messagesMod, filesMod, productsMod, opportu
     vendorContractsMod, vendorScopesMod, iamVendorsMod,
     fieldJobsMod, fieldLocationMod, fieldCheckinMod, fieldUploadsMod, fieldTasksMod,
     fieldNotesMod, fieldConversationMod, investigationsMod, reportsMod, orgRollupMod, orgDrilldownMod,
-    farmFarmsMod, farmObservationsMod, farmAlertsMod, farmPortfolioMod, farmReportsMod;
+    farmFarmsMod, farmObservationsMod, farmAlertsMod, farmPortfolioMod, farmReportsMod, farmGatewayMod;
 async function lazy(mod) {
   if (mod === 'leads')             return leadsMod             ??= await import('./sales/leads.mjs');
   if (mod === 'notes')             return notesMod             ??= await import('./sales/notes.mjs');
@@ -157,6 +157,8 @@ async function lazy(mod) {
   if (mod === 'farm-alerts')          return farmAlertsMod          ??= await import('./farm/alerts.mjs');
   if (mod === 'farm-portfolio')       return farmPortfolioMod       ??= await import('./farm/portfolio.mjs');
   if (mod === 'farm-reports')         return farmReportsMod         ??= await import('./farm/reports.mjs');
+  // AlphaGeo gateway relay — thin byte-forwarder to /api/farm/* (twins, signals, scan, jobs, SSE).
+  if (mod === 'farm-gateway')         return farmGatewayMod         ??= await import('./farm/gateway.mjs');
   return null;
 }
 
@@ -1433,6 +1435,34 @@ export async function handleV1(req, res) {
     // rollups, and report generation over the farm.* schema. Every handler is
     // tenant-scoped + permission-gated inside its module (farm/gate.mjs).
     if (path.startsWith('/farm/')) {
+      // --- /farm/gw/* — AlphaGeo gateway relay (twins, signals, scan, jobs, SSE) ---
+      if (path.startsWith('/farm/gw/')) {
+        const gw = await tryLoad('farm-gateway');
+        const mTwin = path.match(/^\/farm\/gw\/twins\/([^/]+)$/);
+        if (mTwin && method === 'GET') {
+          gw ? await gw.twins(req, res, decodeURIComponent(mTwin[1])) : notImpl(res, 'farm.gw.twins');
+          return true;
+        }
+        if (path === '/farm/gw/signals-by-bbox' && method === 'GET') {
+          gw ? await gw.signalsByBbox(req, res, url) : notImpl(res, 'farm.gw.signals');
+          return true;
+        }
+        if (path === '/farm/gw/scan' && method === 'POST') {
+          gw ? await gw.scan(req, res) : notImpl(res, 'farm.gw.scan');
+          return true;
+        }
+        const mEvents = path.match(/^\/farm\/gw\/jobs\/([^/]+)\/events$/);
+        if (mEvents && method === 'GET') {
+          gw ? await gw.jobEvents(req, res, decodeURIComponent(mEvents[1])) : notImpl(res, 'farm.gw.jobEvents');
+          return true;
+        }
+        const mJob = path.match(/^\/farm\/gw\/jobs\/([^/]+)$/);
+        if (mJob && method === 'GET') {
+          gw ? await gw.job(req, res, decodeURIComponent(mJob[1])) : notImpl(res, 'farm.gw.job');
+          return true;
+        }
+      }
+
       // /farm/farms  and  /farm/farms/:id (+ /parcels, /zones)
       const farms = await tryLoad('farm-farms');
       if (path === '/farm/farms') {
