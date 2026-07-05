@@ -21,7 +21,9 @@ export type TwinGeom =
   | { type: 'point'; lng: number; lat: number; rotation: number; scale: number }
   | { type: 'rect'; center: [number, number]; widthM: number; heightM: number; rotation: number }
   | { type: 'circle'; center: [number, number]; radiusM: number }
-  | { type: 'polyline'; points: [number, number][] };
+  | { type: 'polyline'; points: [number, number][] }
+  // An operator-drawn, accurate parcel/field boundary (ring of [lng,lat]).
+  | { type: 'polygon'; ring: [number, number][] };
 
 export type MaintenanceEntry = { id: string; date: string; type: string; notes: string };
 export type TwinDoc = { id: string; name: string; url?: string; note?: string };
@@ -277,15 +279,33 @@ export function healthScore(twin: Twin): number {
 export function geomCenter(g: TwinGeom): [number, number] {
   if (g.type === 'point') return [g.lng, g.lat];
   if (g.type === 'rect' || g.type === 'circle') return g.center;
-  const pts = g.points;
+  const pts = g.type === 'polygon' ? g.ring : g.points;
   let x = 0, y = 0;
   for (const p of pts) { x += p[0]; y += p[1]; }
   return [x / pts.length, y / pts.length];
 }
 
+// Planar shoelace area (equirectangular meters about the ring centroid) → m².
+function ringAreaM2(ring: [number, number][]): number {
+  if (ring.length < 3) return 0;
+  let cy = 0;
+  for (const [, y] of ring) cy += y;
+  cy /= ring.length;
+  const mPerDegLat = 111320;
+  const mPerDegLng = 111320 * Math.cos((cy * Math.PI) / 180);
+  let a = 0;
+  for (let i = 0; i < ring.length; i++) {
+    const [x1, y1] = ring[i];
+    const [x2, y2] = ring[(i + 1) % ring.length];
+    a += (x1 * mPerDegLng) * (y2 * mPerDegLat) - (x2 * mPerDegLng) * (y1 * mPerDegLat);
+  }
+  return Math.abs(a) / 2;
+}
+
 export function geomAreaAcres(g: TwinGeom): number | null {
   if (g.type === 'circle') return (Math.PI * g.radiusM * g.radiusM) / 4046.86;
   if (g.type === 'rect') return (g.widthM * g.heightM) / 4046.86;
+  if (g.type === 'polygon') return ringAreaM2(g.ring) / 4046.86;
   return null;
 }
 
@@ -339,6 +359,11 @@ export function twinsToGeoJSON(twins: Twin[]) {
     } else if (t.geom.type === 'rect') {
       polygons.push({ type: 'Feature', id: t.id, properties: props, geometry: { type: 'Polygon', coordinates: [rectPolygon(t.geom.center, t.geom.widthM, t.geom.heightM, t.geom.rotation)] } });
       points.push({ type: 'Feature', id: `${t.id}__c`, properties: props, geometry: { type: 'Point', coordinates: t.geom.center } });
+    } else if (t.geom.type === 'polygon') {
+      const ring = t.geom.ring.length && (t.geom.ring[0][0] !== t.geom.ring[t.geom.ring.length - 1][0] || t.geom.ring[0][1] !== t.geom.ring[t.geom.ring.length - 1][1])
+        ? [...t.geom.ring, t.geom.ring[0]] : t.geom.ring;
+      polygons.push({ type: 'Feature', id: t.id, properties: props, geometry: { type: 'Polygon', coordinates: [ring] } });
+      points.push({ type: 'Feature', id: `${t.id}__c`, properties: props, geometry: { type: 'Point', coordinates: geomCenter(t.geom) } });
     } else {
       lines.push({ type: 'Feature', id: t.id, properties: props, geometry: { type: 'LineString', coordinates: t.geom.points } });
       if (t.geom.points.length) points.push({ type: 'Feature', id: `${t.id}__c`, properties: props, geometry: { type: 'Point', coordinates: t.geom.points[0] } });
