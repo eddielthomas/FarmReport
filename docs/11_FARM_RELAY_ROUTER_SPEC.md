@@ -1,8 +1,10 @@
 # 11 — `/api/farm/*` Gateway Relay Router: SPEC + DRAFT SKELETON
 
-> **Author:** Gateway agent. **Status:** DRAFT — router skeleton written, **not deployed**. Grounded in doc 10 (empirical survey) + the real `harvest_routes.py` idiom it clones.
-> **Skeleton code:** `D:\Projects\AlphaGeoCore\infra\hetzner\farm\gateway\farm_routes.py` (+ mount patch `patch_gateway_farm.py`). Both `py_compile`-clean.
+> **Author:** Gateway agent. **Status:** ✅ **DEPLOYED + VERIFIED** on the live gateway (`alphageo-api-gateway`, image committed). Additive + backward-compatible (all pre-existing surfaces intact). Grounded in doc 10 (empirical survey) + the real `harvest_routes.py` idiom it clones.
+> **Code:** `D:\Projects\AlphaGeoCore\infra\hetzner\farm\gateway\farm_routes.py` (+ mount patch `patch_gateway_farm.py`). `py_compile`-clean; live at `/app/alphageocore/dashboard/farm_routes.py`.
 > **Premise (from doc 10):** the gateway holds **no twin state**. This router only **composes + relays** the gateway's stateless primitives; twin state/config/scheduling/sim/provenance stay in `farm.*` (doc 08 D1).
+>
+> **Verified live (Puerto Plata AOI `c05f7b1f…`):** auth 401 without token; `POST /api/farm/scan {signals:[sar,ndvi]}` → 202 fast; background EO producer launched a **real** `SAR_MONITOR` orbiter + run (`sar`→`launched`, `ndvi`→honest `no_producer`); `signals-by-bbox` → normalized FC (`measurement/value/acquiredAt`, `sceneId=null`); `twins/{aoi}` → composed twin (AOI + orbiters incl. the new SAR monitor + 10 rasters + 500 signals). Backward-compat regression: elements/crystal/orbiters/reasoning/geoagent/super-res all still 200/202.
 
 ---
 
@@ -22,7 +24,7 @@ A gateway-side, **additive, import-guarded** router — a sibling of `/api/harve
 
 | Method + path | Purpose | Real today? | Composes |
 |---|---|---|---|
-| `POST /api/farm/scan` | Enqueue a twin scan for an AOI/bbox → `202 {jobId,…}` | **GIS baseline REAL**; EO signals = marked extension | `run_harvest` RQ path (doc 10 Q2) |
+| `POST /api/farm/scan` | Enqueue a twin scan for an AOI/bbox → `202 {jobId,…}` | **REAL** (GIS baseline + real EO orbiter producers for sar/moisture/thermal/superres; ndvi honest no_producer) | `run_harvest` RQ + `/api/orbiters` launch (doc 10 Q2/Q5) |
 | `GET /api/farm/jobs/{jobId}/events` | SSE live progress `farm.progress\|farm.complete\|farm.error` | **REAL** (wraps `agc:gis-cache:{jobId}` pub/sub) | harvest SSE clone (doc 10 Q3) |
 | `GET /api/farm/jobs/{jobId}` | Poll-style status snapshot | **REAL** | redis job state |
 | `GET /api/farm/signals-by-bbox` | Indicator instances → **normalized** farm GeoJSON FC | **REAL** (empty until producers run) | `/api/indicators/instances` + mapping layer (doc 10 Q4) |
@@ -97,10 +99,15 @@ Gateway instances are camelCase and **differ from doc 02 §3.3**. The skeleton's
 
 ---
 
-## 4. What is REAL vs STUBBED in the skeleton
+## 4. What is REAL vs STUBBED (deployed)
 
-- **REAL now:** bbox resolution from `app_meta.aoi`; GIS scan enqueue (`run_harvest`) + its SSE stream; job status; `signals-by-bbox` federation + normalizer; twin composition (AOI+orbiter+raster+signals). All read/compose paths hit live gateway data.
-- **STUBBED / marked TODO (honest):** the **EO/agronomic indicator producers** for `signals=[ndvi,moisture,thermal,sar]`. Today `POST /api/farm/scan` does the GIS baseline and records requested signals; wiring each signal to a real orbiter-run / indicator producer is the one code block marked `# EXTENSION POINT`. Until wired, `signals-by-bbox` returns only whatever instances real producers have written (leak/mineral/detection today) — **never fabricated** NDVI/EVI.
+- **REAL now:** bbox resolution from `app_meta.aoi`; GIS scan enqueue (`run_harvest`) + its SSE stream; job status; `signals-by-bbox` federation + normalizer; twin composition (AOI+orbiter+raster+signals). **EO producers ARE wired** — recognized `signals` launch a real per-AOI orbiter run via the existing `/api/orbiters` create+launch endpoints, mapped:
+  - `sar`/`coherence`/`radar` → `SAR_MONITOR` (`sar_coherence`)
+  - `moisture`/`soil_moisture`/`water_stress` → `MOISTURE_SCAN` (`tau_omega`)
+  - `thermal`/`heat` → `THERMAL_SCAN` (`thermal_anomaly`)
+  - `superres`/`enhance`/`imagery` → `SUPER_RES` (Real-ESRGAN)
+  Producers run as a `BackgroundTasks` step (the 202 never blocks); a per-AOI orbiter is created-or-reused by name `farm-{aoi8}-{sensor_mode}` (fast DB lookup) and launched ON_DEMAND. Results land on `GET /api/farm/jobs/{jobId}.producers`.
+- **HONEST GAP (not stubbed — genuinely absent):** `ndvi`/`evi`/`vegetation` have **no orbiter producer today** → recorded as `no_producer` (never fabricated). Add an NDVI producer (an S2 analyzer that writes indicator instances) to close it. Signals only appear in `signals-by-bbox` once a real producer has written instances (leak/mineral/detection + whatever the launched orbiters emit).
 
 ---
 
