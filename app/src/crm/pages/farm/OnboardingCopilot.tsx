@@ -25,6 +25,7 @@ import { useHasRole } from '@crm/lib/auth-store';
 import { Button } from '@crm/components/ui/button';
 import { Input, Label } from '@crm/components/ui/input';
 import { BoundaryImport, geometryAreaHa } from '@crm/components/farm/BoundaryImport';
+import { FindMyFarm } from '@crm/components/farm/FindMyFarm';
 import {
   ZoneIntentEditor, newZoneDraft, ZONE_TYPES,
   type ZoneDraft,
@@ -410,9 +411,10 @@ export function OnboardingCopilot() {
               <Panel>
                 <SectionHead icon={<MapPinned className="size-4" />} title="Farm boundary" />
                 <p className="mb-4 text-[13px] text-[var(--fg-muted)]">
-                  Import a boundary file, paste GeoJSON, or preview the parsed shape on the satellite canvas.
-                  Freehand drawing arrives in a later release — import + paste is the functional path today.
+                  Find your farm by address or pin, or import a boundary file / paste GeoJSON. The parsed
+                  shape previews on the satellite canvas — refine it there before you continue.
                 </p>
+                <FindMyFarm className="mb-4" onParcel={(b) => { setBoundary(b); setBoundaryError(null); }} />
                 <BoundaryImport value={boundary} onGeometry={setBoundary} height={340} error={boundaryError} />
               </Panel>
             )}

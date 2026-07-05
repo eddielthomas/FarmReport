@@ -40,6 +40,13 @@ const HARVEST_TOKEN  = process.env.ALPHAGEO_HARVEST_TOKEN ?? '';
 const GATEWAY_ORIGIN = (process.env.ALPHAGEO_GATEWAY_ORIGIN
   ?? HARVEST_BASE.replace(/\/api\/harvest\/?$/, '')).replace(/\/+$/, '');
 
+// --- FIND-MY-FARM parcel lookup — gateway HTTP paths NOT yet finalized by the
+// gateway agent. Change ONLY these two lines when the gateway surface is named.
+// TODO(gateway-agent): finalize these sub-paths; the app relay paths
+// /api/v1/farm/gw/parcel and /api/v1/farm/gw/parcel-by-address are fixed.
+const GW_PARCEL      = '/api/farm/parcel';            // ?lat=&lon=
+const GW_PARCEL_ADDR = '/api/farm/parcel-by-address'; // ?q=
+
 // True only when we can actually reach the gateway (origin + bearer token).
 function configured() { return Boolean(GATEWAY_ORIGIN && HARVEST_TOKEN); }
 function unconfigured(res) {
@@ -119,6 +126,21 @@ export async function twins(req, res, aoiId) {
 export async function signalsByBbox(req, res, url) {
   const qs = url?.search ?? (req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '');
   return jsonRelay(req, res, `/api/farm/signals-by-bbox${qs}`, 'farm_signals');
+}
+
+// --- GET /farm/gw/parcel?lat=<>&lon=<> -------------------------------------
+// FIND-MY-FARM: resolve an editable parcel boundary (becomes the twin geometry).
+// Forward the lat/lon query string verbatim; the gateway owns geocode + parcel.
+export async function parcel(req, res, url) {
+  const qs = url?.search ?? (req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '');
+  return jsonRelay(req, res, `${GW_PARCEL}${qs}`, 'farm_parcel');
+}
+
+// --- GET /farm/gw/parcel-by-address?q=<address> ----------------------------
+// FIND-MY-FARM: resolve the same parcel shape from a typed address (forward geocode).
+export async function parcelByAddress(req, res, url) {
+  const qs = url?.search ?? (req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '');
+  return jsonRelay(req, res, `${GW_PARCEL_ADDR}${qs}`, 'farm_parcel_by_address');
 }
 
 // --- POST /farm/gw/scan -----------------------------------------------------

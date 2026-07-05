@@ -1447,6 +1447,14 @@ export async function handleV1(req, res) {
           gw ? await gw.signalsByBbox(req, res, url) : notImpl(res, 'farm.gw.signals');
           return true;
         }
+        if (path === '/farm/gw/parcel' && method === 'GET') {
+          gw ? await gw.parcel(req, res, url) : notImpl(res, 'farm.gw.parcel');
+          return true;
+        }
+        if (path === '/farm/gw/parcel-by-address' && method === 'GET') {
+          gw ? await gw.parcelByAddress(req, res, url) : notImpl(res, 'farm.gw.parcelByAddress');
+          return true;
+        }
         if (path === '/farm/gw/scan' && method === 'POST') {
           gw ? await gw.scan(req, res) : notImpl(res, 'farm.gw.scan');
           return true;
