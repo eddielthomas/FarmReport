@@ -40,12 +40,14 @@ const HARVEST_TOKEN  = process.env.ALPHAGEO_HARVEST_TOKEN ?? '';
 const GATEWAY_ORIGIN = (process.env.ALPHAGEO_GATEWAY_ORIGIN
   ?? HARVEST_BASE.replace(/\/api\/harvest\/?$/, '')).replace(/\/+$/, '');
 
-// --- FIND-MY-FARM parcel lookup — gateway HTTP paths NOT yet finalized by the
-// gateway agent. Change ONLY these two lines when the gateway surface is named.
-// TODO(gateway-agent): finalize these sub-paths; the app relay paths
-// /api/v1/farm/gw/parcel and /api/v1/farm/gw/parcel-by-address are fixed.
-const GW_PARCEL      = '/api/farm/parcel';            // ?lat=&lon=
-const GW_PARCEL_ADDR = '/api/farm/parcel-by-address'; // ?q=
+// --- FIND-MY-FARM parcel lookup — CONFIRMED gateway surface (GATEWAY_TO_
+// REPORTFARM_RESPONSE.md §B1). Parcel is NOT farm-namespaced: it lives in the
+// gis_parcel router as POST /api/gis/parcel {point:{lat,lon} | address}. The app
+// relay paths (/api/v1/farm/gw/parcel?lat&lon, /parcel-by-address?q) stay fixed —
+// this module POSTs the JSON body the gateway expects. No cadastral table is
+// loaded yet → the gateway returns source=osm_landuse (T3) or honest nocoverage;
+// the client prefers the gateway boundary only when source==cadastral.
+const GW_PARCEL = '/api/gis/parcel'; // POST {point:{lat,lon}} | {address}
 
 // True only when we can actually reach the gateway (origin + bearer token).
 function configured() { return Boolean(GATEWAY_ORIGIN && HARVEST_TOKEN); }
@@ -128,19 +130,39 @@ export async function signalsByBbox(req, res, url) {
   return jsonRelay(req, res, `/api/farm/signals-by-bbox${qs}`, 'farm_signals');
 }
 
+// Shared POST → /api/gis/parcel with a JSON body (point or address). The gateway
+// returns {ok, parcel:Feature|null, twinSeed, source, tier, area_ha, ...}; the
+// client normalizes it. 400 on a bad request; 502 on an unreachable gateway.
+async function parcelPost(req, res, body, label) {
+  if (!farmGate(req, res, 'farm.profile.read', 'farm:view')) return;
+  if (!configured()) return unconfigured(res);
+  let upstream;
+  try {
+    upstream = await gatewayFetch(GW_PARCEL, { method: 'POST', body: JSON.stringify(body) });
+  } catch (err) {
+    return send(res, 502, { success: false, error: `${label}_gateway_unreachable`, detail: String(err?.message ?? err) });
+  }
+  return relay(res, upstream, label);
+}
+
 // --- GET /farm/gw/parcel?lat=<>&lon=<> -------------------------------------
-// FIND-MY-FARM: resolve an editable parcel boundary (becomes the twin geometry).
-// Forward the lat/lon query string verbatim; the gateway owns geocode + parcel.
+// FIND-MY-FARM (drop-a-pin): resolve an editable parcel boundary from a point.
+// POST {point:{lat,lon}} to the gateway's gis_parcel router.
 export async function parcel(req, res, url) {
-  const qs = url?.search ?? (req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '');
-  return jsonRelay(req, res, `${GW_PARCEL}${qs}`, 'farm_parcel');
+  const sp = url?.searchParams;
+  const lat = Number(sp?.get('lat')); const lon = Number(sp?.get('lon'));
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
+    return send(res, 400, { success: false, error: 'farm_parcel_bad_latlon' });
+  }
+  return parcelPost(req, res, { point: { lat, lon }, include_context: false }, 'farm_parcel');
 }
 
 // --- GET /farm/gw/parcel-by-address?q=<address> ----------------------------
-// FIND-MY-FARM: resolve the same parcel shape from a typed address (forward geocode).
+// FIND-MY-FARM (typed address): same gis_parcel endpoint, POST {address}.
 export async function parcelByAddress(req, res, url) {
-  const qs = url?.search ?? (req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '');
-  return jsonRelay(req, res, `${GW_PARCEL_ADDR}${qs}`, 'farm_parcel_by_address');
+  const q = (url?.searchParams?.get('q') ?? '').trim();
+  if (!q) return send(res, 400, { success: false, error: 'farm_parcel_missing_q' });
+  return parcelPost(req, res, { address: q, include_context: false }, 'farm_parcel_by_address');
 }
 
 // --- POST /farm/gw/scan -----------------------------------------------------

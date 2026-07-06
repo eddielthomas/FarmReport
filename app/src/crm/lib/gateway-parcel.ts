@@ -48,13 +48,21 @@ export interface Parcel {
   source?: 'gateway' | 'osm';
 }
 
-/** The raw gateway parcel envelope — field names are not final, so we accept the
- *  known aliases (boundary|geometry, area_ha|areaHa) and normalize below. */
+/** The gateway's gis_parcel envelope (GATEWAY_TO_REPORTFARM_RESPONSE.md §B1).
+ *  A parcel Feature + a twinSeed when found; honest nulls under `nocoverage`.
+ *  We also accept a couple of legacy aliases so an older gateway still parses. */
 interface RawParcel {
+  ok?: boolean;
+  source?: string | null;            // 'cadastral' (T2) | 'osm_landuse' (T3) | 'nocoverage'
+  tier?: string | null;
+  area_ha?: number | string | null;
+  parcel?: { geometry?: unknown; properties?: { area_ha?: number | string | null } } | null;
+  twinSeed?: { geom?: unknown; config?: { address?: string | null; area_ha?: number | string | null } } | null;
+  addressAtPoint?: { address?: string | null } | null;
+  // legacy aliases (pre-gis_parcel gateway)
   boundary?: unknown;
   geometry?: unknown;
   address?: string | null;
-  area_ha?: number | string | null;
   areaHa?: number | string | null;
   [k: string]: unknown;
 }
@@ -65,15 +73,25 @@ function num(v: unknown): number | undefined {
   return Number.isFinite(n) ? n : undefined;
 }
 
-/** Reduce a raw gateway parcel to a normalized Parcel, or null if it carries no
- *  usable polygon geometry (so the caller can fall back to manual entry). */
+function str(v: unknown): string | undefined {
+  return typeof v === 'string' && v.trim() ? v.trim() : undefined;
+}
+
+/** Reduce a raw gis/parcel response to a normalized Parcel, or null when it
+ *  carries no usable polygon (source=nocoverage) so the caller falls back to OSM.
+ *  Per the gateway's tier discipline: only a `cadastral` boundary is authoritative;
+ *  `osm_landuse` is a T3 suggestion → flagged approximate for the user to refine. */
 function normalizeParcel(raw: RawParcel | null | undefined): Parcel | null {
   if (!raw || typeof raw !== 'object') return null;
-  const boundary = extractPolygonal(raw.boundary ?? raw.geometry);
-  if (!boundary) return null;
-  const address = typeof raw.address === 'string' && raw.address.trim() ? raw.address.trim() : undefined;
-  const areaHa = num(raw.area_ha ?? raw.areaHa);
-  return { boundary, address, areaHa, source: 'gateway' };
+  const boundary = extractPolygonal(
+    raw.parcel?.geometry ?? raw.twinSeed?.geom ?? raw.boundary ?? raw.geometry,
+  );
+  if (!boundary) return null; // nocoverage / no polygon → caller uses OSM fallback
+  const gwSource = str(raw.source);
+  const address = str(raw.addressAtPoint?.address) ?? str(raw.twinSeed?.config?.address) ?? str(raw.address);
+  const areaHa = num(raw.area_ha ?? raw.parcel?.properties?.area_ha ?? raw.twinSeed?.config?.area_ha ?? raw.areaHa);
+  const approximate = gwSource !== 'cadastral'; // cadastral T2 = exact; else T3 suggestion
+  return { boundary, address, areaHa, approximate, source: 'gateway' };
 }
 
 // ---------------------------------------------------------------------------
