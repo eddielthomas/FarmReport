@@ -111,62 +111,6 @@ function shade(hex: string, amt: number): string {
   return `rgb(${r},${g},${b})`;
 }
 
-// Photoreal strata side material (ported from the concept prototype): a base
-// albedo texture + an onBeforeCompile shader that shifts UVs per face for
-// variation, derives a normal map from the base luminance (Sobel-lite), and
-// adds depth-based ambient occlusion + a wet-rock sheen toward the lower half —
-// no bake step. Works with a raw THREE.MeshStandardMaterial.
-function makeStrataMaterial(base: THREE.Texture, uOffset: number, uFlip = false) {
-  // The soil texture SELF-ILLUMINATES via emissiveMap so the horizons always read
-  // — grazing light on a vertical wall + ACES tone-mapping would otherwise crush
-  // the earth layers to black against the dark panel.
-  const mat = new THREE.MeshStandardMaterial({
-    map: base, roughness: 0.92, metalness: 0.02, bumpScale: 0.08,
-    emissive: new THREE.Color(0xffffff), emissiveMap: base, emissiveIntensity: 0.9,
-  });
-  mat.onBeforeCompile = (shader: { uniforms: Record<string, { value: number }>; vertexShader: string; fragmentShader: string }) => {
-    shader.uniforms.uOffset = { value: uOffset };
-    shader.uniforms.uFlip = { value: uFlip ? 1 : 0 };
-    shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\n varying vec3 vWorldPos;')
-      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\n vWorldPos = worldPosition.xyz;');
-    shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', '#include <common>\n uniform float uOffset;\n uniform float uFlip;\n varying vec3 vWorldPos;')
-      .replace('#include <map_fragment>', `
-        vec2 uv = vMapUv;
-        uv.x = uFlip > 0.5 ? 1.0 - uv.x : uv.x;
-        uv.x = fract(uv.x + uOffset);
-        vec4 sampledDiffuseColor = texture2D( map, uv );
-        vec3 c = sampledDiffuseColor.rgb;
-        float lum = dot(c, vec3(0.299, 0.587, 0.114));
-        c = mix(vec3(lum), c, 1.12);
-        c = (c - 0.5) * 1.08 + 0.5;
-        sampledDiffuseColor.rgb = c;
-        diffuseColor *= sampledDiffuseColor;
-      `)
-      .replace('#include <normal_fragment_maps>', `
-        vec2 nUv = vMapUv;
-        nUv.x = uFlip > 0.5 ? 1.0 - nUv.x : nUv.x;
-        nUv.x = fract(nUv.x + uOffset);
-        float e = 1.0 / 1024.0;
-        float lR = dot(texture2D(map, nUv + vec2( e, 0.0)).rgb, vec3(0.333));
-        float lL = dot(texture2D(map, nUv + vec2(-e, 0.0)).rgb, vec3(0.333));
-        float lU = dot(texture2D(map, nUv + vec2(0.0,  e)).rgb, vec3(0.333));
-        float lD = dot(texture2D(map, nUv + vec2(0.0, -e)).rgb, vec3(0.333));
-        vec3 bump = normalize(vec3((lL - lR) * 6.0, (lD - lU) * 6.0, 1.0));
-        normal = normalize(normal + bump * 0.35 - vec3(0.0, 0.0, 0.35));
-      `)
-      .replace('#include <dithering_fragment>', `#include <dithering_fragment>
-        float depthT = clamp((0.625 - vWorldPos.y) / 1.25, 0.0, 1.0);
-        gl_FragColor.rgb *= mix(1.0, 0.82, depthT);   // gentle depth shade (was 0.55 = too dark)
-        gl_FragColor.rgb += vec3(0.30, 0.20, 0.10) * (1.0 - depthT) * 0.12; // warm topsoil lift
-        float sheen = smoothstep(0.35, 0.55, depthT) * (1.0 - smoothstep(0.55, 0.75, depthT));
-        gl_FragColor.rgb += vec3(0.15, 0.22, 0.28) * sheen * 0.18;
-      `);
-  };
-  return mat;
-}
-
 export function ParcelCutaway({ twin, height = 260 }: { twin: Twin; height?: number }) {
   const mountRef = React.useRef<HTMLDivElement>(null);
   const [failed, setFailed] = React.useState(false);
@@ -191,7 +135,7 @@ export function ParcelCutaway({ twin, height = 260 }: { twin: Twin; height?: num
     renderer.setSize(w, h);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.toneMappingExposure = 1.05;
     el.appendChild(renderer.domElement);
     renderer.domElement.addEventListener('webglcontextlost', (ev: Event) => { ev.preventDefault(); setFailed(true); });
 
@@ -200,9 +144,12 @@ export function ParcelCutaway({ twin, height = 260 }: { twin: Twin; height?: num
 
     // 3/4 "block-diagram" view: high enough to see the satellite top, low enough
     // that the two near soil walls read as a tall geological slice.
-    const camera = new THREE.PerspectiveCamera(38, w / h, 0.1, 100);
-    camera.position.set(2.8, 1.85, 3.6);
-    camera.lookAt(0, -0.08, 0);
+    // 3/4 view — elevated enough that the rotating block always shows the top +
+    // two soil walls (never a thin edge-on sliver), low enough that the earth
+    // layers on those walls stay prominent.
+    const camera = new THREE.PerspectiveCamera(40, w / h, 0.1, 100);
+    camera.position.set(2.5, 1.75, 3.4);
+    camera.lookAt(0, -0.02, 0);
 
     // Brighter ambient + a key light aimed more HORIZONTALLY so the vertical soil
     // walls (not just the flat top) are lit, plus a camera-side fill so the faces
@@ -216,11 +163,14 @@ export function ParcelCutaway({ twin, height = 260 }: { twin: Twin; height?: num
     // Procedural strata shows instantly; the photoreal texture swaps in on load.
     const strata = buildStrataTexture();
     strata.wrapS = THREE.RepeatWrapping; strata.wrapT = THREE.ClampToEdgeWrapping;
-    // Distinct U offset + flip per side so no two faces of the cutaway match.
-    const px = makeStrataMaterial(strata, 0.0, false);
-    const nx = makeStrataMaterial(strata, 0.33, true);
-    const pz = makeStrataMaterial(strata, 0.66, false);
-    const nz = makeStrataMaterial(strata, 0.15, true);
+    // Self-illuminated soil sides (emissiveMap = the strata image) so the earth
+    // layers ALWAYS read — a lit-only vertical wall gets only grazing light and,
+    // with ACES tone-mapping, crushes to black. Plain material, no custom shader.
+    const makeSide = () => new THREE.MeshStandardMaterial({
+      map: strata, emissive: new THREE.Color(0xe6dccb), emissiveMap: strata,
+      emissiveIntensity: 0.55, roughness: 0.9, metalness: 0.0,
+    });
+    const px = makeSide(), nx = makeSide(), pz = makeSide(), nz = makeSide();
     const sideMats = [px, nx, pz, nz];
     const topMat = new THREE.MeshStandardMaterial({ color: 0x2a3a1e, roughness: 0.75, metalness: 0.0 });
     const bottomMat = new THREE.MeshStandardMaterial({ color: 0x080706, roughness: 1 });
@@ -236,7 +186,7 @@ export function ParcelCutaway({ twin, height = 260 }: { twin: Twin; height?: num
       sideMats.forEach((m) => { m.map = t; m.emissiveMap = t; m.needsUpdate = true; });
     }, undefined, () => { /* keep procedural fallback on error */ });
 
-    const W = 2.2, H = 1.25; // a soil SLICE — wider than tall, so it reads as a core sample
+    const W = 2.2, H = 0.9; // a shallow soil SLICE — wider than tall, a thin core sample
     const group = new THREE.Group();
     const cube = new THREE.Mesh(new THREE.BoxGeometry(W, H, W), materials);
     group.add(cube);
