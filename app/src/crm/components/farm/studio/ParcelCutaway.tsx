@@ -117,7 +117,13 @@ function shade(hex: string, amt: number): string {
 // adds depth-based ambient occlusion + a wet-rock sheen toward the lower half —
 // no bake step. Works with a raw THREE.MeshStandardMaterial.
 function makeStrataMaterial(base: THREE.Texture, uOffset: number, uFlip = false) {
-  const mat = new THREE.MeshStandardMaterial({ map: base, roughness: 0.92, metalness: 0.02, bumpScale: 0.08 });
+  // The soil texture SELF-ILLUMINATES via emissiveMap so the horizons always read
+  // — grazing light on a vertical wall + ACES tone-mapping would otherwise crush
+  // the earth layers to black against the dark panel.
+  const mat = new THREE.MeshStandardMaterial({
+    map: base, roughness: 0.92, metalness: 0.02, bumpScale: 0.08,
+    emissive: new THREE.Color(0xffffff), emissiveMap: base, emissiveIntensity: 0.9,
+  });
   mat.onBeforeCompile = (shader: { uniforms: Record<string, { value: number }>; vertexShader: string; fragmentShader: string }) => {
     shader.uniforms.uOffset = { value: uOffset };
     shader.uniforms.uFlip = { value: uFlip ? 1 : 0 };
@@ -151,11 +157,11 @@ function makeStrataMaterial(base: THREE.Texture, uOffset: number, uFlip = false)
         normal = normalize(normal + bump * 0.35 - vec3(0.0, 0.0, 0.35));
       `)
       .replace('#include <dithering_fragment>', `#include <dithering_fragment>
-        float depthT = clamp((0.8 - vWorldPos.y) / 1.6, 0.0, 1.0);
-        gl_FragColor.rgb *= mix(1.0, 0.55, depthT);
+        float depthT = clamp((0.625 - vWorldPos.y) / 1.25, 0.0, 1.0);
+        gl_FragColor.rgb *= mix(1.0, 0.82, depthT);   // gentle depth shade (was 0.55 = too dark)
+        gl_FragColor.rgb += vec3(0.30, 0.20, 0.10) * (1.0 - depthT) * 0.12; // warm topsoil lift
         float sheen = smoothstep(0.35, 0.55, depthT) * (1.0 - smoothstep(0.55, 0.75, depthT));
         gl_FragColor.rgb += vec3(0.15, 0.22, 0.28) * sheen * 0.18;
-        gl_FragColor.rgb += vec3(0.35, 0.22, 0.10) * (1.0 - depthT) * 0.06;
       `);
   };
   return mat;
@@ -185,20 +191,26 @@ export function ParcelCutaway({ twin, height = 260 }: { twin: Twin; height?: num
     renderer.setSize(w, h);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.05;
+    renderer.toneMappingExposure = 1.2;
     el.appendChild(renderer.domElement);
     renderer.domElement.addEventListener('webglcontextlost', (ev: Event) => { ev.preventDefault(); setFailed(true); });
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.Fog(0x050403, 6, 15);
+    scene.fog = new THREE.Fog(0x0a0806, 9, 20);
 
-    const camera = new THREE.PerspectiveCamera(36, w / h, 0.1, 100);
-    camera.position.set(2.8, 2.1, 3.2);
-    camera.lookAt(0, -0.05, 0);
+    // 3/4 "block-diagram" view: high enough to see the satellite top, low enough
+    // that the two near soil walls read as a tall geological slice.
+    const camera = new THREE.PerspectiveCamera(38, w / h, 0.1, 100);
+    camera.position.set(2.8, 1.85, 3.6);
+    camera.lookAt(0, -0.08, 0);
 
-    scene.add(new THREE.AmbientLight(0xffffff, 0.45));
-    const key = new THREE.DirectionalLight(0xfff2d8, 2.2); key.position.set(4.5, 6.5, 3.5); scene.add(key);
-    const fill = new THREE.DirectionalLight(0x7fa8c8, 0.6); fill.position.set(-3, 2.5, -2); scene.add(fill);
+    // Brighter ambient + a key light aimed more HORIZONTALLY so the vertical soil
+    // walls (not just the flat top) are lit, plus a camera-side fill so the faces
+    // we're looking at never fall to black.
+    scene.add(new THREE.AmbientLight(0xffffff, 0.8));
+    const key = new THREE.DirectionalLight(0xfff2d8, 2.4); key.position.set(5, 3.2, 4.5); scene.add(key);
+    const camFill = new THREE.DirectionalLight(0xffffff, 0.7); camFill.position.set(2.6, 1.4, 4); scene.add(camFill);
+    const fill = new THREE.DirectionalLight(0x7fa8c8, 0.5); fill.position.set(-3, 2.5, -2); scene.add(fill);
     const warm = new THREE.DirectionalLight(0xc88a5a, 0.35); warm.position.set(0, -1.5, 3); scene.add(warm);
 
     // Procedural strata shows instantly; the photoreal texture swaps in on load.
@@ -221,10 +233,10 @@ export function ParcelCutaway({ twin, height = 260 }: { twin: Twin; height?: num
       t.anisotropy = 8;
       t.wrapS = THREE.RepeatWrapping;
       t.wrapT = THREE.ClampToEdgeWrapping;
-      sideMats.forEach((m) => { m.map = t; m.needsUpdate = true; });
+      sideMats.forEach((m) => { m.map = t; m.emissiveMap = t; m.needsUpdate = true; });
     }, undefined, () => { /* keep procedural fallback on error */ });
 
-    const W = 2.2, H = 1.6;
+    const W = 2.2, H = 1.25; // a soil SLICE — wider than tall, so it reads as a core sample
     const group = new THREE.Group();
     const cube = new THREE.Mesh(new THREE.BoxGeometry(W, H, W), materials);
     group.add(cube);
