@@ -21,7 +21,7 @@
 import * as React from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { MapPin, Search, Loader2, Check, Info, Crosshair } from 'lucide-react';
+import { MapPin, Search, Loader2, Check, Info, Crosshair, Wand2 } from 'lucide-react';
 import { cn } from '@crm/lib/utils';
 import { Button } from '@crm/components/ui/button';
 import { Input } from '@crm/components/ui/input';
@@ -206,7 +206,32 @@ export function FindMyFarm({ onParcel, className }: FindMyFarmProps) {
           <span>Automatic lookup ran into a problem{errMsg ? ` (${errMsg})` : ''}. You can import or draw your boundary below.</span>
         </div>
       )}
+
+      {/* AI auto-trace (SAM2 field segmentation) — stubbed until the gateway
+          delineation endpoint lands (wing_farm-agent/requests ASK 19dc90e6). When
+          ready: on click, POST the point → segmented boundary → onParcel(boundary),
+          which drops the traced polygon straight into the editor to fine-tune. */}
+      <AutoTraceButton />
     </div>
+  );
+}
+
+/** Placeholder for AI field auto-trace. The gateway can run SAM2 on the Sentinel-2
+ *  tile to delineate a parcel boundary (parcel delineationOption, tier T3); the
+ *  callable endpoint is pending (farm↔gateway ASK). Disabled until then so the
+ *  affordance is discoverable without implying it works yet. */
+function AutoTraceButton() {
+  return (
+    <button
+      type="button"
+      disabled
+      title="AI field segmentation (SAM2 on Sentinel-2) — coming soon. It will auto-trace your field boundary for you to fine-tune."
+      className="flex w-full items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-dashed border-[var(--border)] bg-[var(--surface-sunken)]/40 px-3 py-2 text-[12px] text-[var(--fg-muted)] disabled:cursor-not-allowed disabled:opacity-70"
+    >
+      <Wand2 className="size-3.5 text-[var(--accent)]" />
+      Auto-trace field with AI
+      <span className="ml-1 rounded-full border border-[var(--border)] px-1.5 py-px text-[10px] uppercase tracking-[var(--tracking-wide)] text-[var(--fg-subtle)]">Soon</span>
+    </button>
   );
 }
 
