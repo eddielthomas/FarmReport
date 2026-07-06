@@ -327,6 +327,15 @@ export function getTwinById(id: string): Twin | null {
   return loadTwins().find((t) => t.id === id) ?? null;
 }
 
+/** Add-or-replace a twin from outside the React tree (e.g. the background scan
+ *  runner materializing a backend-composed parcel twin). Persists + notifies;
+ *  does not touch the undo stack. */
+export function upsertTwinExternal(twin: Twin) {
+  const list = loadTwins();
+  const idx = list.findIndex((t) => t.id === twin.id);
+  persist(idx >= 0 ? list.map((t) => (t.id === twin.id ? twin : t)) : [...list, twin]);
+}
+
 export function healthScore(twin: Twin): number {
   let s = twin.status.online ? 70 : 30;
   if (twin.maintenance.length > 0) s += 10;

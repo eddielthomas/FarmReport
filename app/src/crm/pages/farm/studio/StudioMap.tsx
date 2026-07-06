@@ -19,7 +19,9 @@ import {
   useTwins, CATALOG, CATEGORY_LABEL, makeTwinFromCatalog, twinsToGeoJSON, circlePolygon,
   geomAreaAcres, healthScore, type TwinCategory, type CatalogItem, type Twin, type TwinGeom,
 } from '@crm/lib/twins-store';
-import { fetchSignals, runScan, pollJob, bboxFromAoi, type SignalFeature, type ScanSignal } from '@crm/lib/gateway-signals';
+import { fetchSignals, bboxFromAoi, type SignalFeature, type ScanSignal } from '@crm/lib/gateway-signals';
+import { launchScanJob } from '@crm/lib/scan-jobs';
+import { ScanJobsRunner } from '@crm/components/farm/studio/ScanJobsRunner';
 import { StudioHeader } from './studio-ui';
 
 interface FarmProperty {
@@ -384,15 +386,21 @@ export function StudioMap() {
       : item.defaultGeomType === 'polygon' ? 'parcel'
       : 'row');
   };
+  // Non-blocking: launch the HD-twin build (awaits only the fast 202 ack) and
+  // hand it to the background runner. The 5+ minute build never blocks the UI.
   const runScanNow = async () => {
     if (!bbox || scanBusy) return; const sigs = Array.from(scanPick); if (!sigs.length) return;
     setScanBusy(true); setScanMsg(null);
     try {
-      const r = await runScan(bbox, sigs);
-      if (!r.configured) { setSignals({ kind: 'unconfigured' }); setScanMsg('Gateway not connected.'); return; }
-      setScanMsg(`Scan launched · job ${String(r.ack.jobId).slice(0, 10)} · ${r.ack.status}`);
-      for (let i = 0; i < 8; i++) { await new Promise((res) => setTimeout(res, 2500)); const j = await pollJob(r.ack.jobId); if (!j.configured) break; setScanMsg(`Scan ${j.job.status}`); if (['complete', 'error', 'failed', 'finished'].includes(String(j.job.status))) break; }
-      setRefetchTick((n) => n + 1);
+      // If a polygon twin is selected, scan its refined boundary; else the property AOI.
+      const selTwin = twins.find((t) => t.id === selected);
+      const ring = selTwin?.geom.type === 'polygon' ? selTwin.geom.ring : null;
+      const closed = ring && (ring[0][0] !== ring[ring.length - 1][0] || ring[0][1] !== ring[ring.length - 1][1]) ? [...ring, ring[0]] : ring;
+      const boundary: GeoJSON.Polygon | undefined = closed ? { type: 'Polygon', coordinates: [closed] } : undefined;
+      const label = selTwin?.name ?? property?.name ?? 'Property';
+      const job = await launchScanJob({ bbox, signals: sigs, boundary, ring, propertyId, twinId: selTwin?.id ?? null, label });
+      if (!job) { setSignals({ kind: 'unconfigured' }); setScanMsg('Gateway not connected.'); return; }
+      setScanMsg('HD twin build queued — runs in the background (~5 min).');
     } catch (e) { setScanMsg((e as Error)?.message ?? 'scan_failed'); } finally { setScanBusy(false); }
   };
 
@@ -461,6 +469,9 @@ export function StudioMap() {
               <input type="range" min={0.2} max={1} step={0.05} value={opacity} onChange={(e) => setOpacity(Number(e.target.value))} className="h-20 w-1.5 accent-[var(--accent)]" style={{ writingMode: 'vertical-lr', WebkitAppearance: 'slider-vertical' } as React.CSSProperties} aria-label="Layer opacity" />
             </div>
           </div>
+
+          {/* background HD-twin build jobs (non-blocking dock) */}
+          <ScanJobsRunner onOpenTwin={(id) => { setSelected(id); setTab('twin'); const t = twinsRef.current.find((x) => x.id === id); if (t) mapRef.current?.flyTo({ center: twinCenter(t), zoom: 16 }); }} />
 
           {/* contextual hint */}
           {(tool !== 'select') && (
@@ -572,7 +583,7 @@ function SignalsCard({ signals, bbox, scanOpts, scanPick, setScanPick, runScanNo
       <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-[var(--fg-muted)]"><Activity className="size-3.5 text-[var(--risk-healthy)]" /> Live signals</div>{signals.kind === 'loading' ? <Loader2 className="size-3.5 animate-spin text-[var(--fg-subtle)]" /> : signals.kind === 'ready' && <span className="rounded-full bg-[color-mix(in_oklch,var(--risk-healthy-fill)_60%,transparent)] px-2 py-0.5 text-[10px] font-medium text-[var(--risk-healthy)] tabular-nums">{count}</span>}</div>
       <div className="mt-1.5 text-[11px] text-[var(--fg-muted)]">{!bbox ? 'No AOI on this property.' : signals.kind === 'unconfigured' ? 'Connect the AlphaGeo gateway for live signals.' : signals.kind === 'error' ? `Error: ${signals.message}` : signals.kind === 'ready' && count === 0 ? 'No signals yet — run a scan.' : signals.kind === 'ready' ? `${count} signal(s) over this property.` : 'Loading…'}</div>
       <div className="mt-2 flex flex-wrap gap-1">{scanOpts.map((o) => { const on = scanPick.has(o.id); return <button key={o.id} onClick={() => setScanPick((p) => { const n = new Set(p); n.has(o.id) ? n.delete(o.id) : n.add(o.id); return n; })} className={`rounded-full border px-2 py-0.5 text-[11px] transition ${on ? 'border-[var(--accent)] bg-[color-mix(in_oklch,var(--accent)_14%,transparent)] text-[var(--fg)]' : 'border-[var(--border)] text-[var(--fg-muted)]'}`}>{o.label}</button>; })}</div>
-      <button onClick={runScanNow} disabled={!bbox || scanBusy || scanPick.size === 0} className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--accent)] px-3 py-1.5 text-xs font-semibold text-[var(--fg-on-accent)] hover:brightness-110 disabled:opacity-40">{scanBusy ? <><Loader2 className="size-3.5 animate-spin" /> Scanning…</> : <><Satellite className="size-3.5" /> Run scan</>}</button>
+      <button onClick={runScanNow} disabled={!bbox || scanBusy || scanPick.size === 0} className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--accent)] px-3 py-1.5 text-xs font-semibold text-[var(--fg-on-accent)] hover:brightness-110 disabled:opacity-40">{scanBusy ? <><Loader2 className="size-3.5 animate-spin" /> Queuing…</> : <><Satellite className="size-3.5" /> Build HD twin</>}</button>
       {scanMsg && <div className="mt-1.5 text-[10px] text-[var(--fg-subtle)]">{scanMsg}</div>}
     </div>
   );

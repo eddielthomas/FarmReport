@@ -111,10 +111,42 @@ export async function fetchSignals(
 export async function runScan(
   bbox: Bbox,
   signals: ScanSignal[],
+  boundary?: GeoJSON.Polygon | GeoJSON.MultiPolygon,
 ): Promise<GatewayResult<{ ack: ScanAck }>> {
   try {
-    const ack = await apiPost<ScanAck>('/farm/gw/scan', { bbox, signals });
+    // `boundary` is forward-compat for the gateway accepting a refined polygon AOI
+    // (spec ask B2); it ignores the field until that lands and uses the bbox.
+    const body = boundary ? { bbox, signals, boundary } : { bbox, signals };
+    const ack = await apiPost<ScanAck>('/farm/gw/scan', body);
     return { configured: true, ack };
+  } catch (err) {
+    if (isUnconfigured(err)) return { configured: false };
+    throw err;
+  }
+}
+
+/** A composed parcel twin from the gateway (schema unconfirmed — spec ask B4).
+ *  We accept it loosely and normalize defensively at materialization time. */
+export interface CompositeTwin {
+  aoiId?: string;
+  geometry?: GeoJSON.Geometry;
+  boundary?: unknown;
+  aoi?: { geometry?: GeoJSON.Geometry; boundary?: unknown; area_ha?: number } & Record<string, unknown>;
+  orbiters?: unknown[];
+  rasters?: unknown[];
+  signals?: SignalFeature[] | { features?: SignalFeature[] };
+  indicators?: Record<string, unknown>;
+  [k: string]: unknown;
+}
+
+/**
+ * GET /farm/gw/twins/:aoiId — the composed parcel twin the backend builds after a
+ * scan completes (AOI geometry + orbiters + rasters + signals + indicators).
+ */
+export async function fetchTwins(aoiId: string): Promise<GatewayResult<{ twin: CompositeTwin }>> {
+  try {
+    const twin = await apiGet<CompositeTwin>(`/farm/gw/twins/${encodeURIComponent(aoiId)}`);
+    return { configured: true, twin };
   } catch (err) {
     if (isUnconfigured(err)) return { configured: false };
     throw err;
