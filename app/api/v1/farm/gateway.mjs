@@ -166,6 +166,30 @@ export async function scan(req, res) {
   return relay(res, upstream, 'farm_scan');
 }
 
+// --- POST /farm/gw/aoi/from-geom -------------------------------------------
+// FIND-MY-FARM → SCAN keystone: register the operator's REFINED polygon as an AOI
+// so a scan can run against the exact boundary. Forward { name, geom_geojson }
+// verbatim; the gateway stores the polygon in app_meta.aoi and returns { aoi_id }.
+// (Gateway exposes this with NO app-layer auth — the nginx allow-list is the gate
+// — but we still inject the Bearer for uniformity; it is simply ignored there.)
+export async function aoiFromGeom(req, res) {
+  if (!farmGate(req, res, 'farm.profile.write', 'farm:onboard')) return;
+  if (!configured()) return unconfigured(res);
+  let body;
+  try { body = await readBody(req); } catch { body = null; }
+  const payload = (body && typeof body === 'object') ? { ...body } : {};
+  let upstream;
+  try {
+    upstream = await gatewayFetch('/api/aoi/from-geom', { method: 'POST', body: JSON.stringify(payload) });
+  } catch (err) {
+    return send(res, 502, {
+      success: false, error: 'aoi_from_geom_gateway_unreachable',
+      detail: String(err?.message ?? err),
+    });
+  }
+  return relay(res, upstream, 'aoi_from_geom');
+}
+
 // --- GET /farm/gw/jobs/:jobId ----------------------------------------------
 // Poll-style redis job snapshot (producer results land on .producers).
 export async function job(req, res, jobId) {

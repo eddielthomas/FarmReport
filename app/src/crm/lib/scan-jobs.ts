@@ -16,7 +16,7 @@
 import { useCallback, useSyncExternalStore } from 'react';
 import { extractPolygonal } from '@crm/components/farm/BoundaryImport';
 import {
-  runScan, pollJob, fetchTwins,
+  aoiFromGeom, runScan, streamJobEvents, fetchTwins,
   type Bbox, type ScanSignal, type CompositeTwin,
 } from './gateway-signals';
 import {
@@ -148,37 +148,50 @@ export function materializeParcelTwin(job: ScanJob, composite: CompositeTwin): T
 
 // ---- job lifecycle: launch + drive ------------------------------------------
 
-const TERMINAL_OK = ['complete', 'completed', 'finished', 'done', 'success'];
-const TERMINAL_ERR = ['error', 'failed', 'cancelled', 'canceled'];
 const POLL_MS = 5000;
 const MAX_MS = 12 * 60 * 1000; // generous ceiling well past the ~5-min build
 
+function closeRing(r: [number, number][]): [number, number][] {
+  return (r[0][0] !== r[r.length - 1][0] || r[0][1] !== r[r.length - 1][1]) ? [...r, r[0]] : r;
+}
+function bboxRing(b: Bbox): [number, number][] {
+  const [w, s, e, n] = b;
+  return [[w, s], [e, s], [e, n], [w, n], [w, s]];
+}
+
 /**
- * Launch a scan and record a background job. Awaits ONLY the fast 202 ack, then
- * returns — the runner drives the 5-min build. Returns the created job, or null
- * when the gateway is unconfigured (caller shows "not connected").
+ * Launch the full HD-twin build: register the REFINED polygon as an AOI
+ * (/api/aoi/from-geom), then scan it. Awaits only the fast round-trips (from-geom
+ * + 202 scan ack), then returns — the runner drives the 5-min build in the
+ * background. Returns the job, or null when the gateway is unconfigured.
  */
 export async function launchScanJob(args: {
   bbox: Bbox;
   signals: ScanSignal[];
-  boundary?: GeoJSON.Polygon | GeoJSON.MultiPolygon;
   ring?: [number, number][] | null;
   propertyId: string | null;
   twinId?: string | null;
   label: string;
 }): Promise<ScanJob | null> {
-  const res = await runScan(args.bbox, args.signals, args.boundary);
+  // AOI polygon: the operator's refined ring if present, else the property bbox.
+  const ring = args.ring && args.ring.length >= 3 ? closeRing(args.ring) : bboxRing(args.bbox);
+  const geom: GeoJSON.Polygon = { type: 'Polygon', coordinates: [ring] };
+  // 1) Register the exact polygon → aoi_id.
+  const aoi = await aoiFromGeom(geom, args.label);
+  if (!aoi.configured) return null;
+  // 2) Launch the scan over that AOI.
+  const res = await runScan(aoi.aoiId, args.signals);
   if (!res.configured) return null;
   const now = Date.now();
   const job: ScanJob = {
-    id: `sj_${now}_${res.ack.jobId}`.slice(0, 48),
+    id: `sj_${now}_${String(res.ack.jobId).slice(0, 10)}`,
     jobId: String(res.ack.jobId),
-    aoiId: res.ack.aoiId ?? null,
+    aoiId: aoi.aoiId,
     propertyId: args.propertyId,
     twinId: args.twinId ?? null,
     label: args.label,
     signals: args.signals,
-    boundary: args.ring ?? null,
+    boundary: args.ring ?? ring,
     status: 'running',
     pct: 0,
     stage: res.ack.status ?? 'launched',
@@ -189,56 +202,81 @@ export async function launchScanJob(args: {
   return job;
 }
 
-function pctOf(job: Record<string, unknown>): number | undefined {
-  const v = job.pct ?? job.progress ?? job.percent;
+function pctOf(d: Record<string, unknown>): number | undefined {
+  const v = d.pct ?? d.progress ?? d.percent;
   const n = typeof v === 'number' ? v : Number(v);
   return Number.isFinite(n) ? Math.max(0, Math.min(100, n <= 1 ? n * 100 : n)) : undefined;
 }
 
-/**
- * Drive one running job to a terminal state by polling, then materialize the
- * composed twin. Idempotent-safe: aborts cleanly via the signal (navigation),
- * leaving the job 'running' so it resumes on return. `onDone` fires once.
- */
-export async function driveJob(jobId_local: string, signal: AbortSignal, onDone: () => void): Promise<void> {
-  const deadline = Date.now() + MAX_MS;
-  while (!signal.aborted && Date.now() < deadline) {
-    await sleep(POLL_MS, signal);
-    if (signal.aborted) return;
-    const job = getJob(jobId_local);
-    if (!job || job.status !== 'running') return;
-    let snap;
-    try { snap = await pollJob(job.jobId); }
-    catch { continue; } // transient — keep polling
-    if (!snap.configured) { patchJob(jobId_local, { status: 'error', message: 'Gateway disconnected mid-run.' }); onDone(); return; }
-    const s = snap.job as Record<string, unknown>;
-    const status = String(s.status ?? '').toLowerCase();
-    const pct = pctOf(s);
-    const aoiId = (s.aoiId as string | undefined) ?? job.aoiId;
-    if (pct != null || aoiId !== job.aoiId || status) patchJob(jobId_local, { pct: pct ?? job.pct, stage: status || job.stage, aoiId: aoiId ?? null });
+function twinLooksReady(t: CompositeTwin): boolean {
+  const sig = Array.isArray(t.signals) ? t.signals : (t.signals as { features?: unknown[] } | undefined)?.features;
+  return Boolean(t.geometry || t.aoi?.geometry || (Array.isArray(t.rasters) && t.rasters.length) || (Array.isArray(sig) && sig.length));
+}
 
-    if (TERMINAL_ERR.includes(status)) { patchJob(jobId_local, { status: 'error', message: `Backend reported ${status}.` }); onDone(); return; }
-    if (TERMINAL_OK.includes(status)) {
-      // Compose the twin from the backend.
-      const fresh = getJob(jobId_local);
-      const useAoi = fresh?.aoiId;
-      if (useAoi) {
-        try {
-          const tw = await fetchTwins(useAoi);
-          if (tw.configured) {
-            const twin = materializeParcelTwin(fresh!, tw.twin);
-            upsertTwinExternal(twin);
-            patchJob(jobId_local, { status: 'complete', pct: 100, resultTwinId: twin.id, message: 'HD twin ready.' });
-            onDone(); return;
-          }
-        } catch { /* fall through to complete-without-twin */ }
+/** Pull the composed twin and materialize it. Returns true on success. */
+async function completeFromTwin(localId: string): Promise<boolean> {
+  const job = getJob(localId);
+  if (!job?.aoiId) return false;
+  const tw = await fetchTwins(job.aoiId);
+  if (!tw.configured) return false;
+  const twin = materializeParcelTwin(job, tw.twin);
+  upsertTwinExternal(twin);
+  patchJob(localId, { status: 'complete', pct: 100, resultTwinId: twin.id, message: 'HD twin ready.' });
+  return true;
+}
+
+/**
+ * Drive one running job via the SSE progress stream (farm.progress →
+ * farm.complete), then materialize the composed twin from twins/{aoi}. Aborts
+ * cleanly on navigation (job stays 'running' → resumes on return). Reconnects on
+ * stream drop and, on any clean stream-end, checks twins/{aoi} as the source of
+ * truth so a build that finished while we were away still lands. `onDone` fires once.
+ */
+export async function driveJob(localId: string, signal: AbortSignal, onDone: () => void): Promise<void> {
+  const job0 = getJob(localId);
+  if (!job0 || job0.status !== 'running') { onDone(); return; }
+  const deadline = Date.now() + MAX_MS;
+  let settled = false;
+  const settle = () => { if (!settled) { settled = true; onDone(); } };
+
+  while (!signal.aborted && Date.now() < deadline) {
+    let sawComplete = false, sawError = false;
+    try {
+      await streamJobEvents(job0.jobId, (ev) => {
+        const d = ev.data;
+        if (/complete|finished|done/i.test(ev.event)) sawComplete = true;
+        else if (/error|failed/i.test(ev.event)) { sawError = true; patchJob(localId, { status: 'error', message: String(d.message ?? 'Backend error.') }); }
+        else {
+          const pct = pctOf(d);
+          const stage = String(d.stage ?? d.status ?? ev.event.replace(/^farm\./, '')) || undefined;
+          patchJob(localId, { pct: pct ?? getJob(localId)?.pct ?? 0, stage });
+        }
+      }, signal);
+    } catch (err) {
+      if (signal.aborted) return; // navigation — resume on remount
+      if (String((err as Error)?.message ?? '').includes('unconfigured')) {
+        patchJob(localId, { status: 'error', message: 'Gateway not connected.' }); settle(); return;
       }
-      patchJob(jobId_local, { status: 'complete', pct: 100, message: 'Scan complete (no composed twin returned).' });
-      onDone(); return;
+      // stream-level error → fall through to a twins check, then reconnect.
     }
+    if (sawError) { settle(); return; }
+    if (sawComplete) {
+      try { if (!(await completeFromTwin(localId))) patchJob(localId, { status: 'complete', pct: 100, message: 'Scan complete (twin not returned).' }); }
+      catch { patchJob(localId, { status: 'complete', pct: 100, message: 'Scan complete (twin fetch failed).' }); }
+      settle(); return;
+    }
+    // Stream ended without a verdict — the build may have finished while away.
+    try {
+      const job = getJob(localId);
+      if (job?.aoiId) {
+        const tw = await fetchTwins(job.aoiId);
+        if (tw.configured && twinLooksReady(tw.twin)) { await completeFromTwin(localId); settle(); return; }
+      }
+    } catch { /* keep retrying */ }
+    await sleep(POLL_MS, signal); // brief backoff before reconnecting the stream
   }
-  if (!signal.aborted) patchJob(jobId_local, { status: 'error', message: 'Timed out waiting for the backend.' });
-  onDone();
+  if (!signal.aborted) patchJob(localId, { status: 'error', message: 'Timed out waiting for the backend.' });
+  settle();
 }
 
 function sleep(ms: number, signal: AbortSignal): Promise<void> {

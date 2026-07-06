@@ -13,6 +13,18 @@
 // =============================================================================
 
 import { apiGet, apiPost, ApiError } from './api';
+import { useAuthStore } from './auth-store';
+import { useTenantStore } from './tenant-store';
+
+/** Bearer + tenant headers for raw fetch() calls (SSE) that bypass api(). */
+function authHeaders(extra: Record<string, string> = {}): Record<string, string> {
+  const h: Record<string, string> = { ...extra };
+  const token = useAuthStore.getState().token;
+  if (token) h.authorization = `Bearer ${token}`;
+  const tenantId = useTenantStore.getState().currentTenantId;
+  if (tenantId) h['x-tenant-id'] = tenantId;
+  return h;
+}
 
 /** [west, south, east, north] — the shape every FarmProfile bbox unpacks to. */
 export type Bbox = [number, number, number, number];
@@ -108,20 +120,85 @@ export async function fetchSignals(
  * tenant_id is injected server-side from the authenticated tenant; the body just
  * carries the bbox + chosen producers.
  */
+/**
+ * POST /farm/gw/aoi/from-geom — register the operator's REFINED polygon as an
+ * AOI (find-my-farm → scan keystone). The gateway stores the exact polygon and
+ * returns { aoi_id }, which then drives the scan.
+ */
+export async function aoiFromGeom(
+  geom: GeoJSON.Polygon | GeoJSON.MultiPolygon,
+  name: string,
+): Promise<GatewayResult<{ aoiId: string }>> {
+  try {
+    const r = await apiPost<{ aoi_id?: string; aoiId?: string }>('/farm/gw/aoi/from-geom', { name, geom_geojson: geom });
+    const aoiId = r.aoi_id ?? r.aoiId;
+    if (!aoiId) throw new ApiError('aoi_from_geom_no_id', 502);
+    return { configured: true, aoiId: String(aoiId) };
+  } catch (err) {
+    if (isUnconfigured(err)) return { configured: false };
+    throw err;
+  }
+}
+
+/**
+ * POST /farm/gw/scan — launch a real scan over a REGISTERED AOI (from-geom).
+ * The gateway owns validation; returns a 202 { jobId }.
+ */
 export async function runScan(
-  bbox: Bbox,
+  aoiId: string,
   signals: ScanSignal[],
-  boundary?: GeoJSON.Polygon | GeoJSON.MultiPolygon,
 ): Promise<GatewayResult<{ ack: ScanAck }>> {
   try {
-    // `boundary` is forward-compat for the gateway accepting a refined polygon AOI
-    // (spec ask B2); it ignores the field until that lands and uses the bbox.
-    const body = boundary ? { bbox, signals, boundary } : { bbox, signals };
-    const ack = await apiPost<ScanAck>('/farm/gw/scan', body);
+    const ack = await apiPost<ScanAck>('/farm/gw/scan', { aoi_id: aoiId, signals });
     return { configured: true, ack };
   } catch (err) {
     if (isUnconfigured(err)) return { configured: false };
     throw err;
+  }
+}
+
+/** A parsed SSE frame from the job-events stream. */
+export interface JobEvent { event: string; data: Record<string, unknown>; }
+
+/**
+ * GET /farm/gw/jobs/:jobId/events — consume the gateway's SSE progress stream
+ * (farm.progress → farm.complete / farm.error) via fetch (so we can attach the
+ * Bearer + tenant headers that EventSource can't). Resolves when the stream ends;
+ * throws ApiError(503) when the gateway is unconfigured, or on abort.
+ */
+export async function streamJobEvents(
+  jobId: string,
+  onEvent: (ev: JobEvent) => void,
+  signal: AbortSignal,
+): Promise<void> {
+  const res = await fetch(`/api/v1/farm/gw/jobs/${encodeURIComponent(jobId)}/events`, {
+    headers: authHeaders({ accept: 'text/event-stream' }),
+    signal,
+  });
+  if (res.status === 503) throw new ApiError('gateway_unconfigured', 503);
+  if (!res.ok || !res.body) throw new ApiError(`job_events_${res.status}`, res.status);
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buf = '';
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    let idx;
+    while ((idx = buf.indexOf('\n\n')) >= 0) {
+      const frame = buf.slice(0, idx);
+      buf = buf.slice(idx + 2);
+      if (!frame || frame.startsWith(':')) continue; // heartbeat/comment
+      let event = 'message';
+      const dataLines: string[] = [];
+      for (const line of frame.split('\n')) {
+        if (line.startsWith('event:')) event = line.slice(6).trim();
+        else if (line.startsWith('data:')) dataLines.push(line.slice(5).trim());
+      }
+      let data: Record<string, unknown> = {};
+      if (dataLines.length) { try { data = JSON.parse(dataLines.join('\n')); } catch { data = { raw: dataLines.join('\n') }; } }
+      onEvent({ event, data });
+    }
   }
 }
 

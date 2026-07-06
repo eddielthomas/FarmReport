@@ -1455,6 +1455,10 @@ export async function handleV1(req, res) {
           gw ? await gw.parcelByAddress(req, res, url) : notImpl(res, 'farm.gw.parcelByAddress');
           return true;
         }
+        if (path === '/farm/gw/aoi/from-geom' && method === 'POST') {
+          gw ? await gw.aoiFromGeom(req, res) : notImpl(res, 'farm.gw.aoiFromGeom');
+          return true;
+        }
         if (path === '/farm/gw/scan' && method === 'POST') {
           gw ? await gw.scan(req, res) : notImpl(res, 'farm.gw.scan');
           return true;

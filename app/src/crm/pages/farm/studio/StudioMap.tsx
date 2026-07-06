@@ -393,12 +393,11 @@ export function StudioMap() {
     setScanBusy(true); setScanMsg(null);
     try {
       // If a polygon twin is selected, scan its refined boundary; else the property AOI.
+      // launchScanJob registers the polygon via /api/aoi/from-geom, then scans the aoi_id.
       const selTwin = twins.find((t) => t.id === selected);
       const ring = selTwin?.geom.type === 'polygon' ? selTwin.geom.ring : null;
-      const closed = ring && (ring[0][0] !== ring[ring.length - 1][0] || ring[0][1] !== ring[ring.length - 1][1]) ? [...ring, ring[0]] : ring;
-      const boundary: GeoJSON.Polygon | undefined = closed ? { type: 'Polygon', coordinates: [closed] } : undefined;
       const label = selTwin?.name ?? property?.name ?? 'Property';
-      const job = await launchScanJob({ bbox, signals: sigs, boundary, ring, propertyId, twinId: selTwin?.id ?? null, label });
+      const job = await launchScanJob({ bbox, signals: sigs, ring, propertyId, twinId: selTwin?.id ?? null, label });
       if (!job) { setSignals({ kind: 'unconfigured' }); setScanMsg('Gateway not connected.'); return; }
       setScanMsg('HD twin build queued — runs in the background (~5 min).');
     } catch (e) { setScanMsg((e as Error)?.message ?? 'scan_failed'); } finally { setScanBusy(false); }
