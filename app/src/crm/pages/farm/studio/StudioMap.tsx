@@ -12,7 +12,7 @@ import {
   MousePointer2, StickyNote, TriangleAlert, ListChecks, Ruler, Pentagon, LandPlot,
   Grid2x2, Square, Circle, Spline, Copy, Trash2, Undo2, Redo2, EyeOff, Tag,
   Sparkles, Clock, FileText, MapPin, X, Boxes, ExternalLink, MapPinned, ChevronDown,
-  Sprout, Activity, Loader2, Satellite, Waypoints,
+  Sprout, Activity, Loader2, Satellite, Waypoints, PenTool,
 } from 'lucide-react';
 import { apiGet } from '@crm/lib/api';
 import {
@@ -23,6 +23,7 @@ import { fetchSignals, bboxFromAoi, type SignalFeature, type ScanSignal } from '
 import { launchScanJob } from '@crm/lib/scan-jobs';
 import { ScanJobsRunner } from '@crm/components/farm/studio/ScanJobsRunner';
 import { StudioHeader } from './studio-ui';
+import strataPhotoUrl from '@crm/assets/strata-photoreal.jpg';
 
 interface FarmProperty {
   id: string; name: string;
@@ -31,7 +32,7 @@ interface FarmProperty {
   crops?: string[];
 }
 type Annotation = { id: string; lng: number; lat: number; label: string; kind: 'note' | 'issue' | 'task' };
-type Tool = 'select' | 'edit' | 'note' | 'issue' | 'task' | 'measure' | 'zone' | 'parcel' | 'place' | 'rect' | 'circle' | 'row';
+type Tool = 'select' | 'edit' | 'note' | 'issue' | 'task' | 'measure' | 'zone' | 'parcel' | 'place' | 'rect' | 'circle' | 'row' | 'freehand';
 type Layer = 'satellite' | 'ndvi' | 'moisture' | 'thermal';
 type Tab = 'twin' | 'reports' | 'analytics' | 'history';
 
@@ -47,6 +48,9 @@ const SATELLITE_STYLE: maplibregl.StyleSpecification = {
   layers: [{ id: 'bg', type: 'background', paint: { 'background-color': '#0b0a08' } }, { id: 'esri', type: 'raster', source: 'esri', paint: { ...LAYER_PAINT.satellite, 'raster-opacity': 1 } }],
 };
 const CATS: TwinCategory[] = ['structure', 'equipment', 'crop', 'field', 'livestock', 'water', 'infra'];
+// Default object for a boundary drawn WITHOUT first picking a catalog type — so a
+// parcel/rect/circle/freehand draw always yields a Field twin the user can retype.
+const DEFAULT_FIELD = CATALOG.find((c) => c.kind === 'field') ?? CATALOG.find((c) => c.category === 'field') ?? CATALOG[0];
 const EMPTY_FC: GeoJSON.FeatureCollection = { type: 'FeatureCollection', features: [] };
 const LAYERS: Layer[] = ['satellite', 'ndvi', 'moisture', 'thermal'];
 const SCAN_OPTIONS: { id: ScanSignal; label: string }[] = [{ id: 'sar', label: 'SAR' }, { id: 'moisture', label: 'Moisture' }, { id: 'thermal', label: 'Thermal' }];
@@ -54,6 +58,16 @@ const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 const NDVI_12 = [0.42, 0.48, 0.53, 0.58, 0.61, 0.65, 0.68, 0.71, 0.7, 0.72, 0.74, 0.72];
 
 type SignalsState = { kind: 'idle' } | { kind: 'loading' } | { kind: 'unconfigured' } | { kind: 'error'; message: string } | { kind: 'ready'; features: SignalFeature[] };
+
+// Tight lng/lat bounds of a (multi)polygon boundary ring — for fitting to the parcel.
+function boundaryBounds(b: GeoJSON.Polygon | GeoJSON.MultiPolygon): [[number, number], [number, number]] | null {
+  let w = Infinity, s = Infinity, e = -Infinity, n = -Infinity;
+  const rings = b.type === 'Polygon' ? [b.coordinates[0]] : b.coordinates.map((p) => p[0]);
+  for (const ring of rings) for (const pt of ring as [number, number][]) {
+    const [x, y] = pt; if (x < w) w = x; if (x > e) e = x; if (y < s) s = y; if (y > n) n = y;
+  }
+  return Number.isFinite(w) ? [[w, s], [e, n]] : null;
+}
 
 function aoiCenter(p: FarmProperty): [number, number] {
   if (p.aoi_west != null && p.aoi_east != null && p.aoi_south != null && p.aoi_north != null) return [(p.aoi_west + p.aoi_east) / 2, (p.aoi_south + p.aoi_north) / 2];
@@ -77,6 +91,182 @@ function translate(g: TwinGeom, dLng: number, dLat: number): TwinGeom {
   if (g.type === 'rect' || g.type === 'circle') return { ...g, center: [g.center[0] + dLng, g.center[1] + dLat] };
   if (g.type === 'polygon') return { ...g, ring: g.ring.map(([x, y]) => [x + dLng, y + dLat] as [number, number]) };
   return { ...g, points: g.points.map(([x, y]) => [x + dLng, y + dLat] as [number, number]) };
+}
+
+// Outer ring of the property boundary, open (no closing duplicate vertex) — the
+// footprint the cutaway slab is extruded from.
+function outerRing(b: GeoJSON.Polygon | GeoJSON.MultiPolygon | null | undefined): [number, number][] | null {
+  if (!b) return null;
+  const raw = (b.type === 'Polygon' ? b.coordinates[0] : b.coordinates[0]?.[0]) as [number, number][] | undefined;
+  if (!raw || raw.length < 3) return null;
+  const ring = raw.slice();
+  const f = ring[0], l = ring[ring.length - 1];
+  if (l && f && l[0] === f[0] && l[1] === f[1]) ring.pop();
+  return ring.length >= 3 ? ring : null;
+}
+
+// -----------------------------------------------------------------------------
+// Photoreal soil-strata cutaway. A single <canvas> overlaid on the pitched
+// MapLibre view. Each camera-facing parcel edge becomes a "wall" textured with a
+// photoreal strata image mapped ONCE — image width → the (tilted) top edge,
+// image height → the full drop (depth). Because depth maps identically on every
+// face, each soil horizon sits at the same depth fraction all the way around, so
+// the layers line up at the block's corners — realistic rock, no wrapped/tiled
+// seams. A dark soil gradient underlies the block so corner crevices read as
+// shadowed earth, and the parcel footprint is punched clear for the satellite.
+// -----------------------------------------------------------------------------
+let strataImg: HTMLImageElement | null = null;
+let strataImgReady = false;
+function getStrataImage(onReady?: () => void): HTMLImageElement | null {
+  if (typeof window === 'undefined') return null;
+  if (!strataImg) {
+    strataImg = new Image();
+    strataImg.crossOrigin = 'anonymous';
+    strataImg.onload = () => { strataImgReady = true; onReady?.(); };
+    strataImg.src = strataPhotoUrl;
+  } else if (!strataImgReady && onReady) {
+    strataImg.addEventListener('load', onReady, { once: true });
+  }
+  return strataImgReady ? strataImg : null;
+}
+// Soil-horizon palette — the crevice under-fill + the fallback before the photo
+// loads. [depth fraction 0..1 from surface, base RGB].
+const STRATA: Array<[number, [number, number, number]]> = [
+  [0.00, [62, 44, 29]], [0.05, [82, 54, 34]], [0.12, [109, 69, 39]],
+  [0.22, [145, 95, 52]], [0.32, [170, 120, 68]], [0.42, [137, 86, 47]],
+  [0.52, [102, 80, 60]], [0.62, [80, 72, 62]], [0.72, [60, 69, 83]],
+  [0.82, [52, 62, 75]], [0.92, [42, 50, 61]], [1.00, [30, 36, 45]],
+];
+function rgbShade(c: [number, number, number], mul: number): string {
+  const k = (v: number) => Math.max(0, Math.min(255, Math.round(v * mul)));
+  return `rgb(${k(c[0])},${k(c[1])},${k(c[2])})`;
+}
+
+function drawStrataCutaway(map: maplibregl.Map, canvas: HTMLCanvasElement | null, ring: [number, number][] | null, seedStr: string) {
+  if (!canvas) return;
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const width = Math.max(1, Math.round(rect.width * dpr));
+  const height = Math.max(1, Math.round(rect.height * dpr));
+  if (canvas.width !== width || canvas.height !== height) { canvas.width = width; canvas.height = height; }
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, rect.width, rect.height);
+  if (!ring || ring.length < 3) return;
+
+  const pts = ring.map(([lng, lat]) => map.project([lng, lat] as maplibregl.LngLatLike));
+  // Wall depth is tied to the parcel's ON-SCREEN footprint — not an absolute
+  // pixel floor — so the earth block never stretches when you zoom out to a tiny
+  // parcel (small footprint → short walls) yet stays substantial when zoomed in.
+  let mnX = Infinity, mnY = Infinity, mxX = -Infinity, mxY = -Infinity;
+  for (const p of pts) { if (p.x < mnX) mnX = p.x; if (p.x > mxX) mxX = p.x; if (p.y < mnY) mnY = p.y; if (p.y > mxY) mxY = p.y; }
+  const screenSpan = Math.hypot(mxX - mnX, mxY - mnY);
+  const depthPx = Math.max(14, Math.min(120, screenSpan * 0.17));
+  const drop = { x: 0, y: depthPx };
+
+  const img = getStrataImage(() => { try { map.triggerRepaint(); } catch { /* ignore */ } });
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(0, 0, rect.width, rect.height);
+  ctx.clip();
+
+  // BASE fill over the whole swept silhouette (footprint translated through the
+  // drop) so the thin wedge between adjacent faces is soil, never a black gap.
+  const block = new Path2D();
+  const STEPS = 12;
+  for (let k = 0; k <= STEPS; k++) {
+    const dy = (drop.y * k) / STEPS;
+    block.moveTo(pts[0].x, pts[0].y + dy);
+    for (let i = 1; i < pts.length; i++) block.lineTo(pts[i].x, pts[i].y + dy);
+    block.closePath();
+  }
+  ctx.save();
+  ctx.clip(block, 'nonzero');
+  const baseGrad = ctx.createLinearGradient(0, mnY, 0, mxY + depthPx);
+  for (const [t, c] of STRATA) baseGrad.addColorStop(t, rgbShade(c, 0.68));
+  ctx.fillStyle = baseGrad;
+  ctx.fillRect(mnX - 4, mnY - 4, (mxX - mnX) + 8, (mxY + depthPx - mnY) + 8);
+  ctx.restore();
+
+  // Camera-facing walls, back-to-front (front faces overpaint the ones behind).
+  const edges = pts
+    .map((a, i) => { const b = pts[(i + 1) % pts.length]; return { a, b, y: (a.y + b.y) / 2 }; })
+    .sort((l, r) => l.y - r.y);
+
+  for (let ei = 0; ei < edges.length; ei++) {
+    const { a, b } = edges[ei];
+    const faceLen = Math.hypot(b.x - a.x, b.y - a.y);
+    if (faceLen < 0.5) continue;
+    // Front-ness from how horizontal the top edge sits on screen → brighter face.
+    const horiz = Math.abs(b.x - a.x) / faceLen;
+    const shade = 0.6 + 0.4 * horiz;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+    ctx.lineTo(b.x + drop.x, b.y + drop.y); ctx.lineTo(a.x + drop.x, a.y + drop.y); ctx.closePath();
+    ctx.clip();
+
+    // Photoreal strata mapped ONCE onto the wall: image width → the (tilted) top
+    // edge, image height → the full drop. Depth maps identically on every face,
+    // so the horizons line up at the shared corners — realistic, never wrapped.
+    if (img) {
+      const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
+      ctx.save();
+      ctx.transform((b.x - a.x) / iw, (b.y - a.y) / iw, drop.x / ih, drop.y / ih, a.x, a.y);
+      ctx.drawImage(img, 0, 0);
+      ctx.restore();
+    } else {
+      const g = ctx.createLinearGradient(a.x, a.y, a.x + drop.x, a.y + drop.y);
+      for (const [t, c] of STRATA) g.addColorStop(t, rgbShade(c, shade));
+      ctx.fillStyle = g;
+      ctx.fillRect(mnX - 4, mnY - 4, (mxX - mnX) + 8, (mxY + depthPx - mnY) + 8);
+    }
+
+    // Per-face lighting: darken the more side-on (vertical) faces so the block
+    // reads as solid 3D volume without disturbing the strata alignment.
+    ctx.fillStyle = `rgba(0,0,0,${((1 - shade) * 0.55).toFixed(3)})`;
+    ctx.fillRect(mnX - 4, mnY - 4, (mxX - mnX) + 8, (mxY + depthPx - mnY) + 8);
+
+    // Depth sheen: faint warm light at the surface, shadow pooling toward the base.
+    const cx = (a.x + b.x) / 2, cy = (a.y + b.y) / 2;
+    const sheen = ctx.createLinearGradient(cx, cy, cx + drop.x, cy + drop.y);
+    sheen.addColorStop(0, 'rgba(255,226,180,0.10)');
+    sheen.addColorStop(0.12, 'rgba(0,0,0,0)');
+    sheen.addColorStop(0.85, 'rgba(0,0,0,0.16)');
+    sheen.addColorStop(1, 'rgba(0,0,0,0.42)');
+    ctx.fillStyle = sheen;
+    ctx.fillRect(mnX - 4, mnY - 4, (mxX - mnX) + 8, (mxY + depthPx - mnY) + 8);
+    ctx.restore();
+
+    // Accent surface edge + grounded bottom edge.
+    ctx.strokeStyle = 'rgba(110, 231, 214, 0.5)';
+    ctx.lineWidth = 1.25;
+    ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(a.x + drop.x, a.y + drop.y); ctx.lineTo(b.x + drop.x, b.y + drop.y); ctx.stroke();
+  }
+
+  // Punch the parcel footprint clear so the satellite ground shows through.
+  ctx.globalCompositeOperation = 'destination-out';
+  ctx.beginPath();
+  pts.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
+  ctx.closePath();
+  ctx.fillStyle = '#000';
+  ctx.fill();
+  ctx.globalCompositeOperation = 'source-over';
+
+  // Crisp accent outline around the lifted top surface.
+  ctx.strokeStyle = 'rgba(110, 231, 214, 0.9)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  pts.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
 }
 
 export function StudioMap() {
@@ -124,6 +314,12 @@ export function StudioMap() {
   const selRef = React.useRef(selected); selRef.current = selected;
   const twinsRef = React.useRef(twins); twinsRef.current = twins;
   const vertsRef = React.useRef<[number, number][]>([]); vertsRef.current = verts;
+  // Cutaway overlay: the <canvas>, live isolate flag, the parcel ring to extrude,
+  // and a redraw hook the effects can call after the map is initialised.
+  const strataCanvasRef = React.useRef<HTMLCanvasElement | null>(null);
+  const isolateRef = React.useRef(isolate); isolateRef.current = isolate;
+  const cutawayRingRef = React.useRef<[number, number][] | null>(null);
+  const drawCutawayRef = React.useRef<() => void>(() => {});
 
   const commit = (geom: TwinGeom) => {
     const item = pendingRef.current; if (!item) return;
@@ -145,16 +341,28 @@ export function StudioMap() {
   React.useEffect(() => {
     const el = containerRef.current; if (!el || mapRef.current) return;
     let map: maplibregl.Map;
-    try { map = new maplibregl.Map({ container: el, style: SATELLITE_STYLE, center: [-93.63, 42.03], zoom: 13, attributionControl: { compact: true }, maxPitch: 0, doubleClickZoom: false }); }
+    try { map = new maplibregl.Map({ container: el, style: SATELLITE_STYLE, center: [-93.63, 42.03], zoom: 13, attributionControl: { compact: true }, maxPitch: 68, doubleClickZoom: false }); }
     catch (e) { console.warn('[StudioMap] WebGL unavailable', e); setFailed(true); return; }
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'bottom-right');
     map.on('error', (ev) => console.warn('[StudioMap] map error', ev?.error ?? ev));
     mapRef.current = map;
+
+    // Photoreal cutaway: redraw the soil-strata slab whenever the camera moves,
+    // but only while isolating a property that has a boundary ring.
+    const drawCutaway = () => {
+      const ring = isolateRef.current ? cutawayRingRef.current : null;
+      drawStrataCutaway(map, strataCanvasRef.current, ring, propRef.current ?? '');
+    };
+    drawCutawayRef.current = drawCutaway;
+    map.on('render', drawCutaway);
+    map.on('move', drawCutaway);
+    map.on('resize', drawCutaway);
+
     map.on('load', () => {
       for (const s of ['property', 'mask', 'twin-poly', 'twin-line', 'twin-point', 'signals', 'draft', 'measure', 'zone', 'edit-verts', 'edit-mid']) map.addSource(s, { type: 'geojson', data: EMPTY_FC });
       map.addLayer({ id: 'property-fill', type: 'fill', source: 'property', paint: { 'fill-color': '#4C7EFF', 'fill-opacity': 0.05 } });
       // Isolate mask: world fill with the property punched out — dims off-property.
-      map.addLayer({ id: 'mask-fill', type: 'fill', source: 'mask', paint: { 'fill-color': '#05060a', 'fill-opacity': 0.6 } });
+      map.addLayer({ id: 'mask-fill', type: 'fill', source: 'mask', paint: { 'fill-color': '#000000', 'fill-opacity': 1 } });
       map.addLayer({ id: 'property-line', type: 'line', source: 'property', paint: { 'line-color': '#6E97FF', 'line-width': 2.5, 'line-dasharray': [2, 1.5] } });
       map.addLayer({ id: 'zone-fill', type: 'fill', source: 'zone', paint: { 'fill-color': '#F59E0B', 'fill-opacity': 0.16 } });
       map.addLayer({ id: 'zone-line', type: 'line', source: 'zone', paint: { 'line-color': '#F59E0B', 'line-width': 1.5, 'line-dasharray': [2, 1] } });
@@ -174,6 +382,7 @@ export function StudioMap() {
       map.addLayer({ id: 'edit-mid', type: 'circle', source: 'edit-mid', paint: { 'circle-radius': 4, 'circle-color': '#0b0a08', 'circle-stroke-color': '#8BB0FF', 'circle-stroke-width': 1.5, 'circle-opacity': 0.9 } });
       map.addLayer({ id: 'edit-vert', type: 'circle', source: 'edit-verts', paint: { 'circle-radius': 6, 'circle-color': '#4C7EFF', 'circle-stroke-color': '#fff', 'circle-stroke-width': 2 } });
       setReady(true); map.resize();
+      (window as unknown as { __map?: maplibregl.Map }).__map = map;
     });
 
     const hitLayers = ['twin-poly-fill', 'twin-point', 'twin-line'];
@@ -207,6 +416,32 @@ export function StudioMap() {
       else { const rM = Math.max(widthM, heightM) / 2; if (rM < 1) return; commitRef.current({ type: 'circle', center: [cx, cy], radiusM: rM }); }
       setTool('select');
     });
+
+    // ---- freehand boundary: drag to trace any organic parcel shape ----------
+    let freePts: [number, number][] | null = null;
+    const freeMinDeg = 0.00004; // ~4-5 m — sample cadence so the ring isn't dense
+    map.on('mousedown', (e) => {
+      if (toolRef.current !== 'freehand') return;
+      e.preventDefault(); freePts = [[e.lngLat.lng, e.lngLat.lat]]; map.dragPan.disable();
+    });
+    map.on('mousemove', (e) => {
+      if (!freePts || toolRef.current !== 'freehand') return;
+      const p: [number, number] = [e.lngLat.lng, e.lngLat.lat];
+      const last = freePts[freePts.length - 1];
+      if (Math.hypot(p[0] - last[0], p[1] - last[1]) < freeMinDeg) return;
+      freePts.push(p);
+      const src = map.getSource('draft') as maplibregl.GeoJSONSource | undefined;
+      const ring = freePts.length >= 3 ? [...freePts, freePts[0]] : freePts;
+      src?.setData({ type: 'FeatureCollection', features: [{ type: 'Feature', properties: {}, geometry: freePts.length >= 3 ? { type: 'Polygon', coordinates: [ring] } : { type: 'LineString', coordinates: freePts } }] });
+    });
+    const endFree = () => {
+      if (!freePts) return;
+      const pts = freePts; freePts = null; map.dragPan.enable();
+      (map.getSource('draft') as maplibregl.GeoJSONSource | undefined)?.setData(EMPTY_FC);
+      if (pts.length >= 3 && pendingRef.current) commitRef.current({ type: 'polygon', ring: pts });
+      setTool('select');
+    };
+    map.on('mouseup', endFree);
 
     let dragId: string | null = null, dragLast: [number, number] | null = null;
     map.on('mousedown', (e) => {
@@ -287,18 +522,48 @@ export function StudioMap() {
     return () => window.removeEventListener('keydown', onKey);
   }, [undo, redo, duplicateTwin, removeTwin]);
 
-  React.useEffect(() => { // property boundary + fly
+  React.useEffect(() => { // property boundary + fly — focus tightly on THIS parcel
     const map = mapRef.current; if (!map || !ready || !property) return;
-    (map.getSource('property') as maplibregl.GeoJSONSource | undefined)?.setData(property.boundaries ? { type: 'FeatureCollection', features: [{ type: 'Feature', properties: {}, geometry: property.boundaries }] } : EMPTY_FC);
-    if (property.aoi_west != null && property.aoi_east != null && property.aoi_south != null && property.aoi_north != null) map.fitBounds([[property.aoi_west, property.aoi_south], [property.aoi_east, property.aoi_north]], { padding: 90, maxZoom: 16, duration: 900 });
+    const b = property.boundaries;
+    (map.getSource('property') as maplibregl.GeoJSONSource | undefined)?.setData(b ? { type: 'FeatureCollection', features: [{ type: 'Feature', properties: {}, geometry: b }] } : EMPTY_FC);
+    // The parcel ring the cutaway slab extrudes from (open, no closing dup).
+    cutawayRingRef.current = outerRing(b);
+    // Prefer a tight fit to the boundary ring (the parcel itself), not the padded AOI bbox.
+    // With a boundary we frame it as a lifted 3D block (pitch + slight bearing).
+    // Frame FLAT first (fitBounds mis-centers vertically when a pitch is passed,
+    // pushing the parcel off-screen). The isolate effect then pitches around the
+    // framed centre, which keeps the parcel put. Asymmetric bottom padding lifts
+    // the block into the upper half so its cutaway walls drop into open space.
+    const bounds = b ? boundaryBounds(b) : null;
+    if (bounds) map.fitBounds(bounds, { padding: { top: 55, bottom: 150, left: 45, right: 45 }, maxZoom: 18, duration: 800 });
+    else if (property.aoi_west != null && property.aoi_east != null && property.aoi_south != null && property.aoi_north != null) map.fitBounds([[property.aoi_west, property.aoi_south], [property.aoi_east, property.aoi_north]], { padding: 90, maxZoom: 16, duration: 900 });
     else map.flyTo({ center: aoiCenter(property), zoom: 15 });
+    // Default the studio to a spotlighted single-parcel view: the operator is
+    // looking at ONLY their parcel while they author twins. They can toggle it off.
+    if (b) setIsolate(true);
+    map.once('moveend', () => drawCutawayRef.current());
   }, [property, ready]);
 
   React.useEffect(() => { // isolate: mask everything outside the property
     const map = mapRef.current; if (!map || !ready) return;
     const src = map.getSource('mask') as maplibregl.GeoJSONSource | undefined; if (!src) return;
     const b = property?.boundaries;
-    if (!isolate || !b) { src.setData(EMPTY_FC); return; }
+    cutawayRingRef.current = outerRing(b);
+    // In the spotlighted single-parcel view, hide POIs that sit outside the
+    // parcel (the live-signal markers span the whole AOI) so only the parcel reads.
+    if (map.isStyleLoaded()) for (const id of ['signals-glow', 'signals-dot']) if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', isolate && b ? 'none' : 'visible');
+    if (!isolate || !b) {
+      src.setData(EMPTY_FC);
+      drawStrataCutaway(map, strataCanvasRef.current, null, ''); // clear the slab
+      if (map.getPitch() > 1) map.easeTo({ pitch: 0, bearing: 0, duration: 600 });
+      return;
+    }
+    // Entering isolate: lift into the pitched block view once any framing move
+    // has settled (avoids fighting fitBounds and keeps the parcel centred).
+    const applyPitch = () => { if (map.getPitch() < 40) map.easeTo({ pitch: 56, bearing: -22, duration: 650 }); };
+    if (map.isMoving()) map.once('moveend', applyPitch); else applyPitch();
+    map.once('moveend', () => drawCutawayRef.current());
+    map.triggerRepaint();
     const holes: [number, number][][] = b.type === 'Polygon'
       ? [b.coordinates[0] as [number, number][]]
       : b.coordinates.map((poly) => poly[0] as [number, number][]);
@@ -376,7 +641,7 @@ export function StudioMap() {
     return () => { live = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bboxKey, refetchTick]);
-  React.useEffect(() => { const map = mapRef.current; if (!map || !ready) return; const feats = signals.kind === 'ready' ? signals.features.filter((f) => f && f.geometry) : []; (map.getSource('signals') as maplibregl.GeoJSONSource | undefined)?.setData({ type: 'FeatureCollection', features: feats as unknown as GeoJSON.Feature[] }); }, [signals, ready]);
+  React.useEffect(() => { const map = mapRef.current; if (!map || !ready) return; const hide = isolate && !!property?.boundaries; const feats = (!hide && signals.kind === 'ready') ? signals.features.filter((f) => f && f.geometry) : []; (map.getSource('signals') as maplibregl.GeoJSONSource | undefined)?.setData({ type: 'FeatureCollection', features: feats as unknown as GeoJSON.Feature[] }); }, [signals, ready, isolate, property]);
 
   const pickObject = (item: CatalogItem) => {
     setPending(item); setLibraryOpen(false);
@@ -433,6 +698,13 @@ export function StudioMap() {
           {failed ? <div className="grid h-full min-h-[74vh] place-items-center"><div className="text-center text-[var(--fg-muted)]"><MapPinned className="mx-auto size-6" /><p className="mt-2 text-sm">Map needs WebGL, which this browser couldn't start.</p></div></div>
             : <div ref={containerRef} className="absolute inset-0" style={{ minHeight: '74vh' }} aria-label="Property placement map" />}
 
+          {/* Photoreal soil-strata cutaway overlay — drawn on the pitched map when
+              a property is isolated, so the parcel reads as a lifted 3D earth block. */}
+          {!failed && <canvas ref={strataCanvasRef} className="pointer-events-none absolute inset-0 z-[4]" style={{ width: '100%', height: '100%', display: isolate && property?.boundaries ? 'block' : 'none' }} aria-hidden />}
+          {!failed && isolate && property?.boundaries && (
+            <div className="pointer-events-none absolute inset-0 z-[3]" style={{ background: 'radial-gradient(ellipse at 50% 44%, transparent 52%, rgba(4,5,10,0.5) 100%)' }} aria-hidden />
+          )}
+
           {/* LEFT TOOL RAIL */}
           <div className="absolute left-3 top-1/2 z-20 -translate-y-1/2">
             <div className="flex flex-col items-center gap-0.5 rounded-[var(--radius-2xl)] border border-[var(--border)] bg-[color-mix(in_oklch,var(--surface)_92%,transparent)] p-1.5 shadow-[var(--shadow-popover)] backdrop-blur-xl">
@@ -444,11 +716,12 @@ export function StudioMap() {
               <Div />
               <TB active={tool === 'measure'} onClick={() => setTool(tool === 'measure' ? 'select' : 'measure')} title="Measure (dbl-click reset)" icon={Ruler} />
               <TB active={tool === 'zone'} onClick={() => setTool(tool === 'zone' ? 'select' : 'zone')} title="Draw zone (dbl-click finish)" icon={Pentagon} />
-              <TB active={tool === 'parcel'} onClick={() => { setTool(tool === 'parcel' ? 'select' : 'parcel'); }} title="Define parcel (click corners · dbl-click save)" icon={LandPlot} />
+              <TB active={tool === 'parcel'} onClick={() => { const on = tool !== 'parcel'; setTool(on ? 'parcel' : 'select'); if (on && !pending) setPending(DEFAULT_FIELD); }} title="Parcel — trace corners (click · dbl-click save). Or use ▢ ◯ ✎ for other shapes." icon={LandPlot} />
+              <TB active={tool === 'freehand'} onClick={() => { const on = tool !== 'freehand'; setTool(on ? 'freehand' : 'select'); if (on && !pending) setPending(DEFAULT_FIELD); }} title="Freehand boundary — hold + drag to trace an organic parcel shape" icon={PenTool} />
               <Div />
               <TB active={libraryOpen || tool === 'place'} onClick={() => { setLibraryOpen((v) => !v); if (tool === 'place') setTool('select'); }} title="Object library" icon={Grid2x2} />
-              <TB active={tool === 'rect'} onClick={() => setTool(tool === 'rect' ? 'select' : 'rect')} title="Rectangle (drag)" icon={Square} />
-              <TB active={tool === 'circle'} onClick={() => setTool(tool === 'circle' ? 'select' : 'circle')} title="Circle (drag)" icon={Circle} />
+              <TB active={tool === 'rect'} onClick={() => { const on = tool !== 'rect'; setTool(on ? 'rect' : 'select'); if (on && !pending) setPending(DEFAULT_FIELD); }} title="Rectangle boundary (drag)" icon={Square} />
+              <TB active={tool === 'circle'} onClick={() => { const on = tool !== 'circle'; setTool(on ? 'circle' : 'select'); if (on && !pending) setPending(DEFAULT_FIELD); }} title="Circle / pivot boundary (drag)" icon={Circle} />
               <TB active={tool === 'row'} onClick={() => setTool(tool === 'row' ? 'select' : 'row')} title="Row / line (click · dbl-click finish)" icon={Spline} />
               <TB onClick={() => selected && duplicateTwin(selected)} title="Duplicate (⌘D)" icon={Copy} />
               <TB onClick={() => { if (selected) { removeTwin(selected); setSelected(null); } }} title="Delete (Del)" icon={Trash2} />
@@ -475,11 +748,13 @@ export function StudioMap() {
           {/* contextual hint */}
           {(tool !== 'select') && (
             <div className="absolute left-1/2 top-4 z-20 flex -translate-x-1/2 items-center gap-3 rounded-full border border-[color-mix(in_oklch,var(--accent)_45%,transparent)] bg-[color-mix(in_oklch,var(--surface)_88%,transparent)] px-4 py-1.5 text-xs backdrop-blur-xl">
-              {pending && ['place', 'rect', 'circle', 'row'].includes(tool) && <span className="text-lg">{pending.icon}</span>}
-              <span className="text-[var(--accent)] capitalize">{tool === 'place' && pending ? `Place ${pending.name}` : tool}</span>
+              {pending && ['place', 'rect', 'circle', 'row', 'freehand', 'parcel'].includes(tool) && <span className="text-lg">{pending.icon}</span>}
+              <span className="text-[var(--accent)] capitalize">{tool === 'place' && pending ? `Place ${pending.name}` : tool === 'freehand' ? 'Freehand parcel' : tool}</span>
               <span className="text-[var(--fg-muted)]">
                 {tool === 'place' ? 'click to drop'
-                  : tool === 'rect' || tool === 'circle' ? 'drag on the map'
+                  : tool === 'freehand' ? 'hold + drag to trace the parcel outline'
+                  : tool === 'rect' ? 'drag a rectangular boundary'
+                  : tool === 'circle' ? 'drag a circular / pivot boundary'
                   : tool === 'measure' ? 'click points · dbl-click reset'
                   : tool === 'edit' ? (sel ? 'drag a vertex · click an edge dot to add · right-click a vertex to remove' : 'select a field/parcel twin first, then edit its boundary')
                   : `click corners · dbl-click / ⏎ to ${tool === 'zone' ? 'finish' : 'save'} · ⌫ undo · ${verts.length} pt`}
