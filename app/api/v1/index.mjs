@@ -1467,6 +1467,10 @@ export async function handleV1(req, res) {
           gw ? await gw.visionRefine(req, res) : notImpl(res, 'farm.gw.visionRefine');
           return true;
         }
+        if (path === '/farm/gw/vision/delineate' && method === 'POST') {
+          gw ? await gw.visionDelineate(req, res) : notImpl(res, 'farm.gw.visionDelineate');
+          return true;
+        }
         if (path === '/farm/gw/scan' && method === 'POST') {
           gw ? await gw.scan(req, res) : notImpl(res, 'farm.gw.scan');
           return true;

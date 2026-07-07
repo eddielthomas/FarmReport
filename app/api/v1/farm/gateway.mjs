@@ -246,6 +246,13 @@ export async function visionSegment(req, res) {
 export async function visionRefine(req, res) {
   return visionRelay(req, res, '/api/vision/segment/refine', 'vision_refine');
 }
+// Purpose-built parcel auto-trace: the gis_parcel delineate alias runs SAM2 at a
+// point and returns a CLEAN top-level { ok, boundary:<Polygon>, area_ha, source,
+// tier, confidence, twinSeed } — no surface-factory wrapper. Preferred for
+// find-my-farm; same graceful-404 posture.
+export async function visionDelineate(req, res) {
+  return visionRelay(req, res, '/api/gis/parcel/delineate', 'vision_delineate');
+}
 
 // --- GET /farm/gw/jobs/:jobId ----------------------------------------------
 // Poll-style redis job snapshot (producer results land on .producers).

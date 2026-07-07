@@ -26,17 +26,19 @@ export interface SegObject {
   label?: string;
   confidence?: number;
   tier?: string;              // 'T3'
+  areaHa?: number;
   polygon: Polygon;           // lat/lon (EPSG:4326) when georeferenced
   bbox?: [number, number, number, number]; // [W,S,E,N]
   nonGeo?: boolean;
 }
 
 interface RawSeg {
+  ok?: boolean;               // honest false on nocoverage / no_mask / session_expired
   embedding_session?: string;
   crs?: string;
   jobId?: string;             // present on the 202 async path
   objects?: Array<{
-    label?: string; confidence?: number; tier?: string;
+    label?: string; confidence?: number; tier?: string; area_ha?: number;
     polygon?: unknown; geometry?: unknown; bbox?: number[]; non_geo?: boolean;
   }>;
   [k: string]: unknown;
@@ -48,9 +50,25 @@ export type SegmentResult =
   | { available: false }
   | { available: true; embeddingSession?: string; objects: SegObject[] };
 
-// A small AOI box (deg) around a dropped pin — enough for the gateway to segment
-// the S2 tile and return field polygons; the caller keeps the pin-containing one.
-const PIN_BOX_DEG = 0.012;
+/** The purpose-built parcel-delineate envelope (POST /api/gis/parcel/delineate):
+ *  a clean top-level boundary Polygon at the pin. Preferred for auto-trace. */
+interface RawDelineate {
+  ok?: boolean;
+  boundary?: unknown;         // GeoJSON Polygon (WGS84)
+  area_ha?: number;
+  source?: string;            // 'sam2_s2cloudless' | 'cadastral' | ...
+  tier?: string;              // 'T3'
+  confidence?: number;
+  embedding_session?: string;
+  [k: string]: unknown;
+}
+
+// The surface-factory wraps the segment payload under `result`; unwrap it (the
+// delineate alias, used for auto-trace, is already flat).
+function unwrap(raw: RawSeg): RawSeg {
+  const r = (raw as { result?: unknown }).result;
+  return r && typeof r === 'object' ? { ...(r as RawSeg) } : raw;
+}
 
 function normObjects(raw: RawSeg): SegObject[] {
   const out: SegObject[] = [];
@@ -61,6 +79,7 @@ function normObjects(raw: RawSeg): SegObject[] {
       label: o.label,
       confidence: typeof o.confidence === 'number' ? o.confidence : undefined,
       tier: o.tier,
+      areaHa: typeof o.area_ha === 'number' ? o.area_ha : undefined,
       polygon: g as Polygon,
       bbox: Array.isArray(o.bbox) && o.bbox.length === 4 ? (o.bbox as [number, number, number, number]) : undefined,
       nonGeo: o.non_geo === true,
@@ -81,34 +100,56 @@ export function pointInPolygon(lng: number, lat: number, poly: Polygon): boolean
 }
 
 /**
- * Segment the imagery at a dropped pin and return field-boundary polygons.
- * Handles the async 202 path (fresh S2 fetch) by reusing the farm SSE reader.
- * Returns { available:false } when the endpoint is unconfigured or not yet
- * deployed (404), so the UI degrades gracefully.
+ * FIND-MY-FARM AUTO-TRACE — SAM2-delineate the field at a dropped pin via the
+ * purpose-built /api/gis/parcel/delineate alias, which returns a CLEAN top-level
+ * boundary Polygon (WGS84). Verified live (Glennville → 3.15 ha, source
+ * sam2_s2cloudless, T3). Returns { available:false } when the endpoint is
+ * unconfigured/not-deployed (404) so the UI degrades gracefully.
  */
 export async function segmentFieldAtPoint(
   lat: number,
   lon: number,
-  opts: { signal?: AbortSignal } = {},
 ): Promise<SegmentResult> {
-  const d = PIN_BOX_DEG;
-  const body = {
-    source: { bbox: [lon - d, lat - d, lon + d, lat + d] as [number, number, number, number] },
-    classes: ['field'],
-    prompt: 'field boundary',
-    max: 20,
-  };
-  let raw: RawSeg;
+  let raw: RawDelineate;
   try {
-    raw = await apiPost<RawSeg>('/farm/gw/vision/segment', body);
+    raw = await apiPost<RawDelineate>('/farm/gw/vision/delineate', { point: { lat, lon } });
   } catch (err) {
     // 404 (not deployed) or 503 (unconfigured) → gracefully unavailable.
     if (err instanceof ApiError && (err.status === 404 || isUnconfigured(err))) return { available: false };
     throw err;
   }
+  // Honest empty: ok:false or no polygon → no field to trace (caller falls back).
+  const poly = raw.boundary as { type?: string; coordinates?: unknown } | undefined;
+  if (raw.ok === false || !poly || poly.type !== 'Polygon' || !Array.isArray(poly.coordinates)) {
+    return { available: true, embeddingSession: raw.embedding_session, objects: [] };
+  }
+  const obj: SegObject = {
+    label: 'field',
+    confidence: typeof raw.confidence === 'number' ? raw.confidence : undefined,
+    tier: raw.tier,
+    areaHa: typeof raw.area_ha === 'number' ? raw.area_ha : undefined,
+    polygon: poly as Polygon,
+  };
+  return { available: true, embeddingSession: raw.embedding_session, objects: [obj] };
+}
 
-  // Async path: a 202 returned a jobId — await farm.complete, then read objects
-  // from the completion payload if the gateway attaches them there.
+/**
+ * OBJECT-TO-TWIN — one-shot segment of a source (tile/bbox/image_ref) returning
+ * many objects for click-to-twin. Unwraps the surface-factory `result` envelope.
+ * Handles the async 202 path via the farm SSE reader. (Wired for the Studio flow;
+ * not used by find-my-farm.)
+ */
+export async function segmentSource(
+  body: { source?: unknown; point?: unknown; prompt?: string; classes?: string[]; max?: number },
+  opts: { signal?: AbortSignal } = {},
+): Promise<SegmentResult> {
+  let raw: RawSeg;
+  try {
+    raw = unwrap(await apiPost<RawSeg>('/farm/gw/vision/segment', body));
+  } catch (err) {
+    if (err instanceof ApiError && (err.status === 404 || isUnconfigured(err))) return { available: false };
+    throw err;
+  }
   if (raw.jobId && !(raw.objects && raw.objects.length)) {
     const jobId = String(raw.jobId);
     const collected: RawSeg = { objects: [] };
@@ -117,14 +158,13 @@ export async function segmentFieldAtPoint(
     try {
       await streamJobEvents(jobId, (ev) => {
         if (/complete|finished|done/i.test(ev.event)) {
-          const objs = (ev.data as { objects?: RawSeg['objects'] }).objects;
+          const objs = unwrap(ev.data as RawSeg).objects;
           if (Array.isArray(objs)) collected.objects = objs;
         }
       }, signal);
-    } catch { /* stream ended/aborted — fall through with whatever we have */ }
+    } catch { /* stream ended/aborted — use what we have */ }
     return { available: true, embeddingSession: raw.embedding_session, objects: normObjects(collected) };
   }
-
   return { available: true, embeddingSession: raw.embedding_session, objects: normObjects(raw) };
 }
 
