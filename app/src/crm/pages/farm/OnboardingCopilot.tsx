@@ -25,6 +25,7 @@ import { useHasRole } from '@crm/lib/auth-store';
 import { Button } from '@crm/components/ui/button';
 import { Input, Label } from '@crm/components/ui/input';
 import { BoundaryImport, geometryAreaHa } from '@crm/components/farm/BoundaryImport';
+import { BoundaryEditorMap } from '@crm/components/farm/BoundaryEditorMap';
 import { FindMyFarm } from '@crm/components/farm/FindMyFarm';
 import {
   ZoneIntentEditor, newZoneDraft, ZONE_TYPES,
@@ -411,11 +412,13 @@ export function OnboardingCopilot() {
               <Panel>
                 <SectionHead icon={<MapPinned className="size-4" />} title="Farm boundary" />
                 <p className="mb-4 text-[13px] text-[var(--fg-muted)]">
-                  Find your farm by address or pin, or import a boundary file / paste GeoJSON. The parsed
-                  shape previews on the satellite canvas — refine it there before you continue.
+                  Find your farm by address or pin — or import a boundary file / paste GeoJSON. Then
+                  fine-tune it exactly on the map below: drag vertices, add or delete points, or redraw.
                 </p>
                 <FindMyFarm className="mb-4" onParcel={(b) => { setBoundary(b); setBoundaryError(null); }} />
-                <BoundaryImport value={boundary} onGeometry={setBoundary} height={340} error={boundaryError} />
+                {/* Editable satellite surface — correct the AI auto-trace / imported shape precisely. */}
+                <BoundaryEditorMap value={boundary} onChange={(b) => { setBoundary(b); setBoundaryError(null); }} height={460} className="mb-4" />
+                <BoundaryImport value={boundary} onGeometry={setBoundary} error={boundaryError} hidePreview />
               </Panel>
             )}
 

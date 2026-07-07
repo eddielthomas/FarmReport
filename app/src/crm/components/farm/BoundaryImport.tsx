@@ -279,13 +279,15 @@ export interface BoundaryImportProps {
   compact?: boolean;
   /** External error to surface (e.g. the server's 422 invalid_geometry). */
   error?: string | null;
+  /** Hide the built-in read-only map preview (when an editable map renders it upstream). */
+  hidePreview?: boolean;
   className?: string;
 }
 
 type Mode = 'file' | 'paste';
 
 export function BoundaryImport({
-  onGeometry, value = null, polygonOnly = false, height = 260, compact = false, error = null, className,
+  onGeometry, value = null, polygonOnly = false, height = 260, compact = false, error = null, hidePreview = false, className,
 }: BoundaryImportProps) {
   const [mode, setMode] = React.useState<Mode>('file');
   const [dragOver, setDragOver] = React.useState(false);
@@ -432,7 +434,7 @@ export function BoundaryImport({
             </span>
           </div>
           {notice && <div className="text-[11px] text-[var(--fg-muted)]">{notice}</div>}
-          <GeometryPreview geometry={value} height={height} />
+          {!hidePreview && <GeometryPreview geometry={value} height={height} />}
         </div>
       )}
     </div>
