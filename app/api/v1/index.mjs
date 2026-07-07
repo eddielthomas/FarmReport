@@ -1459,6 +1459,14 @@ export async function handleV1(req, res) {
           gw ? await gw.aoiFromGeom(req, res) : notImpl(res, 'farm.gw.aoiFromGeom');
           return true;
         }
+        if (path === '/farm/gw/vision/segment' && method === 'POST') {
+          gw ? await gw.visionSegment(req, res) : notImpl(res, 'farm.gw.visionSegment');
+          return true;
+        }
+        if (path === '/farm/gw/vision/segment/refine' && method === 'POST') {
+          gw ? await gw.visionRefine(req, res) : notImpl(res, 'farm.gw.visionRefine');
+          return true;
+        }
         if (path === '/farm/gw/scan' && method === 'POST') {
           gw ? await gw.scan(req, res) : notImpl(res, 'farm.gw.scan');
           return true;

@@ -212,6 +212,41 @@ export async function aoiFromGeom(req, res) {
   return relay(res, upstream, 'aoi_from_geom');
 }
 
+// --- POST /farm/gw/vision/segment  and  /farm/gw/vision/segment/refine -----
+// AI PARCEL AUTO-TRACE + OBJECT-TO-TWIN: the gateway's unified vision endpoint
+// (YOLO-seg + Grounding-DINO one-shot; SAM2 cached-embedding refine). Contract
+// agreed in wing_farm-agent (c3b3114b). The endpoint is BUILT but ships in a
+// batched gateway recreate — until then it 404s. We forward the JSON body
+// verbatim and, unlike the generic relay, PRESERVE a 404 as a clean
+// {error:'vision_not_available'} so the client shows an honest "coming soon"
+// instead of a hard error. 200 (cached imagery) or 202 {jobId} (fresh S2 fetch,
+// reuses the farm.progress/complete SSE) both pass through untouched.
+async function visionRelay(req, res, gwPath, label) {
+  if (!farmGate(req, res, 'farm.profile.read', 'farm:view')) return;
+  if (!configured()) return unconfigured(res);
+  let body;
+  try { body = await readBody(req); } catch { body = null; }
+  const payload = (body && typeof body === 'object') ? { ...body } : {};
+  let upstream;
+  try {
+    upstream = await gatewayFetch(gwPath, { method: 'POST', body: JSON.stringify(payload) });
+  } catch (err) {
+    return send(res, 502, { success: false, error: `${label}_gateway_unreachable`, detail: String(err?.message ?? err) });
+  }
+  // Endpoint not deployed yet (batched recreate pending) → honest 404 signal.
+  if (upstream.status === 404) {
+    return send(res, 404, { success: false, error: 'vision_not_available' });
+  }
+  return relay(res, upstream, label);
+}
+
+export async function visionSegment(req, res) {
+  return visionRelay(req, res, '/api/vision/segment', 'vision_segment');
+}
+export async function visionRefine(req, res) {
+  return visionRelay(req, res, '/api/vision/segment/refine', 'vision_refine');
+}
+
 // --- GET /farm/gw/jobs/:jobId ----------------------------------------------
 // Poll-style redis job snapshot (producer results land on .producers).
 export async function job(req, res, jobId) {

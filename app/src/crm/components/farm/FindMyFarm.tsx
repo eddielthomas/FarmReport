@@ -28,6 +28,7 @@ import { Input } from '@crm/components/ui/input';
 import {
   findParcelByPoint, findParcelByAddress, type Parcel,
 } from '@crm/lib/gateway-parcel';
+import { segmentFieldAtPoint, pickFieldForPin } from '@crm/lib/gateway-vision';
 
 type Polygonal = GeoJSON.Polygon | GeoJSON.MultiPolygon;
 
@@ -86,6 +87,8 @@ export function FindMyFarm({ onParcel, className }: FindMyFarmProps) {
   const [errMsg, setErrMsg] = React.useState<string | null>(null);
   // Where to fly the globe: a located parcel's centroid (or a dropped pin).
   const [focus, setFocus] = React.useState<{ lng: number; lat: number; zoom: number } | null>(null);
+  // Last located point (dropped pin or resolved address) — the AI auto-trace anchor.
+  const [lastPoint, setLastPoint] = React.useState<{ lat: number; lon: number } | null>(null);
 
   // Handle a GatewayResult uniformly for both entry points.
   const consume = React.useCallback((
@@ -105,6 +108,7 @@ export function FindMyFarm({ onParcel, className }: FindMyFarmProps) {
     setStatus('found');
     const [lng, lat] = boundaryCenter(res.parcel.boundary);
     setFocus({ lng, lat, zoom: 14 });
+    setLastPoint({ lat, lon: lng });
     onParcel(res.parcel.boundary);
   }, [onParcel]);
 
@@ -121,6 +125,7 @@ export function FindMyFarm({ onParcel, className }: FindMyFarmProps) {
   }, [address, consume]);
 
   const runPoint = React.useCallback(async (lat: number, lon: number) => {
+    setLastPoint({ lat, lon });
     setStatus('searching'); setErrMsg(null);
     try {
       consume(await findParcelByPoint(lat, lon));
@@ -207,31 +212,80 @@ export function FindMyFarm({ onParcel, className }: FindMyFarmProps) {
         </div>
       )}
 
-      {/* AI auto-trace (SAM2 field segmentation) — stubbed until the gateway
-          delineation endpoint lands (wing_farm-agent/requests ASK 19dc90e6). When
-          ready: on click, POST the point → segmented boundary → onParcel(boundary),
-          which drops the traced polygon straight into the editor to fine-tune. */}
-      <AutoTraceButton />
+      {/* AI auto-trace — SAM2 field segmentation at the located point (gateway
+          /api/vision/segment, tier T3). Drops the traced polygon into the editor
+          to fine-tune. Degrades to "coming soon" until the endpoint deploys. */}
+      <AutoTrace point={lastPoint} onParcel={onParcel} onFocus={setFocus} />
     </div>
   );
 }
 
-/** Placeholder for AI field auto-trace. The gateway can run SAM2 on the Sentinel-2
- *  tile to delineate a parcel boundary (parcel delineationOption, tier T3); the
- *  callable endpoint is pending (farm↔gateway ASK). Disabled until then so the
- *  affordance is discoverable without implying it works yet. */
-function AutoTraceButton() {
+type TraceState = 'idle' | 'tracing' | 'unavailable' | 'empty' | 'error';
+
+/** AI field auto-trace. Runs SAM2/YOLO segmentation at the located point and
+ *  drops the pin-containing field polygon into the boundary editor (T3 — the user
+ *  confirms/nudges it). Enabled once a point is known (pin or resolved address).
+ *  If the gateway vision endpoint isn't deployed yet (404) it reports an honest
+ *  "coming soon" and the manual path below still carries onboarding. */
+function AutoTrace({
+  point, onParcel, onFocus,
+}: {
+  point: { lat: number; lon: number } | null;
+  onParcel: (b: Polygonal) => void;
+  onFocus: (f: { lng: number; lat: number; zoom: number }) => void;
+}) {
+  const [state, setState] = React.useState<TraceState>('idle');
+
+  const run = React.useCallback(async () => {
+    if (!point) return;
+    setState('tracing');
+    try {
+      const res = await segmentFieldAtPoint(point.lat, point.lon);
+      if (!res.available) { setState('unavailable'); return; }
+      const field = pickFieldForPin(res.objects, point.lon, point.lat);
+      if (!field) { setState('empty'); return; }
+      onParcel(field.polygon);
+      onFocus({ lng: point.lon, lat: point.lat, zoom: 15 });
+      setState('idle');
+    } catch {
+      setState('error');
+    }
+  }, [point, onParcel, onFocus]);
+
+  const busy = state === 'tracing';
   return (
-    <button
-      type="button"
-      disabled
-      title="AI field segmentation (SAM2 on Sentinel-2) — coming soon. It will auto-trace your field boundary for you to fine-tune."
-      className="flex w-full items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-dashed border-[var(--border)] bg-[var(--surface-sunken)]/40 px-3 py-2 text-[12px] text-[var(--fg-muted)] disabled:cursor-not-allowed disabled:opacity-70"
-    >
-      <Wand2 className="size-3.5 text-[var(--accent)]" />
-      Auto-trace field with AI
-      <span className="ml-1 rounded-full border border-[var(--border)] px-1.5 py-px text-[10px] uppercase tracking-[var(--tracking-wide)] text-[var(--fg-subtle)]">Soon</span>
-    </button>
+    <div className="space-y-1.5">
+      <button
+        type="button"
+        onClick={() => void run()}
+        disabled={!point || busy}
+        title={point
+          ? 'Auto-trace this field with AI (SAM2 on Sentinel-2), then fine-tune the boundary below.'
+          : 'Drop a pin or find an address first, then auto-trace the field.'}
+        className="flex w-full items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-[color-mix(in_oklch,var(--accent)_40%,transparent)] bg-[color-mix(in_oklch,var(--accent)_10%,transparent)] px-3 py-2 text-[12px] font-medium text-[var(--fg)] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {busy ? <Loader2 className="size-3.5 animate-spin text-[var(--accent)]" /> : <Wand2 className="size-3.5 text-[var(--accent)]" />}
+        {busy ? 'Tracing your field…' : 'Auto-trace field with AI'}
+      </button>
+      {state === 'unavailable' && (
+        <div className="flex items-start gap-2 px-1 text-[11px] text-[var(--fg-subtle)]">
+          <Info className="mt-0.5 size-3 shrink-0" />
+          <span>AI auto-trace isn't live yet — trace or import your boundary below for now.</span>
+        </div>
+      )}
+      {state === 'empty' && (
+        <div className="flex items-start gap-2 px-1 text-[11px] text-[var(--fg-subtle)]">
+          <Info className="mt-0.5 size-3 shrink-0" />
+          <span>No clear field detected here. Drop the pin inside the field, or draw the boundary below.</span>
+        </div>
+      )}
+      {state === 'error' && (
+        <div className="flex items-start gap-2 px-1 text-[11px] text-[var(--fg-subtle)]">
+          <Info className="mt-0.5 size-3 shrink-0" />
+          <span>Auto-trace ran into a problem. You can draw or import your boundary below.</span>
+        </div>
+      )}
+    </div>
   );
 }
 
