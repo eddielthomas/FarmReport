@@ -1,4 +1,4 @@
-# The "NEVER GET FIRED" Executive Dashboard — Design Spec
+# Operations Command Center — Executive Dashboard Design Spec
 
 ## What this screen is
 The single screen the **Operations Director opens first, every morning, before the crews arrive.** Not a map. An **AI Executive Operations Center** whose entire job is to answer the fear that pays for the subscription:

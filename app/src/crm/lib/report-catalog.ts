@@ -61,7 +61,7 @@ export const REPORTS: ReportDef[] = [
   // --- Executive / Operations flagships (composite over the live layers) ---
   { id: 'RF-OPS-01', family: 'operations', name: 'Fields Requiring Attention', fear: 'Which fields need action before crews arrive?', kpi: 'Priority list', tier: 'Pro', feature: 'reports.season', buildability: 'LIVE', via: 'signals + s2_ndvi + lband_sar change' },
   { id: 'RF-EXE-01', family: 'executive', name: 'Executive Summary', fear: 'What do I tell the CEO Monday?', kpi: 'Farm Health Score', tier: 'Pro', feature: 'reports.season', buildability: 'LIVE', via: 'LLM over NDVI + stress + drainage + change' },
-  { id: 'RF-EXE-02', family: 'executive', name: 'Never Get Fired Dashboard', fear: 'Will today be a good day or a very bad one?', kpi: 'Executive Priority Score', tier: 'Business', feature: 'portfolio.rollups', buildability: 'LIVE', via: 'portfolio composite' },
+  { id: 'RF-EXE-02', family: 'executive', name: 'Operations Command Center', fear: 'What needs action before crews arrive — and are we on track?', kpi: 'Executive Priority Score', tier: 'Business', feature: 'portfolio.rollups', buildability: 'LIVE', via: 'portfolio composite' },
   // --- Crop Intelligence (LIVE via s2_ndvi / stac_datacube / vision) ---
   { id: 'RF-CRP-01', family: 'crop-intelligence', name: 'Crop Health / NDVI', fear: 'Is any field failing right now?', kpi: 'NDVI + Health Score', tier: 'Basic', feature: 'agriscan.readout', buildability: 'LIVE', via: 's2_ndvi' },
   { id: 'RF-CRP-02', family: 'crop-intelligence', name: 'AgriScan Field Readout', fear: 'Is this field healthy / stressed / waterlogged?', kpi: 'Plain-language status', tier: 'Basic', feature: 'agriscan.readout', buildability: 'LIVE', via: 's2_ndvi + whitebox_terrain' },

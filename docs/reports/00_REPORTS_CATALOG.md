@@ -51,7 +51,7 @@ Each family is a recipe matrix in `docs/reports/categories/<slug>.md`. Report ID
 
 Supporting docs (read alongside the families):
 - **`PRIMITIVES_LIBRARY.md`** — the 73 reusable processing blocks (P01–P73) that all 358 reports compose, with per-primitive buildability and reuse heatmap.
-- **`NEVER_GET_FIRED_DASHBOARD.md`** — the 11-section executive dashboard that surfaces the highest-value reports on one morning screen.
+- **`OPERATIONS_COMMAND_CENTER.md`** — the 11-section executive dashboard that surfaces the highest-value reports on one morning screen.
 - **`ROLE_VIEWS.md`** — the six role bundles (Grower → Grocery Buyer) that re-slice the same twin; the "compute-once, sell-six-times" market thesis.
 - **`AI_MODELS_EXPLAINABILITY.md`** — the T1/T2/T3 honesty ladder, 28-row AI Models Matrix, the 10-block Explainability Standard, the tiered Bayesian Confidence Model, and the Alert Engine spec.
 
@@ -97,7 +97,7 @@ We are a **thin vertical**: we orchestrate + present, the AlphaGeo gateway compu
 
 ### The phased roadmap (ship the fear-closers first)
 
-- **Phase 0 — the "Never Get Fired" LIVE core.** Build the 4 free-win primitives that sit on deployed endpoints and touch ~300 report-slots: **Confidence-Scoring (P72)**, **Change-Detection (P13)**, **Alert-Engine (P71)**, **Phenology-Model (P21)** — plus **Vegetation-Indices (NDVI)**, **Terrain-Drainage**, **Object-Count**. Ship the LIVE-backed dashboard sections (§1 Critical Issues, §5 Bottlenecks-from-EO, §9 Confidence) from `NEVER_GET_FIRED_DASHBOARD.md`. **This is the demo that closes the first customer.**
+- **Phase 0 — the "Operations Command Center" LIVE core.** Build the 4 free-win primitives that sit on deployed endpoints and touch ~300 report-slots: **Confidence-Scoring (P72)**, **Change-Detection (P13)**, **Alert-Engine (P71)**, **Phenology-Model (P21)** — plus **Vegetation-Indices (NDVI)**, **Terrain-Drainage**, **Object-Count**. Ship the LIVE-backed dashboard sections (§1 Critical Issues, §5 Bottlenecks-from-EO, §9 Confidence) from `OPERATIONS_COMMAND_CENTER.md`. **This is the demo that closes the first customer.**
 - **Phase 1 — PRO analysis (GW-LIFTING).** Unlock `index_calc` (full vegetation-index family), Chronos/TiDE serving (**Forecast-Engine P15**), `tau_omega`/ET (**Water-Model**), and **Sensor-Fusion (P68)**. Lights up season curves, drainage, stress, scorecards, alerts, recommendations — the full PRO tier.
 - **Phase 2 — BUSINESS predictive + compliance (NEW-MODEL + EXT-DATA).** Build the keystone models — **Yield-Model (P22)** first (backbone of production/revenue/quota/fulfillment/ROI across 8 families), then **Disease/Pest-Engine (P26/P29)** with the screening guardrail baked in — and land the paid connectors (**Weather-Fusion**, **Financial-Model**, telemetry, HR, logistics, contracts). This unlocks portfolio rollups, compliance/MRV, all-weather SAR, the buyer watchtower, and the predictive family.
 
@@ -116,7 +116,7 @@ We are a **thin vertical**: we orchestrate + present, the AlphaGeo gateway compu
 ## 6. Pointers
 
 - **Primitives** → [`PRIMITIVES_LIBRARY.md`](PRIMITIVES_LIBRARY.md) — 73 blocks, reuse heatmap, per-primitive buildability. *Top-5 most-reused: Confidence-Scoring (~150, effectively all 358) · Forecast-Engine (~109) · Financial-Model (~104) · Weather-Fusion (~97) · Vegetation-Indices (~82).*
-- **The morning screen** → [`NEVER_GET_FIRED_DASHBOARD.md`](NEVER_GET_FIRED_DASHBOARD.md) — 11-section executive dashboard; ship-first LIVE sections are §1 / §5 / §9.
+- **The morning screen** → [`OPERATIONS_COMMAND_CENTER.md`](OPERATIONS_COMMAND_CENTER.md) — 11-section executive dashboard; ship-first LIVE sections are §1 / §5 / §9.
 - **Who buys what** → [`ROLE_VIEWS.md`](ROLE_VIEWS.md) — six role bundles on one twin; "compute-once, sell-six-times."
 - **Models, honesty, confidence & alerts** → [`AI_MODELS_EXPLAINABILITY.md`](AI_MODELS_EXPLAINABILITY.md) — T1/T2/T3 ladder, AI Models Matrix, 10-block Explainability Standard, Bayesian Confidence Model, Alert Engine spec.
 - **Report families** → [`categories/`](categories/) — the 16 recipe matrices, 358 rows.

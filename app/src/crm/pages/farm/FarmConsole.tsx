@@ -15,6 +15,7 @@
 import { lazy, Suspense } from 'react';
 import { PortfolioDashboard } from './PortfolioDashboard';
 import { OnboardingCopilot } from './OnboardingCopilot';
+import { OperationsCommandCenter } from './OperationsCommandCenter';
 
 // Lazy so a missing FarmDetail module never breaks the whole surface.
 const FarmDetail = lazy(() =>
@@ -39,6 +40,7 @@ export function FarmConsole() {
   const view = params.get('view');
   const farmId = params.get('farm');
 
+  if (view === 'command') return <OperationsCommandCenter />;
   if (view === 'onboard') return <OnboardingCopilot />;
   if (farmId) {
     return (
