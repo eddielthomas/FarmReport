@@ -17,6 +17,7 @@ import {
 import { apiGet } from '@crm/lib/api';
 import { useHasFeature } from '@crm/lib/auth-store';
 import { UpsellPill } from '@crm/components/farm/FeatureGate';
+import { REPORTS, TOTAL_PLANNED, REPORT_FAMILIES, type ReportDef } from '@crm/lib/report-catalog';
 import {
   useTwins, CATALOG, CATEGORY_LABEL, makeTwinFromCatalog, twinsToGeoJSON, circlePolygon,
   geomAreaAcres, healthScore, type TwinCategory, type CatalogItem, type Twin, type TwinGeom,
@@ -872,14 +873,37 @@ function SignalsCard({ signals, bbox, scanOpts, scanPick, setScanPick, runScanNo
   );
 }
 
-function ReportsPanel({ property }: { property: FarmProperty | null }) {
-  const reports = [
-    { t: 'Season-to-date report', s: property ? `${property.name} · updated today` : 'Portfolio' },
-    { t: 'Crop insurance MRV · Q2', s: '1 signature left' },
-    { t: 'Water balance · season', s: '3 signatures' },
-    { t: 'Lender covenant packet', s: 'Draft' },
-  ];
-  return <div className="p-4"><div className="mb-3 flex items-baseline justify-between"><h3 className="text-sm font-semibold text-[var(--fg)]">Reports</h3><a href="/operations.html" className="text-xs text-[var(--accent)]">Farm detail →</a></div><ul className="space-y-2">{reports.map((r) => <li key={r.t} className="flex items-center justify-between rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-sunken)] p-3"><div><div className="text-sm text-[var(--fg)]">{r.t}</div><div className="text-[11px] text-[var(--fg-muted)]">{r.s}</div></div><button className="rounded-full border border-[var(--border)] px-3 py-1 text-[11px] text-[var(--fg-muted)]">Open</button></li>)}</ul><div className="mt-4 rounded-[var(--radius-lg)] border border-dashed border-[var(--border)] p-3 text-xs text-[var(--fg-muted)]">Reports pull from the live twin + signal data. Generate a print-grade field report from the farm detail screen.</div></div>;
+function ReportRow({ r }: { r: ReportDef }) {
+  const unlocked = useHasFeature(r.feature);
+  const roadmap = r.buildability !== 'LIVE';
+  return (
+    <li className="flex items-center justify-between gap-2 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-sunken)] p-3">
+      <div className="min-w-0">
+        <div className="flex items-center gap-1.5 text-sm text-[var(--fg)]">{r.name}{r.tier !== 'Basic' && !unlocked && <UpsellPill tier={r.tier as 'Pro' | 'Business'} />}</div>
+        <div className="truncate text-[11px] text-[var(--fg-muted)]">{r.fear}</div>
+      </div>
+      {roadmap
+        ? <span className="shrink-0 rounded-full border border-[var(--border)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[var(--fg-subtle)]" title={`Lights up when the ${r.buildability} capability lands`}>Soon</span>
+        : unlocked
+          ? <a href="/operations.html" className="shrink-0 rounded-full border border-[var(--accent)] bg-[color-mix(in_oklch,var(--accent)_10%,transparent)] px-3 py-1 text-[11px] text-[var(--fg)] hover:brightness-110">Generate</a>
+          : <a href="/operations.html?view=billing" className="shrink-0 rounded-full border border-[var(--border)] px-3 py-1 text-[11px] text-[var(--fg-muted)]">Upgrade</a>}
+    </li>
+  );
+}
+
+function ReportsPanel({ property: _property }: { property: FarmProperty | null }) {
+  return (
+    <div className="p-4">
+      <div className="mb-3 flex items-baseline justify-between">
+        <h3 className="text-sm font-semibold text-[var(--fg)]">Reports</h3>
+        <a href="/operations.html" className="text-xs text-[var(--accent)]">Farm detail →</a>
+      </div>
+      <ul className="space-y-2">{REPORTS.map((r) => <ReportRow key={r.id} r={r} />)}</ul>
+      <div className="mt-4 rounded-[var(--radius-lg)] border border-dashed border-[var(--border)] p-3 text-[11px] text-[var(--fg-muted)]">
+        <span className="font-medium text-[var(--fg)]">{TOTAL_PLANNED} reports</span> across {REPORT_FAMILIES.length} intelligence families — executive, operations, crop, water, disease, supply-chain, grocery compliance, financial, risk & predictive — light up as each capability lands and by your plan tier.
+      </div>
+    </div>
+  );
 }
 function AnalyticsPanel() {
   const cards = [{ t: 'NDVI · 12mo', v: '0.66', d: '▲ 0.03', data: NDVI_12, tone: 'var(--risk-healthy)' }, { t: 'Moisture · 12mo', v: '22%', d: 'stable', data: [22, 24, 21, 19, 18, 20, 23, 25, 24, 22, 21, 22], tone: 'var(--accent)' }, { t: 'Yield idx · 12mo', v: '184', d: '▲ 3.2%', data: [155, 158, 162, 160, 164, 168, 172, 175, 178, 180, 182, 184], tone: 'var(--risk-stress)' }];
