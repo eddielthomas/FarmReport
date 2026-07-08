@@ -7,20 +7,38 @@ import type { User, Role } from './types';
 // generated file keeps this dependency value-only here (no runtime cycle).
 import { GENERATED_CLIENT_PACK } from './solution-pack.generated';
 
+/** The tenant's active plan + the feature keys it unlocks (from /billing/entitlements). */
+export interface Entitlements { plan_key: string; plan_label: string; features: string[] }
+
 interface AuthState {
   token: string | null;
   user: User | null;
+  entitlements: Entitlements | null;
   setSession: (token: string, user: User) => void;
   clear: () => void;
+  setEntitlements: (e: Entitlements | null) => void;
+  loadEntitlements: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       token: null,
       user: null,
-      setSession: (token, user) => set({ token, user }),
-      clear: () => set({ token: null, user: null }),
+      entitlements: null,
+      // Setting a session also refreshes plan entitlements (fire-and-forget).
+      setSession: (token, user) => { set({ token, user }); void get().loadEntitlements(); },
+      clear: () => set({ token: null, user: null, entitlements: null }),
+      setEntitlements: (entitlements) => set({ entitlements }),
+      loadEntitlements: async () => {
+        if (!get().token) return;
+        try {
+          // Dynamic import avoids a static cycle (api.ts reads the token from here).
+          const { apiGet } = await import('./api');
+          const e = await apiGet<Entitlements>('/billing/entitlements');
+          set({ entitlements: e });
+        } catch { /* leave as-is; hasFeature defaults open until loaded, server still enforces */ }
+      },
     }),
     {
       name: 'rwr.auth',
@@ -58,6 +76,30 @@ export function useHasAnyRole(...roles: Array<Role | string>): boolean {
   const userRoles = user?.roles ?? [];
   if (userRoles.includes('platform:admin')) return true;
   return roles.some((r) => userRoles.includes(r));
+}
+
+// ---- Plan-tier entitlements (Basic / Pro / Business) ----------------------
+// Feature keys come from api/v1/billing/entitlements.mjs. platform:admin always
+// passes. Until entitlements load (or if the fetch fails), we default OPEN so the
+// UI never flashes an upsell on a feature the tenant actually has — the API's
+// requireFeature gate is the real boundary.
+export function hasFeature(key: string): boolean {
+  const s = useAuthStore.getState();
+  if (s.user?.roles?.includes('platform:admin')) return true;
+  const e = s.entitlements;
+  return e ? e.features.includes(key) : true;
+}
+
+export function useHasFeature(key: string): boolean {
+  const entitlements = useAuthStore((s) => s.entitlements);
+  const user = useAuthStore((s) => s.user);
+  if (user?.roles?.includes('platform:admin')) return true;
+  return entitlements ? entitlements.features.includes(key) : true;
+}
+
+/** Current plan tier label (Basic / Pro / Business), or null if unknown. */
+export function usePlanLabel(): string | null {
+  return useAuthStore((s) => s.entitlements?.plan_label ?? null);
 }
 
 // ---- SolutionPack (Sprint A1) ---------------------------------------------

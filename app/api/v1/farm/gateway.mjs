@@ -28,6 +28,7 @@
 
 import { readBody, send } from '../http.mjs';
 import { farmGate } from './gate.mjs';
+import { requireFeature } from '../billing/entitlements.mjs';
 
 const ORIGIN = process.env.CORS_ORIGIN ?? '*';
 
@@ -169,8 +170,10 @@ export async function parcelByAddress(req, res, url) {
 // Forward the JSON body verbatim; inject tenant_id from the resolved tenant if
 // the client omitted it. The gateway owns all validation (span/AOI → 422).
 export async function scan(req, res) {
-  // Scan launches real orbiter work → gate on the farm write permission.
+  // Scan launches real orbiter work → gate on the farm write permission…
   if (!farmGate(req, res, 'farm.profile.write', 'farm:onboard')) return;
+  // …and on the plan tier — on-demand HD EO scans are a Pro/Business feature.
+  if (!(await requireFeature(req, res, 'studio.scan.hd'))) return;
   if (!configured()) return unconfigured(res);
   let body;
   try { body = await readBody(req); } catch { body = null; }

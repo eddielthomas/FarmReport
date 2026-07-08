@@ -12,9 +12,11 @@ import {
   MousePointer2, StickyNote, TriangleAlert, ListChecks, Ruler, Pentagon, LandPlot,
   Grid2x2, Square, Circle, Spline, Copy, Trash2, Undo2, Redo2, EyeOff, Tag,
   Sparkles, Clock, FileText, MapPin, X, Boxes, ExternalLink, MapPinned, ChevronDown,
-  Sprout, Activity, Loader2, Satellite, Waypoints, PenTool,
+  Sprout, Activity, Loader2, Satellite, Waypoints, PenTool, Lock,
 } from 'lucide-react';
 import { apiGet } from '@crm/lib/api';
+import { useHasFeature } from '@crm/lib/auth-store';
+import { UpsellPill } from '@crm/components/farm/FeatureGate';
 import {
   useTwins, CATALOG, CATEGORY_LABEL, makeTwinFromCatalog, twinsToGeoJSON, circlePolygon,
   geomAreaAcres, healthScore, type TwinCategory, type CatalogItem, type Twin, type TwinGeom,
@@ -669,6 +671,7 @@ export function StudioMap() {
   };
 
   const canPlace = !!propertyId;
+  const canAdvancedLayers = useHasFeature('studio.layers.advanced'); // moisture/thermal → Pro
 
   return (
     <div className="flex min-h-screen flex-col bg-[var(--bg)] text-[var(--fg)]">
@@ -677,7 +680,10 @@ export function StudioMap() {
         right={
           <>
             <div className="hidden items-center gap-0.5 rounded-full border border-[var(--border)] bg-[var(--surface)] p-0.5 text-[11px] md:flex">
-              {LAYERS.map((l) => <button key={l} onClick={() => setLayer(l)} className={`rounded-full px-2.5 py-0.5 capitalize transition ${layer === l ? 'bg-[var(--accent)] text-[var(--fg-on-accent)]' : 'text-[var(--fg-muted)] hover:text-[var(--fg)]'}`}>{l}</button>)}
+              {LAYERS.map((l) => {
+                const locked = (l === 'moisture' || l === 'thermal') && !canAdvancedLayers;
+                return <button key={l} disabled={locked} onClick={() => { if (!locked) setLayer(l); }} title={locked ? 'Moisture & thermal layers are a Pro feature' : undefined} className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 capitalize transition ${locked ? 'cursor-not-allowed text-[var(--fg-subtle)] opacity-60' : layer === l ? 'bg-[var(--accent)] text-[var(--fg-on-accent)]' : 'text-[var(--fg-muted)] hover:text-[var(--fg)]'}`}>{l}{locked && <Lock className="size-2.5" />}</button>;
+              })}
             </div>
             <div className="relative">
               <button onClick={() => setPickerOpen((v) => !v)} className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--surface)] px-3 py-1.5 text-xs text-[var(--fg)] hover:border-[var(--accent)]"><Sprout className="size-3.5 text-[var(--accent)]" /> {property ? property.name : farms === null ? 'Loading…' : 'Select property'} <ChevronDown className="size-3.5 opacity-60" /></button>
@@ -852,12 +858,15 @@ function TwinInspector({ sel, twins, onSelect, onUpdate, onDelete, onDuplicate, 
 
 function SignalsCard({ signals, bbox, scanOpts, scanPick, setScanPick, runScanNow, scanBusy, scanMsg }: { signals: SignalsState; bbox: [number, number, number, number] | null; scanOpts: { id: ScanSignal; label: string }[]; scanPick: Set<ScanSignal>; setScanPick: React.Dispatch<React.SetStateAction<Set<ScanSignal>>>; runScanNow: () => void; scanBusy: boolean; scanMsg: string | null }) {
   const count = signals.kind === 'ready' ? signals.features.length : 0;
+  const canHd = useHasFeature('studio.scan.hd'); // on-demand HD EO scan → Pro
   return (
     <div className="rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-sunken)] p-3">
       <div className="flex items-center justify-between"><div className="flex items-center gap-1.5 text-[11px] uppercase tracking-wider text-[var(--fg-muted)]"><Activity className="size-3.5 text-[var(--risk-healthy)]" /> Live signals</div>{signals.kind === 'loading' ? <Loader2 className="size-3.5 animate-spin text-[var(--fg-subtle)]" /> : signals.kind === 'ready' && <span className="rounded-full bg-[color-mix(in_oklch,var(--risk-healthy-fill)_60%,transparent)] px-2 py-0.5 text-[10px] font-medium text-[var(--risk-healthy)] tabular-nums">{count}</span>}</div>
       <div className="mt-1.5 text-[11px] text-[var(--fg-muted)]">{!bbox ? 'No AOI on this property.' : signals.kind === 'unconfigured' ? 'Connect the AlphaGeo gateway for live signals.' : signals.kind === 'error' ? `Error: ${signals.message}` : signals.kind === 'ready' && count === 0 ? 'No signals yet — run a scan.' : signals.kind === 'ready' ? `${count} signal(s) over this property.` : 'Loading…'}</div>
       <div className="mt-2 flex flex-wrap gap-1">{scanOpts.map((o) => { const on = scanPick.has(o.id); return <button key={o.id} onClick={() => setScanPick((p) => { const n = new Set(p); n.has(o.id) ? n.delete(o.id) : n.add(o.id); return n; })} className={`rounded-full border px-2 py-0.5 text-[11px] transition ${on ? 'border-[var(--accent)] bg-[color-mix(in_oklch,var(--accent)_14%,transparent)] text-[var(--fg)]' : 'border-[var(--border)] text-[var(--fg-muted)]'}`}>{o.label}</button>; })}</div>
-      <button onClick={runScanNow} disabled={!bbox || scanBusy || scanPick.size === 0} className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--accent)] px-3 py-1.5 text-xs font-semibold text-[var(--fg-on-accent)] hover:brightness-110 disabled:opacity-40">{scanBusy ? <><Loader2 className="size-3.5 animate-spin" /> Queuing…</> : <><Satellite className="size-3.5" /> Build HD twin</>}</button>
+      {canHd
+        ? <button onClick={runScanNow} disabled={!bbox || scanBusy || scanPick.size === 0} className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-[var(--radius-md)] bg-[var(--accent)] px-3 py-1.5 text-xs font-semibold text-[var(--fg-on-accent)] hover:brightness-110 disabled:opacity-40">{scanBusy ? <><Loader2 className="size-3.5 animate-spin" /> Queuing…</> : <><Satellite className="size-3.5" /> Build HD twin</>}</button>
+        : <a href="/operations.html?view=billing" title="On-demand HD scans are a Pro feature" className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-[var(--radius-md)] border border-[color-mix(in_oklch,var(--accent)_40%,transparent)] bg-[color-mix(in_oklch,var(--accent)_10%,transparent)] px-3 py-1.5 text-xs font-semibold text-[var(--fg)] hover:brightness-110"><Satellite className="size-3.5 text-[var(--accent)]" /> Build HD twin <UpsellPill tier="Pro" /></a>}
       {scanMsg && <div className="mt-1.5 text-[10px] text-[var(--fg-subtle)]">{scanMsg}</div>}
     </div>
   );

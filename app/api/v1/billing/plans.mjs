@@ -10,7 +10,7 @@
 export const PLANS = [
   {
     key: 'starter',
-    name: 'Starter',
+    name: 'Basic',
     priceEnv: 'STRIPE_PRICE_STARTER',
     blurb: 'For growers and landowners monitoring their first fields.',
     features: [
@@ -24,7 +24,7 @@ export const PLANS = [
   },
   {
     key: 'growth',
-    name: 'Growth',
+    name: 'Pro',
     priceEnv: 'STRIPE_PRICE_GROWTH',
     blurb: 'For teams monitoring crop health and supplier risk across many fields.',
     features: [
@@ -40,7 +40,7 @@ export const PLANS = [
   },
   {
     key: 'enterprise',
-    name: 'Enterprise',
+    name: 'Business',
     priceEnv: null,
     blurb: 'For large buyers, co-ops and land portfolios with custom needs.',
     features: [

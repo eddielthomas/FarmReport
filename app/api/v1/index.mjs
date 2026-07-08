@@ -1561,6 +1561,7 @@ export async function handleV1(req, res) {
       const subs = await import('./billing/subscriptions.mjs');
       if (path === '/billing/plans'        && method === 'GET')  { await subs.plans(req, res);     return true; }
       if (path === '/billing/subscription' && method === 'GET')  { await subs.current(req, res);   return true; }
+      if (path === '/billing/entitlements' && method === 'GET')  { await subs.entitlements(req, res); return true; }
       if (path === '/billing/invoices'     && method === 'GET')  { await subs.invoices(req, res);  return true; }
       if (path === '/billing/checkout'     && method === 'POST') { await subs.checkout(req, res);  return true; }
       if (path === '/billing/portal'       && method === 'POST') { await subs.portal(req, res);    return true; }

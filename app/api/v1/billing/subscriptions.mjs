@@ -14,6 +14,7 @@ import { withTenantConn } from '../db/pool.mjs';
 import { readBody, ok, badReq, send } from '../http.mjs';
 import { recordAudit } from '../audit.mjs';
 import { publicPlans, priceIdFor, PLANS } from './plans.mjs';
+import { activePlanKeyFor, featuresForPlan, TIER_LABEL } from './entitlements.mjs';
 import { getStripe, stripeConfigured, createCheckoutSession, createPortalSession } from './stripe.mjs';
 
 function canManageBilling(req) {
@@ -51,6 +52,13 @@ export async function current(req, res) {
     activePlanKey: active ? data.subscription.plan_key : null,
     canManage: canManageBilling(req),
   });
+}
+
+// GET /billing/entitlements — the tenant's active plan + the feature keys it
+// includes. The SPA loads this at session time to drive show/hide/upsell.
+export async function entitlements(req, res) {
+  const plan = await activePlanKeyFor(req);
+  ok(res, { plan_key: plan, plan_label: TIER_LABEL[plan] ?? plan, features: featuresForPlan(plan) });
 }
 
 // GET /billing/invoices
