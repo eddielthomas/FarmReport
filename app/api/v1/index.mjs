@@ -1547,6 +1547,20 @@ export async function handleV1(req, res) {
         rp ? await rp.generate(req, res) : notImpl(res, 'farm.reports.generate');
         return true;
       }
+      // /farm/reports/schedule (POST) · /farm/reports/schedules (GET) · /schedule/:id (DELETE)
+      if (path === '/farm/reports/schedule' && method === 'POST') {
+        const sch = await import('./farm/report-schedule.mjs');
+        await sch.create(req, res); return true;
+      }
+      if (path === '/farm/reports/schedules' && method === 'GET') {
+        const sch = await import('./farm/report-schedule.mjs');
+        await sch.list(req, res); return true;
+      }
+      const mSch = path.match(/^\/farm\/reports\/schedule\/([0-9a-f-]{36})$/i);
+      if (mSch && method === 'DELETE') {
+        const sch = await import('./farm/report-schedule.mjs');
+        await sch.remove(req, res, mSch[1]); return true;
+      }
       const mRep = path.match(/^\/farm\/reports\/([0-9a-f-]{36})$/i);
       if (mRep && method === 'GET') {
         const rp = await tryLoad('farm-reports');

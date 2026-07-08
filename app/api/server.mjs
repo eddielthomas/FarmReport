@@ -1009,6 +1009,10 @@ server.listen(PORT, () => {
   // Automatic ASTERRA (Recover API) → crm.detection ingest (no-op unless
   // ASTERRA_AUTO_INGEST=1 AND ASTERRA_USERNAME/PASSWORD are set).
   try { startAsterraIngest(); } catch (e) { console.warn('[asterra-ingest] start failed:', e?.message ?? e); }
+  // Report scheduler — generates + delivers due scheduled reports (farm.report_schedule).
+  import('./v1/farm/report-schedule.mjs')
+    .then(({ startReportScheduler }) => startReportScheduler())
+    .catch((e) => console.warn('[report-scheduler] start failed:', e?.message ?? e));
   // S6A â€” attach socket.io to the live http server. attachSocketIo lazy-imports
   // the socket.io package so the server still boots when it is absent (CI
   // parity smoke / scripts that only exercise REST).
