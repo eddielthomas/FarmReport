@@ -80,3 +80,20 @@ export const REPORTS: ReportDef[] = [
 export function reportsForFamily(slug: string): ReportDef[] {
   return REPORTS.filter((r) => r.family === slug);
 }
+
+// --- surface-menu auto-grow -------------------------------------------------
+// The gateway's /api/surface/menu lists LIVE capability tokens (e.g. stac_datacube,
+// index_calc, whitebox_terrain). A report is LIVE when it's statically LIVE OR
+// every gateway capability token its recipe (`via`) names is present on the menu.
+// So as the gateway surfaces more tools, roadmap reports flip to generate-able
+// with no code change — see gateway-surface.ts.
+const VIA_TOKEN_RE = /[a-z][a-z0-9]*(?:_[a-z0-9]+)+/g;
+export function reportViaTokens(r: ReportDef): string[] {
+  return r.via ? (r.via.toLowerCase().match(VIA_TOKEN_RE) ?? []) : [];
+}
+export function reportIsLive(r: ReportDef, liveCaps: Set<string>): boolean {
+  if (r.buildability === 'LIVE') return true;
+  if (!liveCaps.size) return false;
+  const tokens = reportViaTokens(r);
+  return tokens.length > 0 && tokens.every((t) => liveCaps.has(t));
+}

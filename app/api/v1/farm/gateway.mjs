@@ -131,6 +131,15 @@ export async function signalsByBbox(req, res, url) {
   return jsonRelay(req, res, `/api/farm/signals-by-bbox${qs}`, 'farm_signals');
 }
 
+// GET /farm/gw/surface/menu — the gateway's self-describing capability menu
+// (grouped, invokable, tier-chipped, auto-grows). We consume it to auto-grow
+// which reports are LIVE. Graceful: on 404/503 the client falls back to the
+// static report registry, so a not-yet-reachable menu never breaks the UI.
+export async function surfaceMenu(req, res, url) {
+  const qs = url?.search ?? (req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '');
+  return jsonRelay(req, res, `/api/surface/menu${qs}`, 'surface_menu');
+}
+
 // Shared POST → /api/gis/parcel with a JSON body (point or address). The gateway
 // returns {ok, parcel:Feature|null, twinSeed, source, tier, area_ha, ...}; the
 // client normalizes it. 400 on a bad request; 502 on an unreachable gateway.

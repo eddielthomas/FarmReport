@@ -17,7 +17,8 @@ import {
 import { apiGet } from '@crm/lib/api';
 import { useHasFeature } from '@crm/lib/auth-store';
 import { UpsellPill } from '@crm/components/farm/FeatureGate';
-import { REPORTS, TOTAL_PLANNED, REPORT_FAMILIES, type ReportDef } from '@crm/lib/report-catalog';
+import { REPORTS, TOTAL_PLANNED, REPORT_FAMILIES, reportIsLive, type ReportDef } from '@crm/lib/report-catalog';
+import { fetchSurfaceMenu } from '@crm/lib/gateway-surface';
 import {
   useTwins, CATALOG, CATEGORY_LABEL, makeTwinFromCatalog, twinsToGeoJSON, circlePolygon,
   geomAreaAcres, healthScore, type TwinCategory, type CatalogItem, type Twin, type TwinGeom,
@@ -873,9 +874,9 @@ function SignalsCard({ signals, bbox, scanOpts, scanPick, setScanPick, runScanNo
   );
 }
 
-function ReportRow({ r }: { r: ReportDef }) {
+function ReportRow({ r, liveCaps }: { r: ReportDef; liveCaps: Set<string> }) {
   const unlocked = useHasFeature(r.feature);
-  const roadmap = r.buildability !== 'LIVE';
+  const roadmap = !reportIsLive(r, liveCaps);
   return (
     <li className="flex items-center justify-between gap-2 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-sunken)] p-3">
       <div className="min-w-0">
@@ -892,13 +893,22 @@ function ReportRow({ r }: { r: ReportDef }) {
 }
 
 function ReportsPanel({ property: _property }: { property: FarmProperty | null }) {
+  // Auto-grow LIVE reports from the gateway's self-describing capability menu.
+  // Graceful: until the menu is reachable it returns empty and we show the static
+  // LIVE set (see gateway-surface.ts).
+  const [liveCaps, setLiveCaps] = React.useState<Set<string>>(() => new Set());
+  React.useEffect(() => {
+    let live = true;
+    fetchSurfaceMenu().then((m) => { if (live && m.available) setLiveCaps(m.capabilities); }).catch(() => { /* fall back to static */ });
+    return () => { live = false; };
+  }, []);
   return (
     <div className="p-4">
       <div className="mb-3 flex items-baseline justify-between">
         <h3 className="text-sm font-semibold text-[var(--fg)]">Reports</h3>
         <a href="/operations.html" className="text-xs text-[var(--accent)]">Farm detail →</a>
       </div>
-      <ul className="space-y-2">{REPORTS.map((r) => <ReportRow key={r.id} r={r} />)}</ul>
+      <ul className="space-y-2">{REPORTS.map((r) => <ReportRow key={r.id} r={r} liveCaps={liveCaps} />)}</ul>
       <div className="mt-4 rounded-[var(--radius-lg)] border border-dashed border-[var(--border)] p-3 text-[11px] text-[var(--fg-muted)]">
         <span className="font-medium text-[var(--fg)]">{TOTAL_PLANNED} reports</span> across {REPORT_FAMILIES.length} intelligence families — executive, operations, crop, water, disease, supply-chain, grocery compliance, financial, risk & predictive — light up as each capability lands and by your plan tier.
       </div>
