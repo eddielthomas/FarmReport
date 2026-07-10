@@ -14,7 +14,7 @@ import {
   Sparkles, Clock, FileText, MapPin, X, Boxes, ExternalLink, MapPinned, ChevronDown,
   Sprout, Activity, Loader2, Satellite, Waypoints, PenTool, Lock,
 } from 'lucide-react';
-import { apiGet } from '@crm/lib/api';
+import { apiGet, apiPost } from '@crm/lib/api';
 import { useHasFeature } from '@crm/lib/auth-store';
 import { UpsellPill } from '@crm/components/farm/FeatureGate';
 import { REPORTS, TOTAL_PLANNED, REPORT_FAMILIES, reportIsLive, type ReportDef } from '@crm/lib/report-catalog';
@@ -874,25 +874,57 @@ function SignalsCard({ signals, bbox, scanOpts, scanPick, setScanPick, runScanNo
   );
 }
 
-function ReportRow({ r, liveCaps }: { r: ReportDef; liveCaps: Set<string> }) {
+// Portfolio-level families roll up as the executive-monthly report; the rest are
+// field reports. Both map onto the two kinds the /farm/reports/generate engine
+// supports today; richer per-recipe generation (Meridian render) wraps in later.
+function reportKind(r: ReportDef): 'field' | 'executive-monthly' {
+  return r.family === 'executive' || r.family === 'grocery-compliance' ? 'executive-monthly' : 'field';
+}
+
+function ReportRow({ r, liveCaps, farmId }: { r: ReportDef; liveCaps: Set<string>; farmId: string | null }) {
   const unlocked = useHasFeature(r.feature);
   const roadmap = !reportIsLive(r, liveCaps);
+  const [state, setState] = React.useState<'idle' | 'busy' | 'done' | 'scheduled' | 'error'>('idle');
+  const [msg, setMsg] = React.useState<string | null>(null);
+
+  const generate = async () => {
+    if (!farmId) { setState('error'); setMsg('Select a property first.'); return; }
+    setState('busy'); setMsg(null);
+    try {
+      const row = await apiPost<{ id: string; summary?: string }>('/farm/reports/generate', { farm_id: farmId, type: reportKind(r) });
+      setState('done'); setMsg(row.summary ? row.summary.slice(0, 120) : 'Report generated.');
+    } catch (e) { setState('error'); setMsg(e instanceof Error ? e.message : 'Generate failed.'); }
+  };
+  const schedule = async () => {
+    if (!farmId) { setState('error'); setMsg('Select a property first.'); return; }
+    try {
+      await apiPost('/farm/reports/schedule', { farm_id: farmId, report_type: reportKind(r), cadence: 'weekly' });
+      setState('scheduled'); setMsg('Scheduled weekly — runs automatically.');
+    } catch (e) { setState('error'); setMsg(e instanceof Error ? e.message : 'Schedule failed.'); }
+  };
+
   return (
-    <li className="flex items-center justify-between gap-2 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-sunken)] p-3">
-      <div className="min-w-0">
-        <div className="flex items-center gap-1.5 text-sm text-[var(--fg)]">{r.name}{r.tier !== 'Basic' && !unlocked && <UpsellPill tier={r.tier as 'Pro' | 'Business'} />}</div>
-        <div className="truncate text-[11px] text-[var(--fg-muted)]">{r.fear}</div>
+    <li className="flex flex-col gap-1.5 rounded-[var(--radius-lg)] border border-[var(--border)] bg-[var(--surface-sunken)] p-3">
+      <div className="flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <div className="flex items-center gap-1.5 text-sm text-[var(--fg)]">{r.name}{r.tier !== 'Basic' && !unlocked && <UpsellPill tier={r.tier as 'Pro' | 'Business'} />}</div>
+          <div className="truncate text-[11px] text-[var(--fg-muted)]">{r.fear}</div>
+        </div>
+        {roadmap
+          ? <span className="shrink-0 rounded-full border border-[var(--border)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[var(--fg-subtle)]" title={`Lights up when the ${r.buildability} capability lands`}>Soon</span>
+          : unlocked
+            ? <div className="flex shrink-0 items-center gap-1">
+                <button onClick={generate} disabled={state === 'busy'} className="rounded-full border border-[var(--accent)] bg-[color-mix(in_oklch,var(--accent)_10%,transparent)] px-3 py-1 text-[11px] text-[var(--fg)] hover:brightness-110 disabled:opacity-50">{state === 'busy' ? 'Generating…' : state === 'done' ? 'Regenerate' : 'Generate'}</button>
+                <button onClick={schedule} title="Schedule weekly" className="grid size-6 place-items-center rounded-full border border-[var(--border)] text-[var(--fg-muted)] hover:border-[var(--accent)] hover:text-[var(--fg)]"><Clock className="size-3" /></button>
+              </div>
+            : <a href="/operations.html?view=billing" className="shrink-0 rounded-full border border-[var(--border)] px-3 py-1 text-[11px] text-[var(--fg-muted)]">Upgrade</a>}
       </div>
-      {roadmap
-        ? <span className="shrink-0 rounded-full border border-[var(--border)] px-2 py-0.5 text-[10px] uppercase tracking-wide text-[var(--fg-subtle)]" title={`Lights up when the ${r.buildability} capability lands`}>Soon</span>
-        : unlocked
-          ? <a href="/operations.html" className="shrink-0 rounded-full border border-[var(--accent)] bg-[color-mix(in_oklch,var(--accent)_10%,transparent)] px-3 py-1 text-[11px] text-[var(--fg)] hover:brightness-110">Generate</a>
-          : <a href="/operations.html?view=billing" className="shrink-0 rounded-full border border-[var(--border)] px-3 py-1 text-[11px] text-[var(--fg-muted)]">Upgrade</a>}
+      {msg && <div className={`text-[10px] ${state === 'error' ? 'text-[var(--risk-critical)]' : state === 'done' || state === 'scheduled' ? 'text-[var(--risk-healthy)]' : 'text-[var(--fg-subtle)]'}`}>{state === 'done' ? '✓ ' : state === 'scheduled' ? '✓ ' : ''}{msg}</div>}
     </li>
   );
 }
 
-function ReportsPanel({ property: _property }: { property: FarmProperty | null }) {
+function ReportsPanel({ property }: { property: FarmProperty | null }) {
   // Auto-grow LIVE reports from the gateway's self-describing capability menu.
   // Graceful: until the menu is reachable it returns empty and we show the static
   // LIVE set (see gateway-surface.ts).
@@ -908,7 +940,7 @@ function ReportsPanel({ property: _property }: { property: FarmProperty | null }
         <h3 className="text-sm font-semibold text-[var(--fg)]">Reports</h3>
         <a href="/operations.html" className="text-xs text-[var(--accent)]">Farm detail →</a>
       </div>
-      <ul className="space-y-2">{REPORTS.map((r) => <ReportRow key={r.id} r={r} liveCaps={liveCaps} />)}</ul>
+      <ul className="space-y-2">{REPORTS.map((r) => <ReportRow key={r.id} r={r} liveCaps={liveCaps} farmId={property?.id ?? null} />)}</ul>
       <div className="mt-4 rounded-[var(--radius-lg)] border border-dashed border-[var(--border)] p-3 text-[11px] text-[var(--fg-muted)]">
         <span className="font-medium text-[var(--fg)]">{TOTAL_PLANNED} reports</span> across {REPORT_FAMILIES.length} intelligence families — executive, operations, crop, water, disease, supply-chain, grocery compliance, financial, risk & predictive — light up as each capability lands and by your plan tier.
       </div>

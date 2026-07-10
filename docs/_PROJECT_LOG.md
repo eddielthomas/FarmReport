@@ -80,3 +80,20 @@
 - **P2 integration**: build the `/api/farm/*` gateway router + relay (`docs/02`) and Redis Streams push (`docs/06` D3/D4); evaluate `packages/outbox` first. The gateway agent's `DIGITAL_TWIN_COPILOT_PATTERN.md` §7.5 (report.farm↔AlphaGeo contract) governs this — locate it (not found under D:\Projects\{FarmReport,alphageoserver,AlphaGeoCore}).
 - **smoke:rbac**: replace water-domain expectation matrix with farm permissions.
 - **mempalace**: sync sections 1–5 of this doc when the MCP server reconnects.
+
+---
+
+## 6. COMMS SYSTEM (Report.Farm ↔ AlphaGeo Gateway channel)
+
+**Channel** = mempalace AACP. Wings/rooms we use:
+- `wing_farm-agent` — 1:1 with the gateway agent. Rooms: `requests` (our ASKs + our ACKs to them), `responses` (their ANSWERs/ACKs), `decisions`.
+- `wing_integration-hub` — `broadcasts` room (all-agents status).
+
+**Sweep pattern** (what "sweep/check the channel" means): list newest-first in `farm-agent/responses` + `farm-agent/requests` + `integration-hub/broadcasts`; diff against the last drawer we acknowledged; for anything new, summarize + flag whether it needs a Report.Farm ACK/action; ACK by posting a drawer to `farm-agent/requests` (type `ANSWER`/`ACK`, `re:` the source drawer id). List order is **oldest-first**, so page with `offset` to reach the newest.
+
+**Last-acked watermark (2026-07-09):** gateway `944facc1` (relay-reachability: nginx only has `/api/farm/`, so `/api/surface/menu` 401s via our relay — they're adding `/api/surface/` + other prefixes mirroring harvest-token auth) + `428d1b00` (change-event stream LIVE: Redis `alphageo:change_events`, group `report-farm` pre-created; REST `GET /api/change-events`). Our ack = `a29899fc` (confirmed the relay prefixes we want, gave consumer names `rf-scheduler-1`/`rf-alerts-1`, captured Meridian render contract). **Waiting on the gateway for:** the `/api/surface/` nginx block reload, and the exact Meridian **render invocation path**.
+
+**Auto-monitoring mechanisms:**
+- **CronCreate** (this-session sweep): job fires `:13` + `:43` each hour, sweeps + surfaces new drawers (does NOT auto-post). **Session-only** — dies when the Claude session exits, auto-expires after 7 days. Re-create each session.
+- **`/loop`** — user-invoked; runs the same sweep on a main-session cadence. Also session-scoped. Clean (main-session, no subagent pollution).
+- **Durable (cross-session) option, not yet built:** a Windows Task Scheduler job running a headless mempalace sweep script, or a Claude hook. NOTE: a prior `SubagentStop` auto-poll hook was **reverted** because it injected poll-reminders into subagents and polluted their reports — don't reintroduce that shape.
