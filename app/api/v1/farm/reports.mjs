@@ -16,6 +16,7 @@ import { withTenantConn } from '../db/pool.mjs';
 import { readBody, ok, created, badReq, notFound, send } from '../http.mjs';
 import { recordAudit } from '../audit.mjs';
 import { farmGate, UUID_RE } from './gate.mjs';
+import { renderMeridianReport, aoiFromFarmBbox } from './meridian.mjs';
 
 const REPORT_SELECT = `
   id, tenant_id, farm_id, type, title, period_start, period_end,
@@ -137,6 +138,37 @@ export async function buildAndStoreReport(client, { tenantId, farmId, kind, peri
       data: portfolio ?? { supplier_count: 0, region_count: 0, farm_count: 0, avg_risk_score: null, max_risk_score: null, revenue_at_risk_usd: 0 },
       suppliers: suppliers.map((s) => ({ supplier_name: s.supplier_name, farm_count: s.farm_count, avg_risk_score: s.avg_risk_score, max_risk_score: s.max_risk_score, revenue_at_risk_usd: s.revenue_at_risk_usd })),
       data_quality: (portfolio && Number(portfolio.avg_risk_score) > 0) ? [] : ['Risk scores are 0/absent until the rollup worker computes from real observations (P3.5).'] });
+  }
+
+  // --- Meridian intelligence (gateway meridian_render, graceful) -------------
+  // Wrap the AlphaGeo Meridian render engine: trigger a render for the farm AOI +
+  // period, then attach its findings/rasters + honest tier. Degrades to a "pending"
+  // note when the farm has no boundary or the gateway is unconfigured/unreachable
+  // (renderMeridianReport returns null) — the report still ships from local data.
+  const meridianAoi = aoiFromFarmBbox(farm);
+  let meridian = null;
+  if (meridianAoi) {
+    meridian = await renderMeridianReport({
+      aoi: meridianAoi,
+      period: { start: periodStart, end: periodEnd },
+      title: `${farm.name} — ${kind === 'executive-monthly' ? 'Executive' : 'Field'}`,
+      trigger,
+    });
+  }
+  if (meridian) {
+    if (meridian.tier) dataQuality.push(`Meridian tier: ${meridian.tier}${meridian.tier === 'DRAFT-PENDING' ? ' (render pending real evidence)' : ''}.`);
+    sections.push({ key: 'meridian', title: 'Meridian Intelligence',
+      data: { report_id: meridian.report_id, tier: meridian.tier, status: meridian.status,
+        finding_count: meridian.findings.length, raster_count: meridian.raster_links.length,
+        summary: meridian.summary },
+      findings: meridian.findings, raster_links: meridian.raster_links,
+      notes: meridian.findings.length === 0 ? ['Meridian returned no findings yet — tier carried verbatim; not fabricated.'] : [] });
+  } else {
+    sections.push({ key: 'meridian', title: 'Meridian Intelligence', data: { report_id: null, tier: null, status: 'pending' },
+      findings: [], raster_links: [],
+      notes: [meridianAoi
+        ? 'Meridian render pending — the AlphaGeo gateway relay is not reachable yet (host offline).'
+        : 'Meridian render skipped — this farm has no boundary/AOI yet.'] });
   }
 
   const title = kind === 'executive-monthly' ? `Executive Monthly Report — ${farm.name}` : `Field Report — ${farm.name}`;
